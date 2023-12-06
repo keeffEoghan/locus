@@ -1,7 +1,7 @@
 {
   "name": "locus",
   "version": "0.0.0",
-  "description": "A digital kinetic artwork evoking meditation, fluid particles trace layers in a translucent human form, art and audience interact by natural motion. Exhibited as interactive digital installation, online, and NFT series.",
+  "description": "In a digital kinetic artwork evoking meditation, fluid particles trace layers in a translucent human form, as art and audience interact by natural motion. Exhibited as interactive digital installation, online, and `NFT` series.",
   "repository": "https://github.com/keeffEoghan/locus.git",
   "homepage": "https://epok.tech/locus",
   "author": "Eoghan O'Keeffe <epok.tech@gmail.com> (https://epok.tech)",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@parcel/core": "^2.10.3",
+    "markdown-it-attrs": "^4.1.6",
     "parcel": "^2.10.3",
     "postcss": "^8.0.0",
     "postcss-import": "^15.1.0",

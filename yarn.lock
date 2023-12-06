@@ -2233,6 +2233,7 @@ __metadata:
   resolution: "locus@workspace:."
   dependencies:
     "@parcel/core": ^2.10.3
+    markdown-it-attrs: ^4.1.6
     parcel: ^2.10.3
     postcss: ^8.0.0
     postcss-import: ^15.1.0
@@ -2284,6 +2285,15 @@ __metadata:
     promise-retry: ^2.0.1
     ssri: ^10.0.0
   checksum: 7c7a6d381ce919dd83af398b66459a10e2fe8f4504f340d1d090d3fa3d1b0c93750220e1d898114c64467223504bd258612ba83efbc16f31b075cd56de24b4af
+  languageName: node
+  linkType: hard
+
+"markdown-it-attrs@npm:^4.1.6":
+  version: 4.1.6
+  resolution: "markdown-it-attrs@npm:4.1.6"
+  peerDependencies:
+    markdown-it: ">= 9.0.0"
+  checksum: 3487fab315a5955f1882edcb29b5362fcdc9a369c4cd1c38688b3d32a145254094d2d8389bdd6887c3af66f9a9a75143f167d88421dcf201e54ec587675756a0
   languageName: node
   linkType: hard
 

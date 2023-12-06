@@ -12,6 +12,15 @@
     url(../fonts/material-symbols/MaterialSymbolsRounded-FILL-GRAD-opsz-wght.ttf) format('truetype');
 }
 
+:root {
+  --c-base: rgb(19 19 19);
+  --c-text: #bbb;
+  --c-hi: #fff;
+  --c-hi: #fff;
+  --c-lo: #333;
+  --c-link: #2d9cdb;
+}
+
 *,
 *:before,
 *:after { box-sizing: inherit; }
@@ -20,9 +29,9 @@ html {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  font-family: monospace;
-  background-color: #000;
-  color: #fff;
+  font-family: Inter, sans-serif;
+  background: var(--c-base);
+  color: var(--c-text);
 }
 
 body {
@@ -42,4 +51,85 @@ video,
 canvas {
   max-width: 100%;
   max-height: 100%;
+}
+
+code {
+  font-family: monospace, sans-serif;
+  border-radius: 3px;
+  padding: 3px 5px;
+  background: var(--c-lo);
+  color: var(--c-hi);
+}
+
+a {
+  position: relative;
+  z-index: 0;
+  color: var(--c-hi);
+  font-weight: 900;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 800ms ease-out;
+
+  &::after {
+    content: '';
+    display: block;
+    pointer-events: none;
+    position: absolute;
+    left: -3px;
+    right: -3px;
+    z-index: -1;
+    bottom: -3px;
+    height: 2px;
+    background: currentColor;
+    transition: transform 800ms ease-out;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--c-link);
+    transition: color 200ms ease-in;
+
+    &::after {
+      transform: translateY(80%) scaleY(0.5);
+      transition: transform 200ms ease-in;
+    }
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--c-hi);
+  line-height: 1.5;
+  margin: 1rem 2rem;
+}
+
+h1 {
+  font-size: 2.8em;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 1.6em;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1em;
+  font-weight: 700;
+}
+
+h4 {}
+
+h5 {}
+
+h6 {}
+
+p {
+  margin: 1rem 2rem;
+  line-height: 1.5;
 }

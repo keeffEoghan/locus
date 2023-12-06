@@ -1,5 +1,15 @@
 {
   "plugins": {
-    "posthtml-markdownit": {}
+    "posthtml-markdownit": {
+      "markdownit": {
+        "html": true,
+        "breaks": true,
+        "linkify": true,
+        "typographer": true
+      },
+      "plugins": [{
+        "plugin": "markdown-it-attrs"
+      }]
+    }
   }
 }
