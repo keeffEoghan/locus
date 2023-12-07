@@ -7,9 +7,7 @@
         "linkify": true,
         "typographer": true
       },
-      "plugins": [{
-        "plugin": "markdown-it-attrs"
-      }]
+      "plugins": [{ "plugin": "markdown-it-attrs" }]
     }
   }
 }

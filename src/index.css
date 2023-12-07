@@ -19,6 +19,13 @@
   --c-hi: #fff;
   --c-lo: #333;
   --c-link: #2d9cdb;
+  --s-m0-x: 4rem;
+  --s-m0-y: 2rem;
+  --s-s0-x: 5px;
+  --s-s0-y: 3px;
+  --s-s0-r: 2px;
+  --s-s1-r: 3px;
+  --s-line: 33rem;
 }
 
 *,
@@ -42,21 +49,50 @@ body {
   min-height: 100%;
   margin: 0;
   font-size: 1em;
+  line-height: 1.5;
   animation: 500ms ease-out 700ms 1 backwards fadeIn;
   will-change: opacity;
+}
+
+main {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+header,
+article {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+section {
+  /* flex: 1 1 auto; */
+  flex: 1 1 var(--s-line);
+}
+
+figure {
+  flex: 1 1 50%;
+  display: flex;
+  margin: 0;
+  max-height: 75vh;
 }
 
 img,
 video,
 canvas {
+  flex: 1 1 auto;
   max-width: 100%;
   max-height: 100%;
+  object-fit: cover;
 }
 
 code {
   font-family: monospace, sans-serif;
-  border-radius: 3px;
-  padding: 3px 5px;
+  border-radius: var(--s-s1-r);
+  padding: var(--s-s0-y) var(--s-s0-x);
   background: var(--c-lo);
   color: var(--c-hi);
 }
@@ -68,20 +104,22 @@ a {
   font-weight: 900;
   cursor: pointer;
   text-decoration: none;
-  transition: color 800ms ease-out;
+  transition: color 900ms ease-out;
+
+  &[target="_blank"] { cursor: alias; }
 
   &::after {
     content: '';
     display: block;
     pointer-events: none;
     position: absolute;
-    left: -3px;
-    right: -3px;
+    left: calc(-1*var(--s-s0-r));
+    right: calc(-1*var(--s-s0-r));
     z-index: -1;
-    bottom: -3px;
-    height: 2px;
+    bottom: calc(-1*var(--s-s0-r));
+    height: var(--s-s0-r);
     background: currentColor;
-    transition: transform 800ms ease-out;
+    transition: transform 900ms ease-out;
   }
 
   &:hover,
@@ -91,7 +129,7 @@ a {
     transition: color 200ms ease-in;
 
     &::after {
-      transform: translateY(80%) scaleY(0.5);
+      transform: translateY(2px) scaleY(0.5);
       transition: transform 200ms ease-in;
     }
   }
@@ -104,8 +142,8 @@ h4,
 h5,
 h6 {
   color: var(--c-hi);
-  line-height: 1.5;
-  margin: 1rem 2rem;
+  margin: var(--s-m0-y) var(--s-m0-x);
+  max-width: var(--s-line);
 }
 
 h1 {
@@ -130,6 +168,6 @@ h5 {}
 h6 {}
 
 p {
-  margin: 1rem 2rem;
-  line-height: 1.5;
+  margin: var(--s-m0-y) var(--s-m0-x);
+  max-width: var(--s-line);
 }
