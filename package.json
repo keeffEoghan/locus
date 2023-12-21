@@ -26,7 +26,8 @@
   "dependencies": {
     "@epok.tech/fn-lists": "^0.1.4",
     "@thi.ng/math": "^5.7.7",
-    "@thi.ng/vectors": "^7.8.13"
+    "@thi.ng/vectors": "^7.8.13",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@parcel/core": "^2.10.3",

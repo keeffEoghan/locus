@@ -1,24 +1,18 @@
 import { each } from '@epok.tech/fn-lists';
 import { fit } from '@thi.ng/math/fit';
 import { mix } from '@thi.ng/math/mix';
-import { setC2 } from '@thi.ng/vectors/setc';
-import { range } from '@epok.tech/fn-lists/range';
+import throttle from 'lodash/fp/throttle';
 
 const { min, max, abs } = Math;
-const eps = 1e-5;
+
 const $art = document.querySelector('.intro-concept-art');
 const $layers = document.querySelectorAll('.intro-concept-art-layer');
-const at = range(2, Infinity);
 
-$art.addEventListener('pointermove', ({ clientX: cx, clientY: cy }) => {
-  const [x0, y0] = at;
+const move = throttle(1e2, (e) => {
+  const { clientX: cx, clientY: cy } = e;
   const { y: bt, right: br, bottom: bb, x: bl } = $art.getBoundingClientRect();
   const y = fit(cy, bb, bt, 0, 1);
   const x = fit(cx, br, bl, 0, $layers.length+1);
-
-  if((abs(x-x0) < eps) && (abs(y-y0) < eps)) { return; }
-  else { setC2(at, x, y); }
-
   const w = mix(3e-2, 1.1, y);
 
   each(($l, i) => {
@@ -34,7 +28,9 @@ $art.addEventListener('pointermove', ({ clientX: cx, clientY: cy }) => {
     $layers);
 });
 
+$art.addEventListener('pointermove', move);
+
 $art.addEventListener('pointerout', () => {
-    each(($l) => $l.style.clipPath = '', $layers);
-    range(at, Infinity);
+  move.cancel();
+  each(($l) => $l.style.clipPath = '', $layers);
 });

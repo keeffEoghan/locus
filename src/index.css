@@ -187,8 +187,9 @@ p {
 .intro-concept-art-layer {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background-color: #999;
-  clip-path: polygon(-150% 0%, -50% 0%, -50% 100%, -150% 100%);
+  clip-path: polygon(-180% 0%, -100% 0%, -200% 100%, -280% 100%);
   transition: clip-path 900ms ease-in;
 
   .intro-concept-art:hover & { transition: clip-path 200ms ease-out; }
@@ -196,7 +197,8 @@ p {
 
 .intro-concept-art-layer-fill {
   background-color: inherit;
-  transition: clip-path 900ms ease-in 1200ms;
+  clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
+  transition: clip-path 1900ms cubic-bezier(0.2, 0.5, 0.75, 0.25) 800ms;
 
   .intro-concept-art:hover & { transition: clip-path 200ms ease-out; }
 }
