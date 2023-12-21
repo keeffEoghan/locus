@@ -5,6 +5,12 @@ import throttle from 'lodash/fp/throttle';
 
 const { min, max, abs } = Math;
 
+const loaded = ($l) => $l.classList.add('loaded');
+
+each(($l) =>
+    (($l.complete)? loaded($l) : $l.addEventListener('load', () => loaded($l))),
+  document.querySelectorAll('.load'));
+
 const $art = document.querySelector('.intro-concept-art');
 const $layers = document.querySelectorAll('.intro-concept-art-layer');
 
