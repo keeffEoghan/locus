@@ -3,7 +3,7 @@ import { fit } from '@thi.ng/math/fit';
 import { mix } from '@thi.ng/math/mix';
 import throttle from 'lodash/fp/throttle';
 
-const { min, max, abs } = Math;
+const { min, max, abs, round } = Math;
 
 const loaded = ($l) => $l.classList.add('loaded');
 
@@ -18,7 +18,7 @@ const move = throttle(1e2, (e) => {
   const { clientX: cx, clientY: cy } = e;
   const { y: bt, right: br, bottom: bb, x: bl } = $art.getBoundingClientRect();
   const y = fit(cy, bb, bt, 0, 1);
-  const x = fit(cx, br, bl, 0, $layers.length+1);
+  const x = fit(cx, br, bl, $layers.length+1, 0);
   const w = mix(3e-2, 1.1, y);
 
   each(($l, i) => {
@@ -40,3 +40,16 @@ $art.addEventListener('pointerout', () => {
   move.cancel();
   each(($l) => $l.style.clipPath = '', $layers);
 });
+
+(async () => {
+  try {
+    let c = fetch('https://api.coinconvert.net/convert/eth/usd?amount=0.01');
+    const $c = document.querySelector('.crypto-convert');
+    const { textContent, title } = $c;
+
+    c = round((await (await c).json()).USD);
+    $c.textContent = textContent.replace(/(\$)[0-9\.]+/gi, '$1'+c);
+    $c.title = title.replace(/[0-9\.]+( USD)/gi, c+' $1');
+  }
+  catch(e) { console.warn(e); }
+})();
