@@ -11,6 +11,30 @@ each(($l) =>
     (($l.complete)? loaded($l) : $l.addEventListener('load', () => loaded($l))),
   document.querySelectorAll('.load'));
 
+const $subscribe = document.querySelector('#subscribe');
+const $submit = $subscribe.querySelector('[type="submit"]');
+
+$subscribe.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $submit.disabled = true;
+
+  const body = new FormData($subscribe);
+  const r = await fetch($subscribe.action, { method: 'POST', body });
+  const valid = ((r.ok)? '' : "Couldn't send your details, please try again");
+  const cs = $subscribe.classList;
+
+  $submit.setCustomValidity(valid);
+  $submit.disabled = false;
+
+  cs.toggle('success', $submit.reportValidity()) &&
+    setTimeout(() => {
+      cs.remove('success');
+      $subscribe.reset();
+    });
+});
+
+/** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
+
 const $art = document.querySelector('.intro-concept-art');
 const $layers = document.querySelectorAll('.intro-concept-art-layer');
 

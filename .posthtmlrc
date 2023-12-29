@@ -3,7 +3,6 @@
     "posthtml-markdownit": {
       "markdownit": {
         "html": true,
-        "breaks": true,
         "linkify": true,
         "typographer": true
       },

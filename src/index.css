@@ -7,17 +7,25 @@
   /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
   font-family: 'Material Symbols Rounded';
   font-style: normal;
-  font-display: block;
+  font-weight: 400;
   src: url(../fonts/material-symbols/MaterialSymbolsRounded-FILL-GRAD-opsz-wght.woff2) format('woff2'),
     url(../fonts/material-symbols/MaterialSymbolsRounded-FILL-GRAD-opsz-wght.ttf) format('truetype');
 }
 
 :root {
-  --c-base: #161616;
-  --c-text: #fffa;
   --c-hi: #fff;
-  --c-lo: #333a;
-  --c-link: #2d9cdb;
+  --c-lo: #333b;
+  --c-base: #161616;
+  --c-text: #fffb;
+  --c-code: var(--c-hi);
+  --c-link: var(--c-hi);
+  --c-link-on: #2d9cdb;
+  --c-error: #f43;
+  --c-warn: #f92;
+  --c-good-0: #fff;
+  --c-good-1: #1acc6c;
+  --c-interact: #2d9cdb15;
+  --c-disable: #999;
   --s-l0-x: 2rem;
   --s-l0-y: 2rem;
   --s-m0-x: 2rem;
@@ -29,9 +37,13 @@
   --s-s0-y: 3px;
   --s-s0-r: 2px;
   --s-s1-x: 8px;
-  --s-s1-y: 4px;
+  --s-s1-y: 6px;
   --s-s1-r: 3px;
   --s-line: 30rem;
+  --s-icon: 2.5rem;
+  --s-input-x: 0.7rem;
+  --s-input-y: 0.7rem;
+  --s-input-r: 1.5rem;
 }
 
 *,
@@ -43,6 +55,10 @@ html {
   width: 100%;
   height: 100%;
   font-family: Inter, sans-serif;
+}
+
+html,
+nav {
   background: var(--c-base);
   color: var(--c-text);
 }
@@ -54,6 +70,7 @@ body {
   line-height: 1.5;
   animation: 900ms ease-out 700ms 1 backwards fadeIn;
   will-change: opacity;
+  padding-bottom: 1000px;
 }
 
 main {
@@ -61,6 +78,63 @@ main {
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
+}
+
+nav,
+form {
+  align-self: stretch;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+nav {
+  --c-text: #000b;
+  --c-hi: #000;
+  --c-base: #fff;
+  --c-link: var(--c-hi);
+  position: sticky;
+  inset: var(--s-s1-r);
+  margin: var(--s-s1-r);
+  padding: var(--s-m1-y) var(--s-m1-x);
+  gap: 2rem;
+  z-index: 10;
+  border-radius: var(--s-s1-r);
+  box-shadow: 0 0 var(--s-s1-r) 0 var(--c-hi);
+  /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
+
+  /* @media (min-width: 40rem) {} */
+}
+
+form {
+  padding: var(--s-s0-r);
+  border: 1px solid currentColor;
+  border-radius: var(--s-input-r);
+  background: var(--c-interact);
+  overflow: hidden;
+
+  & > input,
+  & > button {
+    &,
+    &.icon { border-color: #0000; }
+  }
+
+  &:invalid {
+    [type="submit"] {
+      color: var(--c-disable);
+
+      &:invalid { color: var(--c-warn); }
+    }
+
+    :not(:placeholder-shown):required:invalid {
+      color: var(--c-error);
+      border-color: var(--c-error);
+
+      & ~ [type="submit"] { cursor: not-allowed; }
+    }
+  }
 }
 
 header,
@@ -79,14 +153,6 @@ header {
   min-height: 95dvh; */
   padding: var(--s-s1-r);
   background: #000;
-}
-
-nav {
-  position: sticky;
-  inset: 0;
-  width: 100%;
-  background: var(--c-lo);
-  backdrop-filter: invert(1) blur(3px);
 }
 
 section,
@@ -111,11 +177,11 @@ figcaption {
   bottom: 0;
   margin: var(--s-s1-r);
   overflow: auto;
-  max-height: 2.5em;
+  max-height: 2.6em;
   padding: var(--s-s1-y) var(--s-s1-x);
   text-align: center;
   background: var(--c-lo);
-  backdrop-filter: invert(1) blur(3px);
+  backdrop-filter: invert(1) blur(3px) saturate(0.5);
   border-radius: var(--s-s1-r);
   transition: transform 300ms ease-in-out,
     opacity 300ms ease-in-out;
@@ -147,11 +213,30 @@ code {
   border-radius: var(--s-s1-r);
   padding: var(--s-s0-y) var(--s-s0-x);
   background: var(--c-lo);
-  color: var(--c-hi);
+  color: var(--c-code);
+}
+
+a,
+input,
+button {
+  font-size: 1em;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--c-link-on);
+    outline-color: currentColor;
+    transition: color 300ms ease-in;
+  }
+
+  &.icon {
+    border: 1px solid currentColor;
+    border-radius: var(--s-icon);
+    background: #0000;
+  }
 }
 
 a {
-  /* display: inline-block; */
   position: relative;
   z-index: 0;
   padding: var(--s-s0-r) 0;
@@ -159,30 +244,105 @@ a {
   cursor: pointer;
   text-decoration: none;
   border-radius: var(--s-s0-r);
-  color: var(--c-hi);
+  color: var(--c-link);
   background-image: linear-gradient(to top,
     currentColor var(--s-s0-r), #0000 var(--s-s0-r));
   background-repeat: repeat no-repeat;
   background-position-y: 0;
   transition: color 900ms ease-out,
     background-position-y 900ms ease-out;
-  will-change: background-position-y;
-
-  &:hover,
-  &:focus,
-  &:active { background-position-y: calc(0.5*var(--s-s0-r)); }
+  will-change: color, background-position-y;
 
   &:hover,
   &:focus,
   &:active {
-    color: var(--c-link);
-    transition: color 200ms ease-in,
-      background-position-y 200ms ease-in;
+    background-position-y: calc(0.5*var(--s-s0-r));
+    transition: color 300ms ease-in,
+      background-position-y 300ms ease-in;
   }
 
+  &.icon,
   &.link-plain { background: #0000; }
 
   &[target="_blank"] { cursor: alias; }
+}
+
+input,
+button {
+  padding: var(--s-input-y) var(--s-input-x);
+  border-radius: var(--s-input-r);
+  border: 1px solid currentColor;
+  vertical-align: middle;
+  cursor: pointer;
+  text-decoration: none;
+  background: #0000;
+  transition: color 900ms ease-out;
+  will-change: color;
+}
+
+.icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--s-icon);
+  height: var(--s-icon);
+  /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1.5rem;
+  /* display: inline-block; */
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+
+  &[type="submit"] {
+    position: relative;
+    overflow: hidden;
+
+    &::before,
+    &::after {
+      display: inherit;
+      flex-flow: inherit;
+      justify-content: inherit;
+      align-items: inherit;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      color: #0000;
+      opacity: 0;
+      transition: color 700ms ease-out,
+        opacity 700ms ease-out 500ms;
+      will-change: opacity;
+    }
+
+    &::before {
+      content: 'schedule_send';
+      --c-show: var(--c-good-0);
+      background: var(--c-warn);
+    }
+
+    &::after {
+      content: 'done_outline';
+      --c-show: var(--c-good-0);
+      background: var(--c-good-1);
+    }
+
+    &[disabled]::before,
+    .success &::after,
+    &.success::after {
+      color: var(--c-show);
+      opacity: 1;
+      transition: none;
+      z-index: 2;
+    }
+  }
 }
 
 h1,
@@ -234,8 +394,8 @@ ul {
 ol { padding-left: var(--s-m0-x); }
 
 strong {
-  color: var(--c-hi);
   font-weight: 900;
+  color: var(--c-hi);
 
   a & { color: inherit; }
 }
@@ -277,7 +437,7 @@ strong {
   clip-path: polygon(-140% 0%, -100% 0%, -200% 100%, -240% 100%);
   transition: clip-path 900ms ease-in;
 
-  .intro-concept-art:hover & { transition: clip-path 200ms ease-out; }
+  .intro-concept-art:hover & { transition: clip-path 300ms ease-out; }
 }
 
 .intro-concept-art-layer-fill {
@@ -285,7 +445,7 @@ strong {
   clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
   transition: clip-path 1500ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 800ms;
 
-  .intro-concept-art:hover & { transition: clip-path 200ms ease-out; }
+  .intro-concept-art:hover & { transition: clip-path 300ms ease-out; }
 }
 
 .artizen-laurel {
