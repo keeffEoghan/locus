@@ -18,8 +18,8 @@
   --c-base: #161616;
   --c-text: #fffb;
   --c-code: var(--c-hi);
-  --c-link: var(--c-hi);
-  --c-link-on: #2d9cdb;
+  --c-action: var(--c-hi);
+  --c-active: #2d9cdb;
   --c-error: #f43;
   --c-warn: #f92;
   --c-good-0: #fff;
@@ -55,6 +55,7 @@ html {
   width: 100%;
   height: 100%;
   font-family: Inter, sans-serif;
+  font-weight: 100;
 }
 
 html,
@@ -70,7 +71,7 @@ body {
   line-height: 1.5;
   animation: 900ms ease-out 700ms 1 backwards fadeIn;
   will-change: opacity;
-  padding-bottom: 1000px;
+  padding-bottom: 500px;
 }
 
 main {
@@ -94,13 +95,15 @@ nav {
   --c-text: #000b;
   --c-hi: #000;
   --c-base: #fff;
-  --c-link: var(--c-hi);
+  --c-action: var(--c-hi);
   position: sticky;
   inset: var(--s-s1-r);
   margin: var(--s-s1-r);
   padding: var(--s-m1-y) var(--s-m1-x);
-  gap: 2rem;
+  gap: 1rem 2rem;
   z-index: 10;
+  font-size: 1.1rem;
+  font-weight: 500;
   border-radius: var(--s-s1-r);
   box-shadow: 0 0 var(--s-s1-r) 0 var(--c-hi);
   /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
@@ -224,7 +227,7 @@ button {
   &:hover,
   &:focus,
   &:active {
-    color: var(--c-link-on);
+    color: var(--c-active);
     outline-color: currentColor;
     transition: color 300ms ease-in;
   }
@@ -244,7 +247,7 @@ a {
   cursor: pointer;
   text-decoration: none;
   border-radius: var(--s-s0-r);
-  color: var(--c-link);
+  color: var(--c-action);
   background-image: linear-gradient(to top,
     currentColor var(--s-s0-r), #0000 var(--s-s0-r));
   background-repeat: repeat no-repeat;
@@ -276,9 +279,12 @@ button {
   cursor: pointer;
   text-decoration: none;
   background: #0000;
+  color: inherit;
   transition: color 900ms ease-out;
   will-change: color;
 }
+
+label { cursor: pointer; }
 
 .icon {
   display: inline-flex;
@@ -286,6 +292,7 @@ button {
   align-items: center;
   width: var(--s-icon);
   height: var(--s-icon);
+  vertical-align: middle;
   /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
   font-family: 'Material Symbols Rounded';
   font-weight: normal;
@@ -305,6 +312,10 @@ button {
     position: relative;
     overflow: hidden;
 
+    &[disabled],
+    .success &,
+    &.success {}
+
     &::before,
     &::after {
       display: inherit;
@@ -323,14 +334,14 @@ button {
     }
 
     &::before {
-      content: 'schedule_send';
       --c-show: var(--c-good-0);
+      content: 'schedule_send';
       background: var(--c-warn);
     }
 
     &::after {
-      content: 'done_outline';
       --c-show: var(--c-good-0);
+      content: 'done_outline';
       background: var(--c-good-1);
     }
 
@@ -461,3 +472,13 @@ strong {
 }
 
 .info { cursor: help; }
+
+.peer-demo { display: block; }
+
+.peer-camera {
+  display: none;
+
+  & ~ .icon::after { content: 'privacy'; }
+
+  &:checked ~ .icon::after { content: 'video_call'; }
+}

@@ -3,7 +3,7 @@ import { fit } from '@thi.ng/math/fit';
 import { mix } from '@thi.ng/math/mix';
 import throttle from 'lodash/fp/throttle';
 
-const { min, max, abs, round } = Math;
+const { min, max, abs, round, ceil, random } = Math;
 
 const loaded = ($l) => $l.classList.add('loaded');
 
@@ -77,3 +77,27 @@ $art.addEventListener('pointerout', () => {
   }
   catch(e) { console.warn(e); }
 })();
+
+// const $peer = document.querySelector('.peer');
+// const $peerCamera = $peer.querySelector('.peer-camera');
+// const $peerRandom = $peer.querySelector('.peer-random');
+// const $peerDemo = $peer.querySelector('.peer-demo');
+
+// $peerCamera.addEventListener('change', () => {
+//   const { allow, dataset } = $peerDemo;
+//   const to = dataset[(($peerCamera.checked)? 'y' : 'n')];
+
+//   if(allow === to) { return; }
+
+//   $peerDemo.allow = to;
+//   $peerDemo.src = $peerDemo.src;
+// });
+
+// $peerRandom.addEventListener('click', () =>
+//   $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
+//     const q = new URLSearchParams($2);
+
+//     q.set('seed', ceil(random()*66));
+
+//     return $1+q;
+//   }));
