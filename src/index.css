@@ -16,6 +16,7 @@
   --c-hi: #fff;
   --c-lo: #333b;
   --c-base: #161616;
+  --c-accent: #000;
   --c-text: #fffb;
   --c-code: var(--c-hi);
   --c-action: var(--c-hi);
@@ -26,24 +27,27 @@
   --c-good-1: #1acc6c;
   --c-interact: #2d9cdb15;
   --c-disable: #999;
+  --s-font: 1rem;
   --s-l0-x: 2rem;
   --s-l0-y: 2rem;
   --s-m0-x: 2rem;
   --s-m0-y: 1rem;
   --s-m0-r: 1rem;
-  --s-m1-x: 0.9rem;
+  --s-m1-x: 1.1rem;
   --s-m1-y: 0.5rem;
+  --s-m1-r: 0.5rem;
   --s-s0-x: 5px;
   --s-s0-y: 3px;
   --s-s0-r: 2px;
   --s-s1-x: 8px;
   --s-s1-y: 6px;
   --s-s1-r: 3px;
-  --s-line: 30rem;
-  --s-icon: 2.5rem;
+  --s-line-x: 30rem;
+  --s-icon: 3rem;
   --s-input-x: 0.7rem;
   --s-input-y: 0.7rem;
-  --s-input-r: 1.5rem;
+  --s-input-r: 2rem;
+  --fit: contain;
 }
 
 *,
@@ -56,19 +60,20 @@ html {
   height: 100%;
   font-family: Inter, sans-serif;
   font-weight: 100;
+  scroll-behavior: smooth;
 }
 
 html,
 nav {
-  background: var(--c-base);
   color: var(--c-text);
+  background: var(--c-base);
+  font-size: var(--s-font);
 }
 
 body {
   min-height: 100%;
   margin: 0;
-  font-size: 1em;
-  line-height: 1.5;
+  line-height: 1.6;
   animation: 900ms ease-out 700ms 1 backwards fadeIn;
   will-change: opacity;
   padding-bottom: 500px;
@@ -96,13 +101,13 @@ nav {
   --c-hi: #000;
   --c-base: #fff;
   --c-action: var(--c-hi);
+  --s-font: 1.1rem;
   position: sticky;
   inset: var(--s-s1-r);
   margin: var(--s-s1-r);
   padding: var(--s-m1-y) var(--s-m1-x);
   gap: 1rem 2rem;
   z-index: 10;
-  font-size: 1.1rem;
   font-weight: 500;
   border-radius: var(--s-s1-r);
   box-shadow: 0 0 var(--s-s1-r) 0 var(--c-hi);
@@ -112,16 +117,24 @@ nav {
 }
 
 form {
+  gap: var(--s-m1-r);
   padding: var(--s-s0-r);
   border: 1px solid currentColor;
   border-radius: var(--s-input-r);
   background: var(--c-interact);
   overflow: hidden;
 
-  & > input,
-  & > button {
-    &,
-    &.icon { border-color: #0000; }
+  input,
+  button,
+  label {
+    &:not(:hover, :focus, :active) { border-color: #0000; }
+  }
+
+  &:not(:focus, :focus-within) .optional:not(:focus, :focus-within) {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    z-index: -1;
   }
 
   &:invalid {
@@ -155,7 +168,7 @@ header {
   /* min-height: 95vh;
   min-height: 95dvh; */
   padding: var(--s-s1-r);
-  background: #000;
+  background: var(--c-accent);
 }
 
 section,
@@ -171,33 +184,43 @@ section {
 figure {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   overflow: hidden;
   margin: 0;
+  cursor: zoom-in;
+  background: var(--c-base);
+
+  &:fullscreen { cursor: zoom-out; }
 }
 
 figcaption {
   position: absolute;
   bottom: 0;
-  margin: var(--s-s1-r);
-  overflow: auto;
   max-height: 2.6em;
   padding: var(--s-s1-y) var(--s-s1-x);
-  text-align: center;
-  background: var(--c-lo);
-  backdrop-filter: invert(1) blur(3px) saturate(0.5);
+  margin: var(--s-s1-r);
+  overflow: auto;
   border-radius: var(--s-s1-r);
-  transition: transform 300ms ease-in-out,
-    opacity 300ms ease-in-out;
+  background: var(--c-lo);
+  text-align: center;
+  backdrop-filter: invert(1) blur(3px) saturate(0.5);
+  transition: transform 300ms ease-out,
+    opacity 300ms ease-out,
+    backdrop-filter 300ms ease-out;
+  will-change: transform, opacity, backdrop-filter;
 
-  figure:hover & {
-    transform: translateY(100%);
-    opacity: 0.5;
-
-    &:hover {
-      transform: unset;
-      opacity: unset;
-    }
+  figure:is(:hover, :active) &:not(:hover, :active) {
+    transform: translateY(100%) translateY(calc(-1*var(--s-s1-y)));
+    opacity: 0.3;
+    backdrop-filter: none;
+    transition: transform 900ms ease-in,
+      opacity 900ms ease-in,
+      backdrop-filter 900ms ease-in;
   }
+
+  figure:fullscreen & { display: none; }
 }
 
 img,
@@ -206,7 +229,7 @@ canvas {
   flex: 1 1 auto;
   max-width: 100%;
   max-height: 100%;
-  object-fit: cover;
+  object-fit: var(--fit);
 }
 
 code {
@@ -221,22 +244,24 @@ code {
 
 a,
 input,
-button {
-  font-size: 1em;
-
+button,
+label {
   &:hover,
   &:focus,
   &:active {
     color: var(--c-active);
     outline-color: currentColor;
-    transition: color 300ms ease-in;
   }
 
   &.icon {
-    border: 1px solid currentColor;
     border-radius: var(--s-icon);
     background: #0000;
   }
+
+  &.icon-in { padding: 0 0 0 var(--s-input-x); }
+
+  strong,
+  code { color: inherit; }
 }
 
 a {
@@ -253,14 +278,18 @@ a {
   background-repeat: repeat no-repeat;
   background-position-y: 0;
   transition: color 900ms ease-out,
+    border-color 900ms ease-out,
+    outline-color 900ms ease-out,
     background-position-y 900ms ease-out;
-  will-change: color, background-position-y;
+  will-change: color, border-color, outline-color, background-position-y;
 
   &:hover,
   &:focus,
   &:active {
     background-position-y: calc(0.5*var(--s-s0-r));
     transition: color 300ms ease-in,
+      border-color 300ms ease-in,
+      outline-color 300ms ease-in,
       background-position-y 300ms ease-in;
   }
 
@@ -271,20 +300,63 @@ a {
 }
 
 input,
-button {
-  padding: var(--s-input-y) var(--s-input-x);
+button,
+label,
+.placeholder {
+  font-size: var(--s-font);
+  line-height: 1.5;
   border-radius: var(--s-input-r);
-  border: 1px solid currentColor;
   vertical-align: middle;
   cursor: pointer;
   text-decoration: none;
   background: #0000;
   color: inherit;
-  transition: color 900ms ease-out;
-  will-change: color;
+  transition: color 900ms ease-out,
+    border-color 900ms ease-out,
+    outline-color 900ms ease-out;
+  will-change: color, border-color, outline-color;
 }
 
-label { cursor: pointer; }
+input,
+button,
+label {
+  border: 1px solid currentColor;
+
+  &:hover,
+  &:focus,
+  &:active {
+    transition: color 300ms ease-in,
+      border-color 300ms ease-in,
+      outline-color 300ms ease-in;
+  }
+}
+
+input,
+button,
+.placeholder { padding: var(--s-input-y) var(--s-input-x); }
+
+label {
+  position: relative;
+  display: inline-flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+
+  input {
+    position: absolute;
+    border-width: 0;
+    max-width: 100%;
+
+    &:placeholder-shown:not(:focus, :active),
+    &:not(:placeholder-shown) ~ .placeholder,
+    &:is(:focus, :active) ~ .placeholder {
+      pointer-events: none;
+      opacity: 0;
+      outline: none;
+      z-index: -1;
+    }
+  }
+}
 
 .icon {
   display: inline-flex;
@@ -312,9 +384,7 @@ label { cursor: pointer; }
     position: relative;
     overflow: hidden;
 
-    &[disabled],
-    .success &,
-    &.success {}
+    &[disabled] { cursor: wait; }
 
     &::before,
     &::after {
@@ -364,7 +434,7 @@ h5,
 h6 {
   color: var(--c-hi);
   margin: var(--s-m0-y) var(--s-m0-x);
-  max-width: var(--s-line);
+  max-width: var(--s-line-x);
 
   a,
   strong { font-weight: inherit; }
@@ -381,7 +451,7 @@ h2 {
 }
 
 h3 {
-  font-size: 1em;
+  font-size: 1.3em;
   font-weight: 700;
 }
 
@@ -393,7 +463,7 @@ p,
 ul,
 ol {
   margin: var(--s-m0-y) var(--s-m0-x);
-  max-width: var(--s-line);
+  max-width: var(--s-line-x);
 }
 
 ul {
@@ -402,17 +472,15 @@ ul {
   /* list-style-type: "— "; */
 }
 
-ol { padding-left: var(--s-m0-x); }
+ol { padding-left: var(--s-m1-x); }
 
 strong {
   font-weight: 900;
   color: var(--c-hi);
-
-  a & { color: inherit; }
 }
 
 .load {
-  background-size: cover;
+  background-size: var(--fit);
   background-repeat: no-repeat;
 
   &.loaded { background-image: none !important; }
@@ -422,11 +490,12 @@ strong {
 
 .intro-concept-art {
   position: relative;
+  display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   background: #e6e6e6;
-  cursor: move;
+  /* cursor: move; */
 }
 
 .intro-concept-art-main {
@@ -473,7 +542,12 @@ strong {
 
 .info { cursor: help; }
 
-.peer-demo { display: block; }
+.peer-demo {
+  display: block;
+  margin: var(--s-m0-r) 0;
+  width: 100dvw;
+  height: 60dvh;
+}
 
 .peer-camera {
   display: none;
@@ -481,4 +555,28 @@ strong {
   & ~ .icon::after { content: 'privacy'; }
 
   &:checked ~ .icon::after { content: 'video_call'; }
+}
+
+.half {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  max-width: calc(2*var(--s-line-x));
+
+  & > section {
+    flex: 1 1 50%;
+    min-width: calc(0.75*var(--s-line-x));
+    max-width: var(--s-line-x);
+    border: var(--s-s1-r) solid #0000;
+    margin: 0 auto;
+    background: var(--c-accent);
+    background-clip: padding-box;
+  }
+}
+
+.jump {
+  position: absolute;
+  top: -6rem;
 }

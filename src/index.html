@@ -9,6 +9,7 @@
   <body>
     <main>
       <header>
+        <div id="intro" class="jump"></div>
         <section md>
           # Locus
           ### <span md inline>Upcoming artwork @ [***epok.tech***](https://epok.tech){target="_blank"} ~&nbsp;</span><span md inline>Crowd-funding @ [***Artizen***](https://artizen.fund/project/locus){target="_blank"}</span>{.h-flex}
@@ -22,124 +23,126 @@
 
           By [***epok.tech***](https://epok.tech){target="_blank"}
         </section>
-        <figure class="intro-concept-art">
-          <img class="intro-concept-art-main load" alt="Locus concept art"
-            loading="lazy"
-            src="../media/peel/artifact.png?width=1000"
-            srcset="../media/peel/artifact.png?width=2000 2x"
+        <figure>
+          <div class="intro-concept-art">
+            <img class="intro-concept-art-main load" alt="Locus concept art"
+              loading="lazy"
+              src="../media/peel/artifact.png?width=1000"
+              srcset="../media/peel/artifact.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/artifact.png?width=100'),
+                  url('../media/peel/artifact.png?width=10');
+              " />
+            <!-- Interactive peel effect; pointer x peels, y for width. -->
+            <img class="intro-concept-art-layer intro-concept-art-layer-fill load"
+              loading="lazy"
+              src="../media/peel/bust-3-alpha.png?width=1000"
+              srcset="../media/peel/bust-3-alpha.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/bust-3-alpha.png?width=100'),
+                  url('../media/peel/bust-3-alpha.png?width=10');
+              " />
+            <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/bust.png?width=1000"
+              srcset="../media/peel/bust.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/bust.png?width=100'),
+                  url('../media/peel/bust.png?width=10');
+                filter: brightness(1.4);
+              " />
+            <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/bust-over-flow.png?width=1000"
+              srcset="../media/peel/bust-over-flow.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/bust-over-flow.png?width=100'),
+                  url('../media/peel/bust-over-flow.png?width=10');
+                filter: brightness(1.2);
+              " />
+            <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/flow.png?width=1000"
+              srcset="../media/peel/flow.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/flow.png?width=100'),
+                  url('../media/peel/flow.png?width=10');
+              " />
+            <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-0.jpeg?as=png&width=1000"
+              srcset="../media/peel/ai-0.jpeg?as=png&width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-0.jpeg?as=png&width=100'),
+                  url('../media/peel/ai-0.jpeg?as=png&width=10');
+              " />
+            <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-1.jpeg?as=png&width=1000"
+              srcset="../media/peel/ai-1.jpeg?as=png&width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-1.jpeg?as=png&width=100'),
+                  url('../media/peel/ai-1.jpeg?as=png&width=10');
+              " />
+            <!-- <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00043_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00043_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00043_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00043_.png?width=10');
+              " /> -->
+            <!-- <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00052_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00052_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00052_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00052_.png?width=10');
+              " /> -->
+            <!-- <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00053_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00053_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00053_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00053_.png?width=10');
+              " /> -->
+            <!-- <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00061_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00061_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00061_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00061_.png?width=10');
+              " /> -->
+            <!-- <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00098_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00098_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00098_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00098_.png?width=10');
+              " /> -->
+            <img class="intro-concept-art-layer load" loading="lazy"
+            src="../media/peel/ai-ComfyUI_00100_.png?width=1000"
+            srcset="../media/peel/ai-ComfyUI_00100_.png?width=2000 2x"
             style="
-              background-image: url('../media/peel/artifact.png?width=100'),
-                url('../media/peel/artifact.png?width=10');
+              background-image: url('../media/peel/ai-ComfyUI_00100_.png?width=100'),
+                url('../media/peel/ai-ComfyUI_00100_.png?width=10');
             " />
-          <!-- Interactive peel effect; pointer x peels, y for width. -->
-          <img class="intro-concept-art-layer intro-concept-art-layer-fill load"
-            loading="lazy"
-            src="../media/peel/bust-3-alpha.png?width=1000"
-            srcset="../media/peel/bust-3-alpha.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/bust-3-alpha.png?width=100'),
-                url('../media/peel/bust-3-alpha.png?width=10');
-            " />
-          <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/bust.png?width=1000"
-            srcset="../media/peel/bust.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/bust.png?width=100'),
-                url('../media/peel/bust.png?width=10');
-              filter: brightness(1.4);
-            " />
-          <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/bust-over-flow.png?width=1000"
-            srcset="../media/peel/bust-over-flow.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/bust-over-flow.png?width=100'),
-                url('../media/peel/bust-over-flow.png?width=10');
-              filter: brightness(1.2);
-            " />
-          <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/flow.png?width=1000"
-            srcset="../media/peel/flow.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/flow.png?width=100'),
-                url('../media/peel/flow.png?width=10');
-            " />
-          <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-0.jpeg?as=png&width=1000"
-            srcset="../media/peel/ai-0.jpeg?as=png&width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-0.jpeg?as=png&width=100'),
-                url('../media/peel/ai-0.jpeg?as=png&width=10');
-            " />
-          <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-1.jpeg?as=png&width=1000"
-            srcset="../media/peel/ai-1.jpeg?as=png&width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-1.jpeg?as=png&width=100'),
-                url('../media/peel/ai-1.jpeg?as=png&width=10');
-            " />
-          <!-- <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00043_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00043_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00043_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00043_.png?width=10');
-            " /> -->
-          <!-- <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00052_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00052_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00052_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00052_.png?width=10');
-            " /> -->
-          <!-- <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00053_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00053_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00053_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00053_.png?width=10');
-            " /> -->
-          <!-- <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00061_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00061_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00061_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00061_.png?width=10');
-            " /> -->
-          <!-- <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00098_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00098_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00098_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00098_.png?width=10');
-            " /> -->
-          <img class="intro-concept-art-layer load" loading="lazy"
-          src="../media/peel/ai-ComfyUI_00100_.png?width=1000"
-          srcset="../media/peel/ai-ComfyUI_00100_.png?width=2000 2x"
-          style="
-            background-image: url('../media/peel/ai-ComfyUI_00100_.png?width=100'),
-              url('../media/peel/ai-ComfyUI_00100_.png?width=10');
-          " />
-          <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00065_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00065_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00065_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00065_.png?width=10');
-            " />
-          <!-- <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00139_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00139_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00139_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00139_.png?width=10');
-            " /> -->
-          <img class="intro-concept-art-layer load" loading="lazy"
-            src="../media/peel/ai-ComfyUI_00156_.png?width=1000"
-            srcset="../media/peel/ai-ComfyUI_00156_.png?width=2000 2x"
-            style="
-              background-image: url('../media/peel/ai-ComfyUI_00156_.png?width=100'),
-                url('../media/peel/ai-ComfyUI_00156_.png?width=10');
-            " />
+            <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00065_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00065_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00065_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00065_.png?width=10');
+              " />
+            <!-- <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00139_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00139_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00139_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00139_.png?width=10');
+              " /> -->
+            <img class="intro-concept-art-layer load" loading="lazy"
+              src="../media/peel/ai-ComfyUI_00156_.png?width=1000"
+              srcset="../media/peel/ai-ComfyUI_00156_.png?width=2000 2x"
+              style="
+                background-image: url('../media/peel/ai-ComfyUI_00156_.png?width=100'),
+                  url('../media/peel/ai-ComfyUI_00156_.png?width=10');
+              " />
+          </div>
           <!-- <video alt="Locus concept art" title="Locus concept art"
             src="../media/peel-artifact.mp4"
             poster="../media/peel-artifact-hi.jpg?as=png&width=4000"
@@ -150,58 +153,87 @@
                 ../media/peel-artifact-hi.jpg?as=png&width=3000 3x,
                 ../media/peel-artifact-hi.jpg?as=png&width=4000 4x" />
           </video> -->
-          <figcaption md inline>***Locus*** concept art, slide across to [expand and peel layers](https://youtu.be/bS0p8n_VcEY){target="_blank"}.</figcaption>
+          <figcaption md inline>[***Locus*** concept art explorations](https://youtu.be/bS0p8n_VcEY){target="_blank"}, slide around to expand and peel layers.</figcaption>
         </figure>
         <!-- <figure md inline>![Locus concept art](../media/peel-artifact.png "Locus concept art"){srcset="../media/peel-artifact-2x.jpg?as=png&width=2000 2x, ../media/peel-artifact-2x.jpg?as=png&width=3000 3x, ../media/peel-artifact-2x.jpg?as=png&width=4000 4x"}</figure> -->
       </header>
       <nav>
-        <div md inline>
-          Support ***Locus*** via [crypto](https://artizen.fund/project/locus){target="_blank"} or [card](https://artizen.link/pay){target="_blank"}
-        </div>
+        <md inline>
+          [Support ***Locus*** by ***crypto*** *<wbr/>*{.eta-crypto-s data-title="Until 29 January 2024" data-til="($)"} or ***card*** *<wbr/>*{.eta-card-s data-title="Until 27 January 2024" data-til="($)"}](#how-to-contribute)
+        </md>
         <form id="subscribe" method="post" target="_blank"
           action="https://script.google.com/macros/s/AKfycbwFvVGJlpRC5IQ6ZTTGGc09UGHDP-f9Y5mBYTYeqcTt4Z4_Wi7un-20nYibTeJY1SnF/exec">
-          <input name="Email" type="email" required title="email"
-            placeholder="Connect by email" />
-          <!-- <input name="Name" type="text" placeholder="name"> -->
+          <label>
+            <input name="Email" type="email" required title="email"
+              placeholder="Connect by email" />
+            <span class="placeholder">Connect by email</span>
+          </label>
+          <!-- <label class="optional">
+            <input name="Name" type="text" placeholder="(Name)">
+            <span class="placeholder">(Name)</span>
+          </label>
+          <label class="optional">
+            <input name="Wallet" type="text" placeholder="(Crypto wallet)">
+            <span class="placeholder">(Crypto wallet)</span>
+          </label> -->
           <button type="submit" class="icon">send</button>
         </form>
       </nav>
       <article class="bleed-inset">
+        <div id="locus-on-artizen" class="jump"></div>
         <figure md inline class="artizen-laurel">
-          [![Artizen OfficialSelection Season 3](../media/Artizen_Laurel_RGB_White_Green.svg)](https://artizen.fund/project/locus){.link-plain target="_blank"}
+          ![Artizen Official Selection Season 3](../media/Artizen_Laurel_RGB_White_Green.svg)
           <!-- @todo List sponsors. -->
+          <!-- <figcaption md inline>
+            [***Locus***](https://artizen.fund/project/locus){target="_blank"} in the [***Artizen** Season 3 Official Selection*](https://artizen.fund){target="_blank"}
+          </figcaption> -->
         </figure>
         <section md>
           ## Crowd-funding @ [***Artizen***](https://artizen.fund/project/locus){target="_blank"}
 
           [***Locus***](https://artizen.fund/project/locus){target="_blank"} has been curated for the *Season 3 Official Selection* of the [***Artizen***](https://artizen.fund){target="_blank"} fund for human creativity!
           <br/>
-          Here, creators engage their communities to support projects, amplified by sponsor [match-funds](https://help.artizen.fund/en/collections/4075653-match-funds){target="_blank"}, and compete for the prestigious [***Artizen** Prize*](https://help.artizen.fund/en/articles/7988933-how-to-win-the-artizen-prize){target="_blank"}.
+          Here, creators engage their communities to support projects, amplified by sponsor [match-funds](https://help.artizen.fund/en/collections/4075653-match-funds){target="_blank"}, and compete for the substantial [***Artizen** Prize*](https://help.artizen.fund/en/articles/7988933-how-to-win-the-artizen-prize){target="_blank"}.
 
-          If this project resonates with you, [supporting it via ***Artizen***](https://artizen.fund/project/locus){target="_blank"} is an ideal way to help make it a reality:
-          - [Your contributions are matched](https://help.artizen.fund/en/collections/2702888-buy-artifacts-to-unlock-match-funding){target="_blank"} by ***Artizen*** and sponsors, *multiplying* your support's impact on the project.
-          - [You earn ***Artifacts***](https://help.artizen.fund/en/articles/6604052-what-are-artifacts){target="_blank"}, a token of your stake per [`Ξ0.01 / US$22`{.crypto-convert title="0.01 ETH (Ether), around 20 USD (United States Dollar)"}](https://www.xe.com/currencyconverter/convert/?Amount=0.01&From=ETH&To=USD){target="_blank" .info} contributed, as [`NFTs`{.info title="Non-Fungible Token, a cryptocurrency asset"}](https://opensea.io/assets/ethereum/0x20cddf283164ee59742c80aa5ce9b97127f123ce/145){target="_blank"} that benefit both you and the project.
-          - [***Artifacts*** increase the ranking](https://help.artizen.fund/en/articles/6604052-what-are-artifacts){target="_blank"} of the project up the [***Artizen** Prize*](https://help.artizen.fund/en/articles/7988933-how-to-win-the-artizen-prize){target="_blank"} leaderboard as well as earning it [match-funding](https://help.artizen.fund/en/articles/7730702-how-to-unlock-match-funding){target="_blank"}.
-          - [***Artifacts*** are investments in the impact](https://help.artizen.fund/en/articles/6746680-artifacts-are-an-investment-in-positive-impact){target="_blank"} of the project, a limited-edition stake that grows with the project and its community.
-          - ***Artifacts*** grant you access to [private ***Locus*** and ***Artizen*** communities](https://help.artizen.fund/en/articles/6761187-artifacts-unlock-a-vibrant-community){target="_blank"} and [votes in future ***Artizen*** curation](https://help.artizen.fund/en/articles/6781958-how-to-curate-projects){target="_blank"}.
-          - [***Locus*** offers you backer rewards](#rewards), both now for your early support, and to be integrated into the future artwork...
+          If this project resonates with you, [supporting it on ***Artizen***](https://artizen.fund/project/locus){target="_blank"} is an ideal way to help make it a reality:
+          - [Your contributions are matched](https://help.artizen.fund/en/collections/2702888-buy-artifacts-to-unlock-match-funding){target="_blank"} by ***Artizen*** and sponsors, *multiplying* your support for the project to go further.
+          - [You earn ***Artifacts***](https://help.artizen.fund/en/articles/6604052-what-are-artifacts){target="_blank"}, a token of your stake per [`Ξ0.01 / US$23`{.crypto-convert title="0.01 ETH (Ether), around 23 USD (United States Dollar)"}](https://www.xe.com/currencyconverter/convert/?Amount=0.01&From=ETH&To=USD){target="_blank" .info} contributed, as [`NFTs`{.info title="Non-Fungible Token, a cryptocurrency asset"}](https://opensea.io/assets/ethereum/0x20cddf283164ee59742c80aa5ce9b97127f123ce/145){target="_blank"} that benefit both you and the project.
+          - [***Artifacts*** increase the ranking](https://help.artizen.fund/en/articles/6604052-what-are-artifacts){target="_blank"} of the project up the leaderboard for the [***Artizen** Prize*](https://help.artizen.fund/en/articles/7988933-how-to-win-the-artizen-prize){target="_blank"} as well as earning it [match-funding](https://help.artizen.fund/en/articles/7730702-how-to-unlock-match-funding){target="_blank"}.
+          - [***Artifacts*** are investments in the project's impact](https://help.artizen.fund/en/articles/6746680-artifacts-are-an-investment-in-positive-impact){target="_blank"}, a limited-edition stake whose worth grows with the project and its community.
+          - ***Artifacts*** grant you [access to private ***Locus*** and ***Artizen*** communities](https://help.artizen.fund/en/articles/6761187-artifacts-unlock-a-vibrant-community){target="_blank"} and [votes in future ***Artizen*** curation](https://help.artizen.fund/en/articles/6781958-how-to-curate-projects){target="_blank"}.
+          - [***Locus*** offers you backer-rewards](#your-rewards), both now for your early support, and to be integrated into the future artwork.
+
+          *[Read how to support ***Locus*** on ***Artizen***](#how-to-contribute), and what [rewards](#your-rewards) you'll receive...!*
         </section>
       </article>
-      <!-- <article>
+      <article class="bleed-inset">
+        <div id="how-to-contribute" class="jump"></div>
         <section md>
-          ### Tier 1: ***Locus*** ***Artifact*** `NFT` @ ***Artizen***
+          ### How to Contribute
+
+          You can support ***Locus*** by [crypto](https://artizen.fund/project/locus){target="_blank"} or [card](https://artizen.link/pay){target="_blank"}  while ***Artizen** Season 3* is running until *late January 2024*:
+        </section>
+        <div class="half">
+          <section md>
+            **[Crypto](https://artizen.fund/project/locus){target="_blank"}** *~ until 29 January 2024*{.eta-crypto data-title="Until 29 January 2024" data-til="~ ends in $"}
+
+            1. [If you don't have a crypto wallet](https://help.artizen.fund/en/articles/6742664-how-do-i-buy-artifacts){target="_blank"}, you can get one via a service like [MetaMask](https://metamask.io/){target="_blank"} *(free and recommended)*.
+            1. [Explore the project on ***Artizen***](https://artizen.fund/project/locus){target="_blank"}, connect your wallet, and buy ***Artifacts*** to support ***Locus***!
+            1. Each ***Artifact*** is `Ξ0.01`{.info title="0.01 ETH (Ether)"} *([around `US$23`{.crypto-convert}](https://www.xe.com/currencyconverter/convert/?Amount=0.01&From=ETH&To=USD){target="_blank" .info title="around 23 USD (United States Dollar)"})*, get as many as you like to contribute and [earn rewards](#your-rewards)!
+          </section>
+          <section md>
+            **[Card](https://artizen.link/pay){target="_blank"}** *~ until 27 January 2024*{.eta-card data-title="Until 27 January 2024" data-til="~ ends in $"}
+          </section>
+        </div>
+      </article>
+      <article>
+        <div id="your-rewards" class="jump"></div>
+        <section md>### Your Rewards</section>
+        <section md>
+          #### Reward Tier 1: [***Locus*** ***Artifact*** `NFT` @ ***Artizen***](https://opensea.io/assets/ethereum/0x20cddf283164ee59742c80aa5ce9b97127f123ce/145){target="_blank"}
         </section>
         <section class="peer" md>
-          ### Tier 2: ***Peer into the Flow*** `NFT` @ ***Olta***
-          <label>
-            Camera face-tracking interaction
-            <input type="checkbox" class="peer-camera" />
-            <span class="icon"></span>
-          </label>
-          <button class="peer-random">
-            Random edition
-            <span class="icon">shuffle</span>
-          </button>
+          #### Reward Tier 2: [***Peer into the Flow*** `NFT` @ ***Olta***](https://www.olta.art/project/0x6d24ce4c32e556313b431fb156edf2060680a998){target="_blank"}
           <iframe class="peer-demo"
             src="https://arweave.net/wU9gVLoAt_sMwiE6_2kv4zGFcQw7xxqCLCnBY2_FRGM/?address=0x6d24ce4c32e556313b431fb156edf2060680a998&seed=37"
             sandbox="allow-scripts allow-same-origin"
@@ -210,11 +242,22 @@
             alt="https://arweave.net/wU9gVLoAt_sMwiE6_2kv4zGFcQw7xxqCLCnBY2_FRGM/thumbnail.png"
             loading="lazy" width="800" height="450" frameborder="0">
           </iframe>
+          <label class="icon-in">
+            Camera face-tracking interaction
+            <input type="checkbox" class="peer-camera" />
+            <span class="icon"></span>
+          </label>
+          <button class="peer-random icon-in">
+            Random edition
+            <span class="icon">shuffle</span>
+          </button>
         </section>
         <section md>
-          ### Tier 3: Your face featured in ***Locus*** finished artwork *Coming Soon!*
+          #### Reward Tier 3: Your face featured in ***Locus*** finished artwork *Coming Soon!*
         </section>
-      </article> -->
+      </article>
+      <article>
+      </article>
     </main>
     <script src="./index.js" type="module"></script>
   </body>
