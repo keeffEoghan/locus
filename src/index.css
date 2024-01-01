@@ -14,10 +14,10 @@
 
 :root {
   --c-hi: #fff;
-  --c-lo: #333b;
+  --c-lo: #333c;
   --c-base: #161616;
   --c-accent: #000;
-  --c-text: #fffb;
+  --c-text: #fffc;
   --c-code: var(--c-hi);
   --c-action: var(--c-hi);
   --c-active: #2d9cdb;
@@ -47,6 +47,12 @@
   --s-input-x: 0.7rem;
   --s-input-y: 0.7rem;
   --s-input-r: 2rem;
+  --s-jump-x: 0;
+  --s-jump-y: -9rem;
+  --s-jumped-x: 0;
+  --s-jumped-y: 9rem;
+  --z-nav: 9;
+  --z-jump: 8;
   --fit: contain;
 }
 
@@ -60,6 +66,7 @@ html {
   height: 100%;
   font-family: Inter, sans-serif;
   font-weight: 100;
+  overflow: hidden auto;
   scroll-behavior: smooth;
 }
 
@@ -76,7 +83,6 @@ body {
   line-height: 1.6;
   animation: 900ms ease-out 700ms 1 backwards fadeIn;
   will-change: opacity;
-  padding-bottom: 500px;
 }
 
 main {
@@ -97,7 +103,7 @@ form {
 }
 
 nav {
-  --c-text: #000b;
+  --c-text: #000c;
   --c-hi: #000;
   --c-base: #fff;
   --c-action: var(--c-hi);
@@ -107,7 +113,7 @@ nav {
   margin: var(--s-s1-r);
   padding: var(--s-m1-y) var(--s-m1-x);
   gap: 1rem 2rem;
-  z-index: 10;
+  z-index: var(--z-nav);
   font-weight: 500;
   border-radius: var(--s-s1-r);
   box-shadow: 0 0 var(--s-s1-r) 0 var(--c-hi);
@@ -126,6 +132,7 @@ form {
 
   input,
   button,
+  .button,
   label {
     &:not(:hover, :focus, :active) { border-color: #0000; }
   }
@@ -245,6 +252,7 @@ code {
 a,
 input,
 button,
+.button,
 label {
   &:hover,
   &:focus,
@@ -285,8 +293,9 @@ a {
 
   &:hover,
   &:focus,
-  &:active {
-    background-position-y: calc(0.5*var(--s-s0-r));
+  &:active,
+  &[href^="#"] {
+    background-position-y: calc(0.7*var(--s-s0-r));
     transition: color 300ms ease-in,
       border-color 300ms ease-in,
       outline-color 300ms ease-in,
@@ -297,10 +306,13 @@ a {
   &.link-plain { background: #0000; }
 
   &[target="_blank"] { cursor: alias; }
+
+  &.button { display: inline-block; }
 }
 
 input,
 button,
+.button,
 label,
 .placeholder {
   font-size: var(--s-font);
@@ -319,6 +331,7 @@ label,
 
 input,
 button,
+.button,
 label {
   border: 1px solid currentColor;
 
@@ -333,6 +346,7 @@ label {
 
 input,
 button,
+.button,
 .placeholder { padding: var(--s-input-y) var(--s-input-x); }
 
 label {
@@ -400,7 +414,7 @@ label {
       opacity: 0;
       transition: color 700ms ease-out,
         opacity 700ms ease-out 500ms;
-      will-change: opacity;
+      will-change: color, opacity;
     }
 
     &::before {
@@ -435,14 +449,11 @@ h6 {
   color: var(--c-hi);
   margin: var(--s-m0-y) var(--s-m0-x);
   max-width: var(--s-line-x);
-
-  a,
-  strong { font-weight: inherit; }
 }
 
 h1 {
   font-size: 2.8em;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 h2 {
@@ -516,6 +527,7 @@ strong {
   pointer-events: none;
   clip-path: polygon(-140% 0%, -100% 0%, -200% 100%, -240% 100%);
   transition: clip-path 900ms ease-in;
+  will-change: clip-path;
 
   .intro-concept-art:hover & { transition: clip-path 300ms ease-out; }
 }
@@ -524,6 +536,7 @@ strong {
   background-color: inherit;
   clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
   transition: clip-path 1500ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 800ms;
+  will-change: clip-path;
 
   .intro-concept-art:hover & { transition: clip-path 300ms ease-out; }
 }
@@ -542,10 +555,12 @@ strong {
 
 .info { cursor: help; }
 
+.perk,
+.peer-demo { width: 100%; }
+
 .peer-demo {
   display: block;
   margin: var(--s-m0-r) 0;
-  width: 100dvw;
   height: 60dvh;
 }
 
@@ -566,6 +581,7 @@ strong {
   max-width: calc(2*var(--s-line-x));
 
   & > section {
+    position: relative;
     flex: 1 1 50%;
     min-width: calc(0.75*var(--s-line-x));
     max-width: var(--s-line-x);
@@ -577,6 +593,57 @@ strong {
 }
 
 .jump {
+  display: block;
   position: absolute;
-  top: -6rem;
+  inset: var(--s-jump-y) var(--s-jump-x);
+  pointer-events: none;
+  z-index: var(--z-jump);
+  opacity: 0;
+  transition: opacity 900ms ease-out;
+  will-change: opacity;
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: var(--s-jumped-y) var(--s-jumped-x);
+    border-radius: var(--s-s1-r);
+    border: var(--s-s1-r) solid var(--c-active);
+  }
+
+  &:target {
+    opacity: 1;
+    transition: opacity 300ms ease-in;
+  }
+}
+
+.copy {
+  position: relative;
+  cursor: copy;
+
+  &::after {
+    content: 'Copied to clipboard';
+    display: block;
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
+    padding: var(--s-s0-y) var(--s-s0-x);
+    border-radius: var(--s-s1-r);
+    white-space: nowrap;
+    pointer-events: none;
+    color: var(--c-good-0);
+    background: var(--c-good-1);
+    font-weight: 900;
+    opacity: 0;
+    transition: opacity 2000ms ease-in 500ms,
+      transform 2000ms ease-in 500ms;
+    will-change: opacity, transform;
+  }
+
+  &.copied::after {
+    opacity: 1;
+    transform: translate(-50%, -100%);
+    transition: opacity 200ms ease-out,
+      transform 200ms ease-out;
+  }
 }

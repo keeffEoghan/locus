@@ -40,10 +40,10 @@ const etaCrypto = new Date('2024-01-29T09:00:00-08:00');
 const etaCard = new Date('2024-01-27T09:00:00-08:00');
 
 const fillTil = (til, match) => each(($e) => {
-    const { til: tilTo, title } = $e.dataset;
+    const { dataset: { til: tilTo, title }, classList } = $e;
 
     $e.textContent = tilTo.replace('$', til);
-    title && ($e.title = title) && $e.classList.add('info');
+    title && ($e.title = title) && classList.add('info');
   },
   document.querySelectorAll(match));
 
@@ -127,6 +127,22 @@ $art.addEventListener('pointerout', () => {
   }
   catch(e) { console.warn(e); }
 })();
+
+// Copy to clipboard.
+
+const { clipboard } = navigator;
+
+each(($c) => $c.addEventListener('click', async () => {
+    const { textContent, classList } = $c;
+
+    try {
+      await clipboard.writeText(textContent);
+      classList.add('copied');
+      setTimeout(() => classList.remove('copied'), 3e2);
+    }
+    catch(e) { console.warn("Can't copy to clipboard", $c, e); }
+  }),
+  document.querySelectorAll('.copy'));
 
 // Reward: `Peer into the Flow`.
 
