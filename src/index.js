@@ -1,9 +1,21 @@
-import { each } from '@epok.tech/fn-lists';
-import { fit } from '@thi.ng/math/fit';
+import { each } from '@epok.tech/fn-lists/each';
+import { reduce } from '@epok.tech/fn-lists/reduce';
+import { range } from '@epok.tech/fn-lists/range';
+import { fitClamped } from '@thi.ng/math/fit';
+import { distSq2 } from '@thi.ng/vectors/distsq';
+import { setC2 } from '@thi.ng/vectors/setc';
 import { mix } from '@thi.ng/math/mix';
 import throttle from 'lodash/fp/throttle';
 
 const { min, max, abs, round, floor, ceil, random } = Math;
+const { indexOf } = Array.prototype;
+
+const cache = {};
+
+function stopEvent(e) {
+  e.preventDefault();
+  e.stopPropagation();
+}
 
 // Progressively load images.
 
@@ -81,43 +93,52 @@ $subscribe.addEventListener('submit', async (e) => {
 // Concept art interactions.
 /** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
 
-const $art = document.querySelector('.peel-art');
-const $layers = document.querySelectorAll('.peel-art-layer');
+const $peel = document.querySelector('.peel-art');
+const $peelLayers = document.querySelectorAll('.peel-art-layer');
+const $peelStyle = document.querySelector('.peel-art-style');
 
-const peelMove = throttle(1e2, (e) => {
+$peel.classList.add('peel-far', 'peel-intro');
+setTimeout(() => $peel.classList.remove('peel-far'), 100+2e3);
+setTimeout(() => $peel.classList.remove('peel-intro'), 4500+2e3);
+
+$peel.addEventListener('pointermove', throttle(1e2, (e) => {
   const { clientX: cx, clientY: cy } = e;
-  const { y: bt, right: br, bottom: bb, x: bl } = $art.getBoundingClientRect();
-  const y = fit(cy, bb, bt, 0, 1);
-  const x = fit(cx, br, bl, $layers.length+1, 0);
-  const w = mix(3e-2, 1.1, y);
+  const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
+  const [v0, v1] = (cache.peelMove ?? [range(2, Infinity), []]);
 
-  each(($l, i) => {
+  const [x, y] = setC2(v1,
+    fitClamped(cx, br, bl, $peelLayers.length+1, 0),
+    fitClamped(cy, bb, bt, 0, 1));
+
+  if(distSq2(v0, v1) < 5e-2) { return; }
+
+  const w = mix(3e-2, 1.1, y);
+  const { disabled } = $peelStyle;
+
+  $peelStyle.textContent = reduce((to, $l, i) => {
       const o = 0.5+((i-x)*w);
       const fill = $l.classList.contains('peel-art-layer-fill');
       const pl = mix(0, 1e2, 1-fill && o);
       const pr = mix(0, 1e2, +fill || (o+w));
+      const n = indexOf.call($peel.children, $l)+1;
 
-      $l.style.clipPath = `polygon(
-        ${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%
-      )`;
+      return to+`.peel-art-layer:nth-child(${n}) { `+
+        `clip-path: polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%);`+
+      ` }\n`;
     },
-    $layers);
+    $peelLayers, '');
 
-  e.preventDefault();
+  $peelStyle.disabled = disabled;
+  setC2(cache.peelMove, v1, v0);
+}));
+
+$peel.addEventListener('pointerenter', () => {
+  $peel.classList.remove('peel-far', 'peel-intro');
+  $peelStyle.disabled = false;
 });
 
-function peelStop() {
-  peelMove.cancel();
-  each(($l) => $l.style.clipPath = '', $layers);
-}
-
-$art.addEventListener('pointermove', peelMove);
-$art.addEventListener('pointerout', peelStop);
-$art.addEventListener('contextmenu', (e) => e.preventDefault());
-
-$art.classList.add('peel-far', 'peel-intro');
-setTimeout(() => $art.classList.remove('peel-far'), 100+2e3);
-setTimeout(() => $art.classList.remove('peel-intro'), 4500+2e3);
+$peel.addEventListener('pointerout', () => $peelStyle.disabled = true);
+$peel.addEventListener('contextmenu', stopEvent);
 
 // Crypto currency conversion.
 

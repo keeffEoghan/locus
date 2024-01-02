@@ -10,16 +10,25 @@
   font-weight: 400;
   src: url(../fonts/material-symbols/MaterialSymbolsRounded-FILL-GRAD-opsz-wght.woff2) format('woff2'),
     url(../fonts/material-symbols/MaterialSymbolsRounded-FILL-GRAD-opsz-wght.ttf) format('truetype');
+
+  /**
+   * @todo Fix the flash of icon fallback text.
+   * @see [SO to watch for the font load](https://stackoverflow.com/a/48121477)
+   * @see [SO for `font-display`](https://stackoverflow.com/a/53301684)
+   */
+  font-display: block;
 }
 
 :root {
   --c-hi: #fff;
   --c-lo: #333c;
-  --c-base: #161616;
+  --c-base-root: #161616;
+  --c-base: var(--c-base-root);
   --c-accent: #000;
   --c-text: #fffc;
   --c-code: var(--c-hi);
-  --c-action: var(--c-hi);
+  --c-action-0: var(--c-hi);
+  --c-action-1: #0000;
   --c-active: #2d9cdb;
   --c-error: #f43;
   --c-warn: #f92;
@@ -36,15 +45,15 @@
   --s-m0-r: 1rem;
   --s-m1-x: 1.1rem;
   --s-m1-y: 0.5rem;
-  --s-m1-r: 0.5rem;
   --s-s0-x: 5px;
   --s-s0-y: 1px;
   --s-s0-r: 2px;
   --s-s1-x: 8px;
   --s-s1-y: 6px;
   --s-s1-r: 3px;
-  --s-s2-x: 4px;
+  --s-s2-x: 2px;
   --s-s2-y: 1px;
+  --s-s2-r: 2px;
   --s-line-x: 30rem;
   --s-icon: 3rem;
   --s-input-x: 0.7rem;
@@ -71,12 +80,12 @@ html {
   font-weight: 100;
   overflow: hidden auto;
   scroll-behavior: smooth;
+  background: var(--c-base);
 }
 
 html,
 nav {
   color: var(--c-text);
-  background: var(--c-base);
   font-size: var(--s-font-m);
 }
 
@@ -109,27 +118,30 @@ nav {
   --c-text: #000c;
   --c-hi: #000;
   --c-base: #fff;
-  --c-action: var(--c-hi);
+  --c-action-0: var(--c-hi);
+  --c-action-1: var(--c-base);
   --s-font-m: 1.1rem;
   position: sticky;
   inset: var(--s-s1-r) 0;
   margin: var(--s-s1-r);
   padding: var(--s-m1-y) var(--s-m1-x);
-  gap: 1rem 1.5rem;
+  gap: 0.5rem 1.5rem;
   z-index: var(--z-nav);
   font-weight: 500;
   border-radius: var(--s-s1-r);
-  box-shadow: 0 0 var(--s-s1-r) 0 var(--c-hi);
+  background: var(--c-base-root);
+  box-shadow: 0 0 var(--s-s1-r) 0 var(--c-base-root);
   /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
 
   /* @media (min-width: 40rem) {} */
 }
 
 form {
-  gap: var(--s-m1-r);
+  gap: var(--s-s2-r);
   padding: var(--s-s2-y) var(--s-s2-x);
   border: 1px solid currentColor;
   border-radius: var(--s-input-r);
+  background: var(--c-base);
   overflow: hidden;
 
   input,
@@ -266,10 +278,7 @@ label {
     outline-color: currentColor;
   }
 
-  &.icon {
-    border-radius: var(--s-icon);
-    background: #0000;
-  }
+  &.icon { border-radius: var(--s-icon); }
 
   &.icon-in { padding: 0 0 0 var(--s-input-x); }
 
@@ -286,7 +295,7 @@ a {
   cursor: pointer;
   text-decoration: none;
   border-radius: var(--s-s0-r);
-  color: var(--c-action);
+  color: var(--c-action-0);
   background-image: linear-gradient(to top,
     currentColor var(--s-s0-r), #0000 var(--s-s0-r));
   background-repeat: repeat no-repeat;
@@ -327,7 +336,7 @@ label,
   vertical-align: middle;
   cursor: pointer;
   text-decoration: none;
-  background: #0000;
+  background: var(--c-action-1);
   color: inherit;
   transition: color 900ms ease-out,
     border-color 900ms ease-out,
@@ -524,9 +533,13 @@ strong { font-weight: 900; }
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  touch-action: none;
   background: #e6e6e6;
   /* cursor: move; */
 }
+
+.peel-art-main,
+.peel-art-layer { pointer-events: none; }
 
 .peel-art-main {
   max-height: 60vmin;
@@ -543,7 +556,6 @@ strong { font-weight: 900; }
   margin: auto;
   width: 100%;
   height: 100%;
-  pointer-events: none;
   clip-path: polygon(-140% 0%, -100% 0%, -200% 100%, -240% 100%);
   transition: clip-path 900ms ease-in;
   will-change: clip-path;
@@ -733,10 +745,12 @@ strong { font-weight: 900; }
     display: block;
     position: absolute;
     inset: auto 0 100% auto;
-    width: auto;
+    width: var(--info-w);
     max-width: var(--s-line-x);
     padding: var(--s-s0-y) var(--s-s0-x);
-    border-radius: var(--s-s1-r);
+    border-radius: var(--s-s1-r) var(--s-s1-r) 0 var(--s-s1-r);
+    font-family: Inter, sans-serif;
+    font-size: var(--s-font-m);
     pointer-events: none;
     opacity: 0;
     transition: opacity 500ms ease-in 500ms,
@@ -764,7 +778,8 @@ strong { font-weight: 900; }
     display: inline-block;
     position: absolute;
     inset: auto auto 100%;
-    transform: translateY(50%);
+    transform: translateY(80%);
+    font-family: monospace, sans-serif;
     font-size: var(--s-font-s);
     line-height: 1;
     text-decoration: none;
@@ -775,6 +790,7 @@ strong { font-weight: 900; }
 
   &::before {
     content: attr(title);
+    border: 1px solid var(--c-active);
     color: var(--c-accent);
     background: var(--c-hi);
     font-weight: 100;
@@ -805,8 +821,10 @@ strong { font-weight: 900; }
 
   &::before {
     content: 'Click to copy';
+    border: none;
     font-weight: 900;
-    color: var(--c-active);
+    color: var(--c-good-1);
+    background: var(--c-good-0);
   }
 
   &.copied {
@@ -821,4 +839,10 @@ strong { font-weight: 900; }
       }
     }
   }
+}
+
+.pay-info {
+  line-height: 1.4;
+  font-size: 1.8rem;
+  font-weight: 900;
 }
