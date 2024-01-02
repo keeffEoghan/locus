@@ -22,35 +22,37 @@ each(($f) => $f.addEventListener('click', () =>
 
 // Countdowns to deadlines.
 
-const now = new Date();
 const minute = 60*1e3;
 const hour = 60*minute;
 const day = 24*hour;
-
-function toTil(t, d, h, m) {
-  t -= now;
-  d ??= floor(t/day);
-  h ??= floor((t -= (day*d))/hour);
-  m ??= floor((t -= (hour*h))/minute);
-
-  return `${d && `${d}d`}${h && `:${h}h`}${m && `:${m}m`}`;
-}
-
 const etaCrypto = new Date('2024-01-29T09:00:00-08:00');
 const etaCard = new Date('2024-01-27T09:00:00-08:00');
 
-const fillTil = (til, match) => each(($e) => {
-    const { dataset: { til: tilTo, title }, classList } = $e;
+function toTil(t, s) {
+  const d = floor(t/day);
+  const h = floor((t -= (day*d))/hour);
+  const m = floor((t -= (hour*h))/minute);
 
-    $e.textContent = tilTo.replace('$', til);
-    title && ($e.title = title) && classList.add('info');
-  },
-  document.querySelectorAll(match));
+  return s.replace(/\$d/g, d).replace(/\$h/g, h).replace(/\$m/g, m);
+}
 
-fillTil(toTil(etaCrypto), '.eta-crypto');
-fillTil(toTil(etaCard), '.eta-card');
-fillTil(toTil(etaCrypto, null, '', ''), '.eta-crypto-s');
-fillTil(toTil(etaCard, null, '', ''), '.eta-card-s');
+function tickTime() {
+  const now = new Date();
+
+  const fillTil = (t, match) => each(($e) => {
+      const { dataset: { til, title }, classList } = $e;
+
+      $e.textContent = toTil(t, til);
+      title && ($e.title = title) && classList.add('info');
+    },
+    document.querySelectorAll(match));
+
+  fillTil(etaCrypto-now, '.eta-crypto');
+  fillTil(etaCard-now, '.eta-card');
+}
+
+tickTime();
+setInterval(tickTime, minute*0.5);
 
 // Subscription.
 
@@ -79,10 +81,10 @@ $subscribe.addEventListener('submit', async (e) => {
 // Concept art interactions.
 /** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
 
-const $art = document.querySelector('.intro-concept-art');
-const $layers = document.querySelectorAll('.intro-concept-art-layer');
+const $art = document.querySelector('.peel-art');
+const $layers = document.querySelectorAll('.peel-art-layer');
 
-const move = throttle(1e2, (e) => {
+const peelMove = throttle(1e2, (e) => {
   const { clientX: cx, clientY: cy } = e;
   const { y: bt, right: br, bottom: bb, x: bl } = $art.getBoundingClientRect();
   const y = fit(cy, bb, bt, 0, 1);
@@ -91,7 +93,7 @@ const move = throttle(1e2, (e) => {
 
   each(($l, i) => {
       const o = 0.5+((i-x)*w);
-      const fill = $l.classList.contains('intro-concept-art-layer-fill');
+      const fill = $l.classList.contains('peel-art-layer-fill');
       const pl = mix(0, 1e2, 1-fill && o);
       const pr = mix(0, 1e2, +fill || (o+w));
 
@@ -100,14 +102,22 @@ const move = throttle(1e2, (e) => {
       )`;
     },
     $layers);
+
+  e.preventDefault();
 });
 
-$art.addEventListener('pointermove', move);
-
-$art.addEventListener('pointerout', () => {
-  move.cancel();
+function peelStop() {
+  peelMove.cancel();
   each(($l) => $l.style.clipPath = '', $layers);
-});
+}
+
+$art.addEventListener('pointermove', peelMove);
+$art.addEventListener('pointerout', peelStop);
+$art.addEventListener('contextmenu', (e) => e.preventDefault());
+
+$art.classList.add('peel-far', 'peel-intro');
+setTimeout(() => $art.classList.remove('peel-far'), 100+2e3);
+setTimeout(() => $art.classList.remove('peel-intro'), 4500+2e3);
 
 // Crypto currency conversion.
 
@@ -133,12 +143,12 @@ $art.addEventListener('pointerout', () => {
 const { clipboard } = navigator;
 
 each(($c) => $c.addEventListener('click', async () => {
-    const { textContent, classList } = $c;
+    const { textContent, dataset, classList } = $c;
 
     try {
-      await clipboard.writeText(textContent);
+      await clipboard.writeText(dataset.copy ?? textContent);
       classList.add('copied');
-      setTimeout(() => classList.remove('copied'), 3e2);
+      setTimeout(() => classList.remove('copied'), 1500);
     }
     catch(e) { console.warn("Can't copy to clipboard", $c, e); }
   }),
