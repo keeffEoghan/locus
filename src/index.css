@@ -491,7 +491,6 @@ ol {
 ul {
   padding-left: var(--s-m1-x);
   list-style-type: "~ ";
-  /* list-style-type: "— "; */
 }
 
 ol { padding-left: var(--s-m1-x); }
@@ -733,8 +732,7 @@ strong { font-weight: 900; }
   &::before {
     display: block;
     position: absolute;
-    left: -50%;
-    bottom: 100%;
+    inset: auto 0 100% auto;
     width: auto;
     max-width: var(--s-line-x);
     padding: var(--s-s0-y) var(--s-s0-x);
@@ -786,7 +784,24 @@ strong { font-weight: 900; }
 .copy {
   cursor: copy;
 
-  &::after { content: '+'; }
+  &::after {
+    content: 'content_copy';
+    transform: translateY(40%) scale(1.2);
+    /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
+    font-family: 'Material Symbols Rounded';
+    /* font-weight: normal; */
+    font-style: normal;
+    /* font-size: 1.5rem; */
+    /* display: inline-block; */
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
 
   &::before {
     content: 'Click to copy';
