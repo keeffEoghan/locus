@@ -32,6 +32,9 @@ each(($f) => $f.addEventListener('click', () =>
     : $f.requestFullscreen())),
   document.querySelectorAll('figure'));
 
+each(($f) => $f.addEventListener('click', (e) => e.stopPropagation()),
+  document.querySelectorAll('figcaption'));
+
 // Countdowns to deadlines.
 
 const minute = 60*1e3;
@@ -174,6 +177,16 @@ each(($c) => $c.addEventListener('click', async () => {
     catch(e) { console.warn("Can't copy to clipboard", $c, e); }
   }),
   document.querySelectorAll('.copy'));
+
+// Reward: `Artifact`.
+
+const $artifactVideo = document.querySelector('.artifact-video');
+
+const artifactFlip = () =>
+  $artifactVideo.classList.toggle('playing', !$artifactVideo.paused);
+
+$artifactVideo.addEventListener('play', artifactFlip);
+$artifactVideo.addEventListener('pause', artifactFlip);
 
 // Reward: `Peer into the Flow`.
 
