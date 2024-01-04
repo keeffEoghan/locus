@@ -1,7 +1,7 @@
 import { each } from '@epok.tech/fn-lists/each';
 import { reduce } from '@epok.tech/fn-lists/reduce';
 import { range } from '@epok.tech/fn-lists/range';
-import { fitClamped } from '@thi.ng/math/fit';
+import { fit } from '@thi.ng/math/fit';
 import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
 import { mix } from '@thi.ng/math/mix';
@@ -12,9 +12,12 @@ const { indexOf } = Array.prototype;
 
 const cache = {};
 
+const stopEffect = (e) => e.preventDefault();
+const stopBubble = (e) => e.stopPropagation();
+
 function stopEvent(e) {
-  e.preventDefault();
-  e.stopPropagation();
+  stopEffect(e);
+  stopBubble(e);
 }
 
 // Progressively load images.
@@ -32,7 +35,7 @@ each(($f) => $f.addEventListener('click', () =>
     : $f.requestFullscreen())),
   document.querySelectorAll('figure'));
 
-each(($f) => $f.addEventListener('click', (e) => e.stopPropagation()),
+each(($f) => $f.addEventListener('click', stopBubble),
   document.querySelectorAll('figcaption'));
 
 // Details.
@@ -83,7 +86,7 @@ const $subscribe = document.querySelector('#subscribe');
 const $submit = $subscribe.querySelector('[type="submit"]');
 
 $subscribe.addEventListener('submit', async (e) => {
-  e.preventDefault();
+  stopEffect(e);
   $submit.disabled = true;
 
   const body = new FormData($subscribe);
@@ -105,70 +108,82 @@ $subscribe.addEventListener('submit', async (e) => {
 /** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
 
 const $peel = document.querySelector('.peel-art');
-const $peelLayers = document.querySelectorAll('.peel-art-layer');
-const $peelStyle = document.querySelector('.peel-art-style');
+const $peelLayers = $peel.querySelectorAll('.peel-art-layer');
+const $peelStyle = $peel.querySelector('.peel-art-style');
 
 $peel.classList.add('peel-far', 'peel-intro');
 setTimeout(() => $peel.classList.remove('peel-far'), 100+2e3);
 setTimeout(() => $peel.classList.remove('peel-intro'), 4500+2e3);
 
-$peel.addEventListener('pointermove', throttle(1e2, (e) => {
+function peelOn(e) {
+  $peel.classList.remove('peel-far', 'peel-intro');
+  $peel.parentElement.focus();
+  $peelStyle.disabled = false;
+}
+
+function peelOff(e) {
+  $peel.parentElement.blur();
+  $peelStyle.disabled = true;
+}
+
+function peelMove(e) {
   const { clientX: cx, clientY: cy } = e;
   const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
   const [v0, v1] = (cache.peelMove ?? [range(2, Infinity), []]);
-
-  const [x, y] = setC2(v1,
-    fitClamped(cx, br, bl, $peelLayers.length+1, 0),
-    fitClamped(cy, bb, bt, 0, 1));
+  const [x, y] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
 
   if(distSq2(v0, v1) < 5e-2) { return; }
 
+  const l = x*($peelLayers.length+1);
   const w = mix(3e-2, 1.1, y);
   const { disabled } = $peelStyle;
 
   $peelStyle.textContent = reduce((to, $l, i) => {
-      const o = 0.5+((i-x)*w);
+      const n = indexOf.call($peel.children, $l)+1;
+      const o = 0.5+((i-l)*w);
       const fill = $l.classList.contains('peel-art-layer-fill');
       const pl = mix(0, 1e2, 1-fill && o);
       const pr = mix(0, 1e2, +fill || (o+w));
-      const n = indexOf.call($peel.children, $l)+1;
+      const p = `polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%)`;
 
-      return to+`.peel-art-layer:nth-child(${n}) { `+
-        `clip-path: polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%);`+
-      ` }\n`;
+      return to+
+        `.peel-art-layer:nth-child(${n}) { clip-path: ${p} !important; }\n`;
     },
     $peelLayers, '');
 
-  $peelStyle.disabled = disabled;
+  $peelStyle.disabled = ((x < 0) || (x > 1) || (y < 0) || (y > 1));
   setC2(cache.peelMove, v1, v0);
-}));
+}
 
-$peel.addEventListener('pointerenter', () => {
-  $peel.classList.remove('peel-far', 'peel-intro');
-  $peelStyle.disabled = false;
-});
-
-$peel.addEventListener('pointerout', () => $peelStyle.disabled = true);
+$peel.addEventListener('pointermove', throttle(1e2, peelMove));
+$peel.addEventListener('pointerdown', peelOn);
+$peel.addEventListener('pointerenter', peelOn);
+$peel.addEventListener('pointerout', peelOff);
+$peel.addEventListener('pointerup', peelOff);
 $peel.addEventListener('contextmenu', stopEvent);
 
 // Crypto and currency conversion.
 
 each(async ($c) => {
     try {
-      const { textContent, title, dataset: d } = $c;
+      const { textContent: content, title, dataset: d } = $c;
       const f = d.coinAt || 'eth';
       const t = d.coinTo || 'usd';
-      const v = d.coinV || 0.01;
-      const u = `https://api.coinconvert.net/convert/${f}/${t}?amount=${v}`;
-      const c = round((await (await fetch(u)).json())[t.toUpperCase()]);
+      const s = d.coinSum || 0.01;
+      const mc = d.coinText || '(\\$)([0-9\\.]+)()';
+      const mt = d.coinTitle || `()([0-9\\.]+)(${t})`;
+      const p = parseInt(d.coinPlace || 0, 10);
+      const u = `https://api.coinconvert.net/convert/${f}/${t}?amount=${s}`;
+      let to = (await (await fetch(u)).json())[t.toUpperCase()];
 
-      $c.textContent = textContent.replace(/(\$)[0-9\.]+/gi, '$1'+c);
-      $c.title = title.replace(/[0-9\.]+(USD)/gi, c+' $1');
+      to = ((p > 0)? to.toFixed(p) : round(to));
+      $c.textContent = content.replace(new RegExp(mc, 'gi'), `$1${to}$3`);
+      $c.title = title.replace(new RegExp(mt, 'gi'), `$1${to}$3`);
     }
     catch(e) { console.warn(e); }
   },
-  document.querySelectorAll('[data-coin-to]'));
-
+  document.querySelectorAll(`[data-coin-at],[data-coin-to],[data-coin-sum],
+    [data-coin-text],[data-coin-title]`));
 // Copy to clipboard.
 
 const { clipboard } = navigator;
@@ -187,13 +202,19 @@ each(($c) => $c.addEventListener('click', async () => {
 
 // Reward: `Artifact`.
 
-const $artifactVideo = document.querySelector('.artifact-video');
+const $artifactView = document.querySelector('.artifact-view');
+const $artifactVideo = $artifactView.querySelector('.artifact-video');
+const $artifactStill = $artifactView.querySelector('.artifact-still');
 
 const artifactFlip = () =>
   $artifactVideo.classList.toggle('playing', !$artifactVideo.paused);
 
 $artifactVideo.addEventListener('play', artifactFlip);
 $artifactVideo.addEventListener('pause', artifactFlip);
+$artifactVideo.addEventListener('click', stopBubble);
+$artifactStill.addEventListener('click', stopBubble);
+$artifactVideo.addEventListener('contextmenu', stopEvent);
+$artifactStill.addEventListener('contextmenu', stopEvent);
 
 // Reward: `Peer into the Flow`.
 
@@ -201,6 +222,20 @@ const $peer = document.querySelector('.peer');
 const $peerCamera = $peer.querySelector('.peer-camera');
 const $peerRandom = $peer.querySelector('.peer-random');
 const $peerDemo = $peer.querySelector('.peer-demo');
+// Seeds that look good and are easy to use.
+const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
+
+const peerSeed = (to = ceil(random()*66)) =>
+  $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
+    const q = new URLSearchParams($2);
+
+    q.set('seed', to);
+
+    return $1+q;
+  });
+
+peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
+$peerRandom.addEventListener('click', () => peerSeed());
 
 $peerCamera.addEventListener('change', () => {
   const { allow, dataset } = $peerDemo;
@@ -211,12 +246,3 @@ $peerCamera.addEventListener('change', () => {
   $peerDemo.allow = to;
   $peerDemo.src = $peerDemo.src;
 });
-
-$peerRandom.addEventListener('click', () =>
-  $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
-    const q = new URLSearchParams($2);
-
-    q.set('seed', ceil(random()*66));
-
-    return $1+q;
-  }));
