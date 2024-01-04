@@ -40,6 +40,7 @@
   --s-font-s: 0.6rem;
   --s-l0-x: 2rem;
   --s-l0-y: 2rem;
+  --s-l0-r: 2rem;
   --s-m0-x: 2rem;
   --s-m0-y: 1rem;
   --s-m0-r: 1rem;
@@ -56,9 +57,10 @@
   --s-s2-r: 2px;
   --s-line-x: 30rem;
   --s-icon: 3rem;
+  --s-icon-s: 30px;
   --s-input-x: 0.7rem;
   --s-input-y: 0.7rem;
-  --s-input-r: 2rem;
+  --s-input-r: 1.7rem;
   --s-jump-x: 0;
   --s-jump-y: -9rem;
   --s-jumped-x: 0;
@@ -215,13 +217,33 @@ figure {
   cursor: zoom-in;
   background: var(--c-base);
 
-  &:fullscreen { cursor: zoom-out; }
+  &:fullscreen {
+    cursor: zoom-out;
+    padding: var(--s-l0-y) var(--s-l0-x);
+
+    &::after {
+      content: '✖';
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      inset: 0 0 auto auto;
+      margin: var(--s-s1-r);
+      font-size: 1.2rem;
+      width: var(--s-icon-s);
+      height: var(--s-icon-s);
+      border-radius: var(--s-icon-s);
+      border: 1px solid currentColor;
+      cursor: pointer;
+    }
+  }
 }
 
 figcaption {
   position: absolute;
   bottom: 0;
-  max-height: 2.6em;
+  max-height: 2.8em;
   padding: var(--s-s1-y) var(--s-s1-x);
   margin: var(--s-s1-r);
   overflow: auto;
@@ -318,7 +340,7 @@ a {
   }
 
   &.icon,
-  &.link-plain { background: #0000; }
+  &.link-plain { background-image: none; }
 
   &[target="_blank"] { cursor: alias; }
 
@@ -488,11 +510,12 @@ h3 {
 
 h4,
 h5,
-h6 { font-size: 1em; }
+h6 { font-size: 1.1em; }
 
 p,
 ul,
-ol {
+ol,
+details {
   margin: var(--s-m0-y) var(--s-m0-x);
   max-width: var(--s-line-x);
 }
@@ -504,7 +527,64 @@ ul {
 
 ol { padding-left: var(--s-m1-x); }
 
-li { margin: var(--s-m0-y) 0; }
+li { margin: var(--s-m1-y) 0; }
+
+details {
+  /** @todo [Animate](https://css-tricks.com/how-to-animate-the-details-element-using-waapi/) */
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: var(--s-input-r);
+  transition: color 900ms ease-out,
+    border-color 900ms ease-out,
+    outline-color 900ms ease-out;
+  will-change: color, border-color, outline-color;
+
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: var(--c-active);
+    outline-color: currentColor;
+    transition: color 300ms ease-in,
+      border-color 300ms ease-in,
+      outline-color 300ms ease-in;
+  }
+
+  & > p,
+  & > ul,
+  & > ol {
+    margin-left: var(--s-input-x);
+    margin-right: var(--s-input-x);
+  }
+}
+
+summary {
+  line-height: 1.5;
+  font-size: var(--s-font-m);
+  padding: var(--s-input-y) var(--s-input-x);
+  background: var(--c-action-1);
+  vertical-align: middle;
+  cursor: pointer;
+  transition: color 900ms ease-out;
+  will-change: color;
+
+  &.icon-in { padding: 0 0 0 var(--s-input-x); }
+
+  details:hover > &,
+  details:focus > &,
+  details:active > & {
+    color: var(--c-active);
+    transition: color 300ms ease-in;
+  }
+
+  &::before {
+    content: '';
+    padding-left: 0.4rem;
+  }
+}
 
 em,
 strong { color: var(--c-hi); }
@@ -544,10 +624,11 @@ strong { font-weight: 900; }
 .peel-art-main {
   max-height: 60vmin;
   max-width: 60vmin;
-  /* max-height: 75vh;
-  max-height: 75dvh;
-  max-width: 75vw;
-  max-width: 75dvw; */
+
+  figure:fullscreen & {
+    max-height: 90vmin;
+    max-width: 90vmin;
+  }
 }
 
 .peel-art-layer {
@@ -666,18 +747,18 @@ strong { font-weight: 900; }
   padding: var(--s-m0-r);
 }
 
-.artizen-info,
-.card-info {
+.split {
+  --split-n: 2;
   flex: 1 1 auto;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
   align-items: stretch;
-  max-width: calc(2*var(--s-line-x));
+  max-width: calc(var(--s-line-x)*var(--split-n));
 
   & > section {
     position: relative;
-    flex: 1 1 50%;
+    flex: 1 1 calc((100%)/var(--split-n));
     min-width: calc(0.75*var(--s-line-x));
     max-width: var(--s-line-x);
     border: var(--s-s1-r) solid #0000;
@@ -705,6 +786,7 @@ strong { font-weight: 900; }
     position: absolute;
     inset: 0;
     margin: auto;
+    object-fit: cover;
     opacity: 0;
     transition: opacity 900ms ease-out;
 
@@ -716,6 +798,11 @@ strong { font-weight: 900; }
       opacity: 1;
       transition: opacity 300ms ease-in;
     }
+  }
+
+  &:fullscreen .artifact-video {
+    border: solid #0000;
+    border-width: var(--s-l0-y) var(--s-l0-x);
   }
 }
 
@@ -825,7 +912,8 @@ strong { font-weight: 900; }
 
   &::after {
     content: 'content_copy';
-    transform: translateY(40%) scale(1.2);
+    transform: translateY(80%);
+    font-weight: 900;
     /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
     font-family: 'Material Symbols Rounded';
     /* font-weight: normal; */

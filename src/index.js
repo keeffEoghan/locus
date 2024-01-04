@@ -35,6 +35,14 @@ each(($f) => $f.addEventListener('click', () =>
 each(($f) => $f.addEventListener('click', (e) => e.stopPropagation()),
   document.querySelectorAll('figcaption'));
 
+// Details.
+
+// const scroll = { behaviour: 'smooth' };
+
+// each(($d) => $d.addEventListener('toggle', () =>
+//     $d.open && $d.scrollIntoView(true, scroll)),
+//   document.querySelectorAll('details'));
+
 // Countdowns to deadlines.
 
 const minute = 60*1e3;
@@ -143,24 +151,23 @@ $peel.addEventListener('pointerenter', () => {
 $peel.addEventListener('pointerout', () => $peelStyle.disabled = true);
 $peel.addEventListener('contextmenu', stopEvent);
 
-// Crypto currency conversion.
+// Crypto and currency conversion.
 
-(async () => {
-  try {
-    let c = fetch('https://api.coinconvert.net/convert/eth/usd?amount=0.01');
+each(async ($c) => {
+    try {
+      const { textContent, title, dataset: d } = $c;
+      const f = d.coinAt || 'eth';
+      const t = d.coinTo || 'usd';
+      const v = d.coinV || 0.01;
+      const u = `https://api.coinconvert.net/convert/${f}/${t}?amount=${v}`;
+      const c = round((await (await fetch(u)).json())[t.toUpperCase()]);
 
-    c = round((await (await c).json()).USD);
-
-    each(($c) => {
-        const { textContent, title } = $c;
-
-        $c.textContent = textContent.replace(/(\$)[0-9\.]+/gi, '$1'+c);
-        $c.title = title.replace(/[0-9\.]+( USD)/gi, c+' $1');
-      },
-      document.querySelectorAll('.crypto-convert'));
-  }
-  catch(e) { console.warn(e); }
-})();
+      $c.textContent = textContent.replace(/(\$)[0-9\.]+/gi, '$1'+c);
+      $c.title = title.replace(/[0-9\.]+(USD)/gi, c+' $1');
+    }
+    catch(e) { console.warn(e); }
+  },
+  document.querySelectorAll('[data-coin-to]'));
 
 // Copy to clipboard.
 
