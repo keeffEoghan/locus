@@ -2,6 +2,7 @@ import { each } from '@epok.tech/fn-lists/each';
 import { reduce } from '@epok.tech/fn-lists/reduce';
 import { range } from '@epok.tech/fn-lists/range';
 import { fit } from '@thi.ng/math/fit';
+import { clamp01 } from '@thi.ng/math/interval';
 import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
 import { mix } from '@thi.ng/math/mix';
@@ -130,17 +131,18 @@ function peelMove(e) {
   const { clientX: cx, clientY: cy } = e;
   const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
   const [v0, v1] = (cache.peelMove ?? [range(2, Infinity), []]);
-  const [x, y] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
+  const [x1, y1] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
 
   if(distSq2(v0, v1) < 5e-2) { return; }
 
-  const l = x*($peelLayers.length+1);
+  const x = clamp01(x1)*($peelLayers.length+1);
+  const y = clamp01(y1);
   const w = mix(3e-2, 1.1, y);
-  const { disabled } = $peelStyle;
+  const d = $peelStyle.disabled;
 
   $peelStyle.textContent = reduce((to, $l, i) => {
       const n = indexOf.call($peel.children, $l)+1;
-      const o = 0.5+((i-l)*w);
+      const o = 0.5+((i-x)*w);
       const fill = $l.classList.contains('peel-art-layer-fill');
       const pl = mix(0, 1e2, 1-fill && o);
       const pr = mix(0, 1e2, +fill || (o+w));
@@ -151,7 +153,8 @@ function peelMove(e) {
     },
     $peelLayers, '');
 
-  $peelStyle.disabled = ((x < 0) || (x > 1) || (y < 0) || (y > 1));
+  // $peelStyle.disabled = ((x1 < 0) || (x1 > 1) || (y1 < 0) || (y1 > 1));
+  $peelStyle.disabled = d;
   setC2(cache.peelMove, v1, v0);
 }
 

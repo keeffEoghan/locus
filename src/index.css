@@ -295,7 +295,7 @@ figcaption {
     backdrop-filter 300ms ease-out;
   will-change: transform, opacity, backdrop-filter;
 
-  figure:is(:hover, :active) &:not(:hover, :active) {
+  figure:is(:hover, :focus, :active) &:not(:hover, :focus, :active) {
     transform: translateY(100%) translateY(calc(-1*var(--s-s1-y)));
     opacity: 0.3;
     backdrop-filter: none;
@@ -647,6 +647,7 @@ strong { font-weight: 900; }
 .intro-main { order: 1; }
 
 .peel-art {
+  --fit: cover;
   position: relative;
   display: flex;
   justify-content: center;
