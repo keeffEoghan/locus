@@ -221,10 +221,11 @@ $artifactStill.addEventListener('contextmenu', stopEvent);
 
 // Reward: `Peer into the Flow`.
 
-const $peer = document.querySelector('.peer');
-const $peerCamera = $peer.querySelector('.peer-camera');
-const $peerRandom = $peer.querySelector('.peer-random');
-const $peerDemo = $peer.querySelector('.peer-demo');
+const $peerView = document.querySelector('.peer-view');
+const $peerRandom = $peerView.querySelector('.peer-random');
+const $peerCamera = $peerView.querySelector('.peer-camera');
+const $peerFlip = $peerView.querySelector('.peer-flip');
+const $peerDemo = $peerView.querySelector('.peer-demo');
 // Seeds that look good and are easy to use.
 const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
 
@@ -249,3 +250,6 @@ $peerCamera.addEventListener('change', () => {
   $peerDemo.allow = to;
   $peerDemo.src = $peerDemo.src;
 });
+
+$peerFlip.addEventListener('change', () =>
+  (($peerFlip.checked)? $peerView.append($peerDemo) : $peerDemo.remove()));
