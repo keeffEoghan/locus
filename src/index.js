@@ -2,10 +2,11 @@ import { each } from '@epok.tech/fn-lists/each';
 import { reduce } from '@epok.tech/fn-lists/reduce';
 import { range } from '@epok.tech/fn-lists/range';
 import { fit } from '@thi.ng/math/fit';
+import { mix } from '@thi.ng/math/mix';
 import { clamp01 } from '@thi.ng/math/interval';
+import { inOpenRange } from '@thi.ng/math/interval';
 import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
-import { mix } from '@thi.ng/math/mix';
 import throttle from 'lodash/fp/throttle';
 
 const { min, max, abs, round, floor, ceil, random } = Math;
@@ -19,6 +20,24 @@ const stopBubble = (e) => e.stopPropagation();
 function stopEvent(e) {
   stopEffect(e);
   stopBubble(e);
+}
+
+// Scroll if needed.
+
+const scroll = {
+  main: { block: 'start', behaviour: 'smooth', scrollMode: 'if-needed' }
+};
+
+function scrollIntoView($e, s = scroll.main) {
+  if(s.scrollMode !== 'if-needed') { return $e.scrollIntoView(s); }
+
+  const { y: t, right: r, bottom: b, x: l } = $e.getBoundingClientRect();
+  const w = innerWidth;
+  const h = innerHeight;
+
+  return !(inOpenRange(t, 0, h) && inOpenRange(b, 0, h) &&
+    inOpenRange(l, 0, w) && inOpenRange(r, 0, w)) &&
+    ($e.scrollIntoView(s) ?? true);
 }
 
 // Progressively load images.
@@ -41,11 +60,8 @@ each(($f) => $f.addEventListener('click', stopBubble),
 
 // Details.
 
-// const scroll = { behaviour: 'smooth' };
-
-// each(($d) => $d.addEventListener('toggle', () =>
-//     $d.open && $d.scrollIntoView(true, scroll)),
-//   document.querySelectorAll('details'));
+each(($d) => $d.addEventListener('toggle', () => $d.open && scrollIntoView($d)),
+  document.querySelectorAll('details'));
 
 // Countdowns to deadlines.
 
@@ -85,6 +101,7 @@ setInterval(tickTime, minute*0.5);
 
 const $subscribe = document.querySelector('#subscribe');
 const $submit = $subscribe.querySelector('[type="submit"]');
+const $optional = $subscribe.querySelector('.optional');
 
 $subscribe.addEventListener('submit', async (e) => {
   stopEffect(e);
@@ -103,6 +120,11 @@ $subscribe.addEventListener('submit', async (e) => {
       cs.remove('success');
       $subscribe.reset();
     });
+});
+
+$subscribe.addEventListener('focusin', () => {
+  scrollIntoView($subscribe);
+  scrollIntoView($optional);
 });
 
 // Concept art interactions.
