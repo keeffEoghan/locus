@@ -417,6 +417,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@parcel/optimizer-data-url@npm:2.10.3":
+  version: 2.10.3
+  resolution: "@parcel/optimizer-data-url@npm:2.10.3"
+  dependencies:
+    "@parcel/plugin": 2.10.3
+    "@parcel/utils": 2.10.3
+    isbinaryfile: ^4.0.2
+    mime: ^2.4.4
+  checksum: c40a21d1e18418eb85a3298a4f6c44c772c786636d28f42e2e95404b20487c3d37d4c53fdf912c3a4c35fe12ca8e8bdf191b53a8328456679c0882c6f39cdf2b
+  languageName: node
+  linkType: hard
+
 "@parcel/optimizer-htmlnano@npm:2.10.3":
   version: 2.10.3
   resolution: "@parcel/optimizer-htmlnano@npm:2.10.3"
@@ -746,6 +758,15 @@ __metadata:
   peerDependencies:
     "@parcel/core": ^2.10.3
   checksum: 5e1fc73ca2e38f0fcb67cc0851e27a2d0f1bcb01c5b6f6e0ba8195987c32a26111cd27ba26d6d9f0374773c04f98dd88e1e4fcec770a596f0618b4a9bae3e46f
+  languageName: node
+  linkType: hard
+
+"@parcel/transformer-inline-string@npm:2.10.3":
+  version: 2.10.3
+  resolution: "@parcel/transformer-inline-string@npm:2.10.3"
+  dependencies:
+    "@parcel/plugin": 2.10.3
+  checksum: 7539b069413ce7eb4ee9c6afe86092286d7e499df3dd51edf4b0b0a6e1068d67b39fa49fbf456e6925e4f1eb5b8163c4af8ad24d83167408e767274ac13182b9
   languageName: node
   linkType: hard
 
@@ -2323,6 +2344,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isbinaryfile@npm:^4.0.2":
+  version: 4.0.10
+  resolution: "isbinaryfile@npm:4.0.10"
+  checksum: a6b28db7e23ac7a77d3707567cac81356ea18bd602a4f21f424f862a31d0e7ab4f250759c98a559ece35ffe4d99f0d339f1ab884ffa9795172f632ab8f88e686
+  languageName: node
+  linkType: hard
+
 "isexe@npm:^2.0.0":
   version: 2.0.0
   resolution: "isexe@npm:2.0.0"
@@ -2541,6 +2569,8 @@ __metadata:
   dependencies:
     "@epok.tech/fn-lists": ^0.1.4
     "@parcel/core": ^2.10.3
+    "@parcel/optimizer-data-url": 2.10.3
+    "@parcel/transformer-inline-string": 2.10.3
     "@thi.ng/math": ^5.7.7
     "@thi.ng/vectors": ^7.8.13
     lodash: ^4.17.21
@@ -2552,6 +2582,7 @@ __metadata:
     postcss-url: ^10.1.3
     posthtml-markdownit: ^1.3.1
     sharp: ^0.31.1
+    three: ^0.160.0
     typescript: ^4.9.5
   languageName: unknown
   linkType: soft
@@ -2652,6 +2683,15 @@ __metadata:
     braces: ^3.0.2
     picomatch: ^2.3.1
   checksum: 02a17b671c06e8fefeeb6ef996119c1e597c942e632a21ef589154f23898c9c6a9858526246abb14f8bca6e77734aa9dcf65476fca47cedfb80d9577d52843fc
+  languageName: node
+  linkType: hard
+
+"mime@npm:^2.4.4":
+  version: 2.6.0
+  resolution: "mime@npm:2.6.0"
+  bin:
+    mime: cli.js
+  checksum: 1497ba7b9f6960694268a557eae24b743fd2923da46ec392b042469f4b901721ba0adcf8b0d3c2677839d0e243b209d76e5edcbd09cfdeffa2dfb6bb4df4b862
   languageName: node
   linkType: hard
 
@@ -3715,6 +3755,13 @@ __metadata:
   version: 2.2.1
   resolution: "term-size@npm:2.2.1"
   checksum: 1ed981335483babc1e8206f843e06bd2bf89b85f0bf5a9a9d928033a0fcacdba183c03ba7d91814643015543ba002f1339f7112402a21da8f24b6c56b062a5a9
+  languageName: node
+  linkType: hard
+
+"three@npm:^0.160.0":
+  version: 0.160.0
+  resolution: "three@npm:0.160.0"
+  checksum: ae9aadbcdfcbf2afdfeebc376abacd980c4cbcd0177dbe56e1420305bcc3dea9115b865932937b74445d937f463623a496e9784c39e238b32f982d6a22c6311d
   languageName: node
   linkType: hard
 

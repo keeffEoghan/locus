@@ -27,10 +27,13 @@
     "@epok.tech/fn-lists": "^0.1.4",
     "@thi.ng/math": "^5.7.7",
     "@thi.ng/vectors": "^7.8.13",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "three": "^0.160.0"
   },
   "devDependencies": {
     "@parcel/core": "^2.10.3",
+    "@parcel/optimizer-data-url": "2.10.3",
+    "@parcel/transformer-inline-string": "2.10.3",
     "markdown-it-attrs": "^4.1.6",
     "parcel": "^2.10.3",
     "postcss": "^8.0.0",

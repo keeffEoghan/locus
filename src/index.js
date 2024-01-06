@@ -9,8 +9,11 @@ import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
 import throttle from 'lodash/fp/throttle';
 
+import { ScenePlayer } from './scene-player';
+
 const { min, max, abs, round, floor, ceil, random } = Math;
 const { indexOf } = Array.prototype;
+const { parse } = JSON;
 
 const cache = {};
 
@@ -273,3 +276,29 @@ $peerCamera.addEventListener('change', () => {
 
 $peerFlip.addEventListener('change', () =>
   (($peerFlip.checked)? $peerView.prepend($peerDemo) : $peerDemo.remove()));
+
+/** @see [Infinite scroll example](https://googlechrome.github.io/samples/intersectionobserver/) */
+const peerIntersector = new IntersectionObserver((all) =>
+    all.some((e) => e.isIntersecting) && ($peerDemo.src = $peerDemo.src),
+  { threshold: 0.5 });
+
+peerIntersector.observe($peerDemo);
+
+// Exhibition scene.
+
+const $exhibit = document.querySelector('.exhibit');
+let $exhibitDemo;
+
+(async () => {
+  const exhibit = await import('../media/exhibit.json');
+  const player = new ScenePlayer();
+  const exhibitResize = () => player.setSize(innerWidth, innerHeight*0.66);
+
+  player.load(exhibit);
+  player.play();
+  $exhibit.prepend($exhibitDemo = player.dom);
+  $exhibitDemo.classList.add('exhibit-demo');
+
+  addEventListener('resize', exhibitResize());
+  exhibitResize();
+})();
