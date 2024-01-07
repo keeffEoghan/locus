@@ -123,21 +123,21 @@ export function ScenePlayer() {
     for(let i = 0, l = array.length; i < l; i++) { array[i](event); }
   }
 
-  let time, startTime, prevTime;
+  let t, t0, tn;
 
   function animate() {
     t = performance.now();
 
-    try { dispatch(events.update, { time: t-startTime, delta: t-prevTime }); }
+    try { dispatch(events.update, { time: t-t0, delta: t-tn }); }
     catch(e) { console.error((e.message || e), (e.stack || '')); }
 
     renderer.render(scene, camera);
-    prevTime = t;
+    tn = t;
   }
 
   this.play = () => {
     renderer.xr.enabled && dom.append(vrButton);
-    startTime = prevTime = performance.now();
+    t0 = tn = performance.now();
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('keyup', onKeyUp);
     document.addEventListener('pointerdown', onPointerDown);
