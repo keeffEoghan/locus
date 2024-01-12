@@ -1,97 +1,99 @@
 import * as three from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+import { OrbitControls } from './orbit-controls';
 import { VRButton } from './vr-button';
 
 const { stringify } = JSON;
 const { PI: pi } = Math;
 
-const orbitOptions = {
-  enableDamping: true,
-  enablePan: false,
-  enableZoom: false,
-  minDistance: 2,
-  maxDistance: 7,
-  maxPolarAngle: pi*0.58
-};
+const orbitDef = { enableDamping: true };
 
-export function ScenePlayer(dom = document.createElement('div'), target) {
-  const loader = new three.ObjectLoader();
+function dispatch(array, event) {
+  for(let i = 0, l = array.length; i < l; i++) { array[i](event); }
+}
 
-  const events = {
-    init: [],
-    start: [],
-    stop: [],
-    keydown: [],
-    keyup: [],
-    pointerdown: [],
-    pointerup: [],
-    pointermove: [],
-    update: []
-  };
+export class ScenePlayer {
+  #events;
 
-  this.renderer = new three.WebGLRenderer({ antialias: true });
-  this.renderer.setPixelRatio(devicePixelRatio); // TODO: Use player.setPixelRatio()
-  this.vrButton = VRButton.createButton(this.renderer); // eslint-disable-line no-undef
-  dom.appendChild(this.renderer.domElement);
+  constructor(dom, target, orbitProps) {
+    this.loader = new three.ObjectLoader();
 
-  this.scene = undefined;
-  this.camera = undefined;
-  this.orbit = undefined;
-  this.dom = dom;
-  this.target = target ??= this.renderer.domElement;
-  this.width = 500;
-  this.height = 500;
+    this.#events = {
+      init: [],
+      start: [],
+      stop: [],
+      keydown: [],
+      keyup: [],
+      pointerdown: [],
+      pointerup: [],
+      pointermove: [],
+      update: []
+    };
 
-  this.load = (json) => {
-    let project = json.project;
+    this.onKeyDown = (event) => dispatch(this.#events.keydown, event);
+    this.onKeyUp = (event) => dispatch(this.#events.keyup, event);
+    this.onPointerDown = (event) => dispatch(this.#events.pointerdown, event);
+    this.onPointerUp = (event) => dispatch(this.#events.pointerup, event);
+    this.onPointerMove = (event) => dispatch(this.#events.pointermove, event);
 
-    (project.vr !== undefined) &&
-      (this.renderer.xr.enabled = project.vr);
+    this.renderer = new three.WebGLRenderer({ antialias: true });
+    this.renderer.setPixelRatio(devicePixelRatio); // TODO: Use player.setPixelRatio()
+    this.vrButton = VRButton.createButton(this.renderer); // eslint-disable-line no-undef
 
-    (project.shadows !== undefined) &&
-      (this.renderer.shadowMap.enabled = project.shadows);
+    (this.dom = dom ?? document.createElement('div'))
+      .appendChild(this.renderer.domElement);
 
-    (project.shadowType !== undefined) &&
-      (this.renderer.shadowMap.type = project.shadowType);
+    this.scene = undefined;
+    this.camera = undefined;
+    this.orbit = undefined;
+    this.orbitProps = { ...orbitDef, ...orbitProps };
+    this.target = target ?? this.renderer.domElement;
+    this.width = 500;
+    this.height = 500;
+  }
 
-    (project.toneMapping !== undefined) &&
-      (this.renderer.toneMapping = project.toneMapping);
+  load(json) {
+    const { project: p, scene, camera, scripts } = json;
+    const { vr, shadows, shadowType, toneMapping, toneMappingExposure: te } = p;
+    const { renderer, loader } = this;
+    const events = this.#events;
 
-    (project.toneMappingExposure !== undefined) &&
-      (this.renderer.toneMappingExposure = project.toneMappingExposure);
+    (vr !== undefined) && (renderer.xr.enabled = vr);
+    (shadows !== undefined) && (renderer.shadowMap.enabled = shadows);
+    (shadowType !== undefined) && (renderer.shadowMap.type = shadowType);
+    (toneMapping !== undefined) && (renderer.toneMapping = toneMapping);
+    (te !== undefined) && (renderer.toneMappingExposure = te);
 
-    this.setScene(loader.parse(json.scene));
-    this.setCamera(loader.parse(json.camera).clone());
+    this.setScene(loader.parse(scene)).setCamera(loader.parse(camera).clone());
 
     let scriptWrapParams = 'player,renderer,scene,camera';
-    let scriptWrapResultObj = {};
+    const scriptWrapResultObj = {};
 
-    for(let eventKey in events) {
+    for(const eventKey in events) {
       scriptWrapParams += ','+eventKey;
       scriptWrapResultObj[eventKey] = eventKey;
     }
 
-    let scriptWrapResult = stringify(scriptWrapResultObj).replace(/\"/g, '');
+    const scriptWrapResult = stringify(scriptWrapResultObj).replace(/\"/g, '');
 
-    for(let uuid in json.scripts) {
-      let object = this.scene.getObjectByProperty('uuid', uuid, true);
+    for(const uuid in scripts) {
+      const object = scene.getObjectByProperty('uuid', uuid, true);
 
       if(object === undefined) {
         console.warn('ScenePlayer: Script without object.', uuid);
         continue;
       }
 
-      let scripts = json.scripts[uuid];
+      let objectScripts = scripts[uuid];
 
-      for(let i = 0; i < scripts.length; i++) {
-        let script = scripts[i];
+      for(let i = 0; i < objectScripts.length; i++) {
+        let script = objectScripts[i];
 
-        let functions = (new Function(scriptWrapParams,
+        const functions = (new Function(scriptWrapParams,
             script.source+'\nreturn '+scriptWrapResult+';')
-          .bind(object))(this, this.renderer, this.scene, this.camera);
+          .bind(object))(this, renderer, scene, camera);
 
-        for(let name in functions) {
+        for(const name in functions) {
           if(functions[name] === undefined) continue;
 
           if(events[name] === undefined) {
@@ -105,97 +107,123 @@ export function ScenePlayer(dom = document.createElement('div'), target) {
     }
 
     dispatch(events.init, arguments);
-  };
 
-  this.setCamera = (to) => {
-    const c = this.camera = to;
+    return this;
+  }
 
-    c.aspect = this.width/this.height;
-    c.updateProjectionMatrix();
-    this.orbit && this.orbit.dispose();
-    this.orbit = Object.assign(new OrbitControls(c, this.target), orbitOptions);
-  };
+  setCamera(to) {
+    const { width, height, orbit, orbitProps, target } = this;
 
-  this.setScene = (to) => this.scene = to;
+    this.camera = to;
+    to.aspect = width/height;
+    to.updateProjectionMatrix();
+    orbit && orbit.dispose();
+    this.orbit = Object.assign(new OrbitControls(to, target), orbitProps);
 
-  this.setPixelRatio = (to) => this.renderer.setPixelRatio(to);
+    return this;
+  }
 
-  this.setSize = (width, height, style) => {
+  setScene(to) {
+    this.scene = to;
+
+    return this;
+  }
+
+  setPixelRatio(to) {
+    this.renderer.setPixelRatio(to);
+
+    return this;
+  }
+
+  setSize(width, height, style) {
+    const { camera, renderer } = this;
+
     this.width = width;
     this.height = height;
 
-    if(this.camera) {
-      this.camera.aspect = this.width/this.height;
-      this.camera.updateProjectionMatrix();
+    if(camera) {
+      camera.aspect = width/height;
+      camera.updateProjectionMatrix();
     }
 
-    this.renderer.setSize(width, height, style);
-  };
+    renderer.setSize(width, height, style);
 
-  function dispatch(array, event) {
-    for(let i = 0, l = array.length; i < l; i++) { array[i](event); }
+    return this;
   }
 
-  let t, t0, tn;
+  #t;
+  #t0;
+  #tn;
 
-  const animate = () => {
-    t = performance.now();
+  animate() {
+    const t = this.#t = performance.now();
+    const { renderer, scene, camera } = this;
 
-    try { dispatch(events.update, { time: t-t0, delta: t-tn }); }
+    try {
+      dispatch(this.#events.update, { time: t-this.#t0, delta: t-this.#tn });
+    }
     catch(e) { console.error((e.message || e), (e.stack || '')); }
 
-    this.renderer.render(this.scene, this.camera);
-    tn = t;
-  };
+    renderer.render(scene, camera);
+    this.#tn = t;
+  }
 
-  let frame;
+  #frame;
 
-  this.orbitFrame = () => {
-    this.orbit.enabled && this.orbit.update();
-    frame = requestAnimationFrame(this.orbitFrame);
-  };
+  orbitFrame() {
+    const { orbit } = this;
 
-  this.play = () => {
-    this.renderer.xr.enabled && this.dom.append(this.vrButton);
-    t0 = tn = performance.now();
-    this.target.addEventListener('keydown', onKeyDown);
-    this.target.addEventListener('keyup', onKeyUp);
-    this.target.addEventListener('pointerdown', onPointerDown);
-    this.target.addEventListener('pointerup', onPointerUp);
-    this.target.addEventListener('pointermove', onPointerMove);
-    dispatch(events.start, arguments);
+    orbit.enabled && orbit.update();
+    this.#frame = requestAnimationFrame(() => this.orbitFrame());
+  }
+
+  play(...etc) {
+    const { renderer, dom, vrButton, target, onKeyDown, onKeyUp } = this;
+    const { onPointerDown, onPointerUp, onPointerMove } = this;
+
+    renderer.xr.enabled && dom.append(vrButton);
+    this.#t0 = this.#tn = performance.now();
+    target.addEventListener('keydown', onKeyDown);
+    target.addEventListener('keyup', onKeyUp);
+    target.addEventListener('pointerdown', onPointerDown);
+    target.addEventListener('pointerup', onPointerUp);
+    target.addEventListener('pointermove', onPointerMove);
+    dispatch(this.#events.start, etc);
     this.orbitFrame();
-    this.renderer.setAnimationLoop(animate);
+    renderer.setAnimationLoop(() => this.animate());
+  }
+
+  stop(...etc) {
+    const { renderer, vrButton, target, onKeyDown, onKeyUp } = this;
+    const { onPointerDown, onPointerUp, onPointerMove } = this;
+
+    renderer.xr.enabled && vrButton.remove();
+    target.removeEventListener('keydown', onKeyDown);
+    target.removeEventListener('keyup', onKeyUp);
+    target.removeEventListener('pointerdown', onPointerDown);
+    target.removeEventListener('pointerup', onPointerUp);
+    target.removeEventListener('pointermove', onPointerMove);
+    dispatch(this.#events.stop, etc);
+    renderer.setAnimationLoop(null);
+    cancelAnimationFrame(this.#frame);
   };
 
-  this.stop = () => {
-    this.renderer.xr.enabled && this.vrButton.remove();
-    this.target.removeEventListener('keydown', onKeyDown);
-    this.target.removeEventListener('keyup', onKeyUp);
-    this.target.removeEventListener('pointerdown', onPointerDown);
-    this.target.removeEventListener('pointerup', onPointerUp);
-    this.target.removeEventListener('pointermove', onPointerMove);
-    dispatch(events.stop, arguments);
-    this.renderer.setAnimationLoop(null);
-    cancelAnimationFrame(frame);
+  render(time) {
+    const { renderer, scene, camera } = this;
+
+    dispatch(this.#events.update, { time: time*1e3, delta: 0 /* TODO */ });
+    renderer.render(scene, camera);
   };
 
-  this.render = (time) => {
-    dispatch(events.update, { time: time*1000, delta: 0 /* TODO */ });
-    this.renderer.render(this.scene, this.camera);
-  };
+  dispose() {
+    const { renderer, orbit } = this;
 
-  this.dispose = () => {
-    this.renderer.dispose();
-    this.orbit && this.orbit.dispose();
-    this.scene = this.camera = this.orbit = undefined;
-  };
+    renderer.dispose();
+    orbit.dispose();
 
-  function onKeyDown(event) { dispatch(events.keydown, event); }
-  function onKeyUp(event) { dispatch(events.keyup, event); }
-  function onPointerDown(event) { dispatch(events.pointerdown, event); }
-  function onPointerUp(event) { dispatch(events.pointerup, event); }
-  function onPointerMove(event) { dispatch(events.pointermove, event); }
+    this.scene = this.camera = this.renderer = this.orbit = this.#events =
+      undefined;
+  }
 }
 
 export default ScenePlayer;

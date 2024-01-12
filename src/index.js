@@ -8,6 +8,7 @@ import { inOpenRange } from '@thi.ng/math/interval';
 import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
 import throttle from 'lodash/fp/throttle';
+import { MOUSE, TOUCH } from 'three';
 
 import { ScenePlayer } from './scene-player';
 
@@ -292,7 +293,17 @@ let $exhibitDemo;
 
 async function exhibitLoad() {
   const exhibit = await import('../media/exhibit.json');
-  const player = api.player = new ScenePlayer();
+
+  const player = api.player = new ScenePlayer(null, null, {
+    enablePan: false,
+    minDistance: 2,
+    maxDistance: 7,
+    // maxPolarAngle: pi*0.58,
+    maxPolarAngle: pi*0.5,
+    zoomSpeed: 2,
+    mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
+    touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
+  });
 
   function exhibitResize() {
     const $p = $exhibitDemo.offsetParent;
@@ -312,10 +323,6 @@ async function exhibitLoad() {
   const { scene, orbit } = player;
 
   scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
-
-  (orbit.enableZoom = $exhibit.classList.contains('exhibit-zoom')) &&
-    (orbit.maxPolarAngle = pi*0.5);
-
   orbit.update();
 
   addEventListener('resize', exhibitResize);
