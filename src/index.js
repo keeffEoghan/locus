@@ -289,16 +289,36 @@ peerIntersector.observe($peerDemo);
 const $exhibit = document.querySelector('.exhibit');
 let $exhibitDemo;
 
-(async () => {
+async function exhibitLoad() {
   const exhibit = await import('../media/exhibit.json');
   const player = new ScenePlayer();
-  const exhibitResize = () => player.setSize(innerWidth, innerHeight*0.66);
+
+  function exhibitResize() {
+    const $p = $exhibitDemo.offsetParent;
+
+    if(!$p) { return player.setSize(innerWidth, innerHeight); }
+
+    const { width: w, height: h } = $p.getBoundingClientRect();
+
+    return player.setSize(w, h);
+  }
 
   player.load(exhibit);
   player.play();
   $exhibit.prepend($exhibitDemo = player.dom);
   $exhibitDemo.classList.add('exhibit-demo');
 
-  addEventListener('resize', exhibitResize());
+  const { scene, orbit } = player;
+
+  scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
+  orbit.update();
+
+  addEventListener('resize', exhibitResize);
   exhibitResize();
-})();
+}
+
+const exhibitReady = () =>
+  (document.readyState === 'complete') && exhibitLoad();
+
+((exhibitReady() === false) &&
+  document.addEventListener('readystatechange', exhibitReady));
