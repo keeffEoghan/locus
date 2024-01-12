@@ -9,9 +9,10 @@ const { PI: pi } = Math;
 const orbitOptions = {
   enableDamping: true,
   enablePan: false,
+  enableZoom: false,
   minDistance: 2,
   maxDistance: 7,
-  maxPolarAngle: pi*0.5
+  maxPolarAngle: pi*0.58
 };
 
 export function ScenePlayer(dom = document.createElement('div'), target) {
@@ -150,7 +151,7 @@ export function ScenePlayer(dom = document.createElement('div'), target) {
   let frame;
 
   this.orbitFrame = () => {
-    this.orbit.update();
+    this.orbit.enabled && this.orbit.update();
     frame = requestAnimationFrame(this.orbitFrame);
   };
 

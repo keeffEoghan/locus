@@ -80,6 +80,8 @@
   --s-l1-x: 2rem;
   --s-l1-y: 4rem;
   --s-l1-r: 2rem;
+  --s-l2-x: 4rem;
+  --s-l2-y: 8rem;
   --s-m0-x: 2rem;
   --s-m0-y: 1rem;
   --s-m0-r: 1rem;
@@ -106,7 +108,7 @@
   --s-jump-y: 9rem;
   --s-items-gap: 0.5rem 1.5rem;
   --s-view-mid: 50vh;
-  --s-view-tall: 75vh;
+  --s-view-tall: 66vh;
   --s-tap-r: 30px;
   --z-jump: 0;
   --z-figure-flip: 1;
@@ -917,6 +919,103 @@ strong { font-weight: 900; }
   text-align: center;
 }
 
+.exhibit {
+  position: relative;
+  flex-flow: column nowrap;
+  gap: var(--s-l2-y);
+  overflow: hidden;
+  min-height: var(--s-view-tall);
+  padding: var(--s-view-mid) var(--s-l0-x);
+  clip-path: inset(0);
+}
+
+.exhibit-zoom {
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: var(--z-exhibit-edge);
+    padding: max(var(--s-l0-y), var(--s-tap-r)) max(var(--s-l0-x), var(--s-tap-r));
+    background: var(--c-over-1);
+    backdrop-filter: blur(var(--s-s1-r));
+  }
+
+  &::before { inset: 0 auto 0 0; }
+
+  &::after { inset: 0 0 0 auto; }
+}
+
+.exhibit-demo {
+  position: fixed;
+  inset: 0;
+  backface-visibility: hidden;
+  animation: 900ms ease-in 1 backwards opacity-0-1;
+  will-change: opacity;
+
+  & > canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+
+    &:active { cursor: grabbing; }
+  }
+}
+
+.exhibit-info {
+  position: relative;
+  background: var(--c-over-0);
+  backdrop-filter: invert(0.8) blur(var(--s-s1-r));
+  border-radius: var(--s-s1-r);
+  z-index: var(--z-exhibit-over);
+}
+
+.exhibit-info-flip { align-self: flex-end; }
+
+.vr-ui {
+  position: absolute;
+  bottom: 20px;
+  padding: 12px 6px;
+  border: 1px solid #fff;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.1);
+  color: #fff;
+  font: normal 13px sans-serif;
+  text-align: center;
+  opacity: 0.5;
+  outline: none;
+  z-index: 999;
+}
+
+.vr-button {
+  cursor: pointer;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  transition: opacity 900ms ease-out;
+  will-change: opacity;
+  text-transform: uppercase;
+
+  &:hover,
+  &:focus,
+  &:active {
+    opacity: 1;
+    transition: opacity 300ms ease-in;
+  }
+
+  &.disabled {
+    cursor: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.vr-message {
+  left: 50%;
+  transform: translateX(-50%);
+  text-transform: uppercase;
+}
+
 .artizen-laurel {
   flex: 0 1 16rem;
   padding: var(--s-m0-r);
@@ -1038,101 +1137,6 @@ strong { font-weight: 900; }
 .face-video {
   width: 100%;
   height: 100%;
-}
-
-.exhibit {
-  position: relative;
-  flex-flow: column nowrap;
-  gap: var(--s-l0-y);
-  overflow: hidden;
-  min-height: var(--s-view-tall);
-  padding: var(--s-view-tall) var(--s-l0-x);
-  clip-path: inset(0);
-
-  &::before,
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    z-index: var(--z-exhibit-edge);
-    padding: max(var(--s-l0-y), var(--s-tap-r)) max(var(--s-l0-x), var(--s-tap-r));
-    background: var(--c-over-1);
-    backdrop-filter: blur(var(--s-s1-r));
-  }
-
-  &::before { inset: 0 auto 0 0; }
-
-  &::after { inset: 0 0 0 auto; }
-}
-
-.exhibit-demo {
-  position: fixed;
-  inset: 0;
-  backface-visibility: hidden;
-  animation: 900ms ease-in 1 backwards opacity-0-1;
-  will-change: opacity;
-
-  & > canvas {
-    width: 100%;
-    height: 100%;
-    cursor: grab;
-
-    &:active { cursor: grabbing; }
-  }
-}
-
-.exhibit-info {
-  position: relative;
-  background: var(--c-over-0);
-  backdrop-filter: invert(0.8) blur(var(--s-s1-r));
-  border-radius: var(--s-s1-r);
-  z-index: var(--z-exhibit-over);
-}
-
-.exhibit-info-flip { align-self: flex-end; }
-
-.vr-ui {
-  position: absolute;
-  bottom: 20px;
-  padding: 12px 6px;
-  border: 1px solid #fff;
-  border-radius: 4px;
-  background: rgba(0,0,0,0.1);
-  color: #fff;
-  font: normal 13px sans-serif;
-  text-align: center;
-  opacity: 0.5;
-  outline: none;
-  z-index: 999;
-}
-
-.vr-button {
-  cursor: pointer;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0.5;
-  transition: opacity 900ms ease-out;
-  will-change: opacity;
-  text-transform: uppercase;
-
-  &:hover,
-  &:focus,
-  &:active {
-    opacity: 1;
-    transition: opacity 300ms ease-in;
-  }
-
-  &.disabled {
-    cursor: auto;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-
-.vr-message {
-  left: 50%;
-  transform: translateX(-50%);
-  text-transform: uppercase;
 }
 
 .info,

@@ -11,10 +11,11 @@ import throttle from 'lodash/fp/throttle';
 
 import { ScenePlayer } from './scene-player';
 
-const { min, max, abs, round, floor, ceil, random } = Math;
+const { min, max, abs, round, floor, ceil, random, PI: pi } = Math;
 const { indexOf } = Array.prototype;
 const { parse } = JSON;
 
+const api = self.locus = {};
 const cache = {};
 
 const stopEffect = (e) => e.preventDefault();
@@ -291,7 +292,7 @@ let $exhibitDemo;
 
 async function exhibitLoad() {
   const exhibit = await import('../media/exhibit.json');
-  const player = new ScenePlayer();
+  const player = api.player = new ScenePlayer();
 
   function exhibitResize() {
     const $p = $exhibitDemo.offsetParent;
@@ -311,6 +312,10 @@ async function exhibitLoad() {
   const { scene, orbit } = player;
 
   scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
+
+  (orbit.enableZoom = $exhibit.classList.contains('exhibit-zoom')) &&
+    (orbit.maxPolarAngle = pi*0.5);
+
   orbit.update();
 
   addEventListener('resize', exhibitResize);
