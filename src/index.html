@@ -4,6 +4,18 @@
     <title>Locus @ epok.tech, Artizen</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-592SYQ8HNE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() { dataLayer.push(arguments); }
+
+      gtag('js', new Date());
+      gtag('config', 'G-592SYQ8HNE');
+    </script>
+
     <link rel="stylesheet" type="text/css" href="./index.css">
   </head>
   <body>
@@ -162,7 +174,7 @@
       </header>
       <nav>
         <md inline>[**Support *Locus*** ~ <span class="eta-crypto" data-til="$d days left">until 27 Jan</span>](#contribute){.button .nav-cta}</md>
-        <form id="subscribe" method="post" target="_blank"
+        <form class="subscribe" method="post" target="_blank"
           action="https://script.google.com/macros/s/AKfycbwFvVGJlpRC5IQ6ZTTGGc09UGHDP-f9Y5mBYTYeqcTt4Z4_Wi7un-20nYibTeJY1SnF/exec">
           <label>
             <input name="Email" type="email" required title="email"
@@ -183,39 +195,45 @@
           </fieldset>
         </form>
       </nav>
-      <article id="inspiration" class="bleed-inset jump" md>
-        **Meditation** profoundly affected me; transcending debilitating depression into vibrant awareness, acceptance and fuller reality.
-        <!-- **Meditation** can't truly be known conceptually or discursively, only by **direct participatory experience**. -->
-        <!-- **Meditation** can profoundly transcend debilitating suffering into vibrant awareness, acceptance and fuller reality. -->
-        <!-- **Meditation** can profoundly transcend debilitating suffering into vibrant awareness and acceptance of a fuller reality. -->
+      <article id="inspiration" class="bleed-inset jump">
+        <blockquote md>
+          **Meditation** profoundly affected me; transcending debilitating depression into vibrant awareness, acceptance and fuller reality.
+          <!-- **Meditation** can't truly be known conceptually or discursively, only by **direct participatory experience**. -->
+          <!-- **Meditation** can profoundly transcend debilitating suffering into vibrant awareness, acceptance and fuller reality. -->
+          <!-- **Meditation** can profoundly transcend debilitating suffering into vibrant awareness and acceptance of a fuller reality. -->
 
-        <!-- I hope to engage audiences in such experiences; to freely explore and co-create the artwork, find their own insights and reflect. -->
-        <!-- This artwork elicits such **direct participatory experiences**; for you to explore and co-create, find your own insights and reflect. -->
-        <!-- This artwork aims to engage you in these **direct participatory experiences**; to explore and co-create, find your own insights and reflect. -->
-        <!-- This artwork engages you in such **direct participatory experiences**; to explore and co-create, find your own insights and reflect. -->
-        Reflect and find your own insights by **direct participatory experience**, as you explore and co-create this artwork.
+          <!-- I hope to engage audiences in such experiences; to freely explore and co-create the artwork, find their own insights and reflect. -->
+          <!-- This artwork elicits such **direct participatory experiences**; for you to explore and co-create, find your own insights and reflect. -->
+          <!-- This artwork aims to engage you in these **direct participatory experiences**; to explore and co-create, find your own insights and reflect. -->
+          <!-- This artwork engages you in such **direct participatory experiences**; to explore and co-create, find your own insights and reflect. -->
+          Reflect and find your own insights by **direct participatory experience**, as you explore and co-create this artwork.
+          <cite>Eoghan ~ [epok.tech](https://epok.tech){target="_blank"}</cite>
+        </blockquote>
       </article>
       <article id="what-is-locus" class="exhibit bleed-inset jump">
-        <section class="exhibit-info" md>
+        <section class="exhibit-info"
+          data-exhibit-camera="PerspectiveCamera1" md>
           ## *Locus* is an interactive digital artwork
 
           Aiming to engage audiences in **direct participatory experiences** evoking meditation, it will be exhibited as a physical installation, free online experience, and `NFT`{.info title="Non-Fungible Token, a cryptocurrency asset"} series.
 
           As flowing particles trace layers in a translucent human form, the audience and artwork interact by natural motion to co-create a meditative experience.
         </section>
-        <section class="exhibit-info exhibit-info-flip" md>
+        <section class="exhibit-info exhibit-info-flip"
+          data-exhibit-camera="PerspectiveCamera2" md>
           ### Aesthetic
 
           Millions of particles pass in fluid motion through a translucent human bust – their colours match the forms they flow within (skin, bone, muscle, organs), tracing ephemeral hints of shapes and colours layered in the depths.
 
           Fluid motion elicits meditative obervation of sensations (bodily, thought, emotional) – both are dynamic, interconnected, chaotic processes.
         </section>
-        <section class="exhibit-info" md>
+        <section class="exhibit-info"
+          data-exhibit-camera="PerspectiveCamera3" md>
           ### Interaction
 
           Your natural motions affect the flow – movement agitates it into turbulence, clouding outer surfaces; stillness settles it into smooth filaments, revealing inner depths.
 
-          This interaction encourages mindful reflective awareness in contrast to busy activity – as still water's clearer than an agitated surface, you see more deeply into the truths within.
+          This interaction encourages mindful reflective awareness, in contrast to busy activity – as still water's clearer than an agitated surface, you see more deeply into the truths within.
         </section>
       </article>
       <article id="locus-artizen" class="bleed-inset jump">
@@ -227,13 +245,13 @@
           </figcaption> -->
         </figure>
         <section md>
-          ## *Locus* crowdfunding on *Artizen*
+          ## *Locus* is crowdfunding on *Artizen*
 
           [*Locus* has been curated](https://artizen.fund/project/locus){target="_blank"} for the *Season 3 Official Selection* of the [*Artizen* fund](https://artizen.fund){target="_blank"} for human creativity.
 
           On this crowdfunding platform, creators engage their communities to support projects, multiplied by [match-funds](https://help.artizen.fund/en/collections/4075653-match-funds){target="_blank"}, and compete for the [*Artizen Prize*](https://help.artizen.fund/en/articles/7988933-how-to-win-the-artizen-prize){target="_blank"}.
 
-          If this project resonates with you, [*Artizen*](https://artizen.fund/project/locus){target="_blank"} is an ideal way to support it and help [the team creating it](#team).
+          If this project resonates with you, [*Artizen*](https://artizen.fund/project/locus){target="_blank"} is an ideal way to [support the team creating it](#team).
         </section>
         <section class="split">
           <section md>
@@ -276,9 +294,7 @@
               Your entire contribution goes to the project intact, without covering *`gas` (transfer-fees)*{.info title="Gas is the Ethereum crypto network's transfer processing fee, which fluctuates according to how busy the network is"}, and you can receive [*Artifacts*](https://help.artizen.fund/en/articles/6604052-what-are-artifacts#h_a1431ba740){target="_blank"} and [rewards](#your-rewards) directly to your *crypto wallet.*
             </md>
             <details md>
-              <summary class="icon-in">
-                <span>Get started with crypto</span><span class="icon">send_money</span>
-              </summary>
+              <summary>Get started with crypto</summary>
 
               1. [If you don't have a *crypto wallet*](https://help.artizen.fund/en/articles/6742664-how-do-i-buy-artifacts){target="_blank"}, you can get one on services like *[MetaMask](https://metamask.io/){target="_blank"}* (free, recommended).
               1. [Check out *Locus* on *Artizen*](https://artizen.fund/project/locus){target="_blank"} to connect your *wallet* and buy *Artifacts* to support the project.
@@ -300,9 +316,7 @@
               No *crypto wallet* needed, but part of your contribution goes to cover *`gas` (transfer-fees)*{.info title="Gas is the Ethereum crypto network's transfer processing fee, which fluctuates according to how busy the network is"}, and you can't receive [*Artifacts*](https://help.artizen.fund/en/articles/6604052-what-are-artifacts#h_a1431ba740){target="_blank"} or any [rewards](#your-rewards) that need a *crypto wallet.*
             </md>
             <details md>
-              <summary class="icon-in">
-                <span>Get started with card</span><span class="icon">credit_card</span>
-              </summary>
+              <summary>Get started with card</summary>
 
               1. [Visit the card payment page](https://artizen.link/pay){target="_blank"} to specify the project you're supporting and enter your details.
               1. *Copy the name "**Locus**"*{.info .copy data-copy="Locus"} into the field *"What project do you want to support?"*

@@ -15,7 +15,7 @@ function dispatch(array, event) {
 export class ScenePlayer {
   #events;
 
-  constructor(dom, target, orbitProps) {
+  constructor(dom, orbitProps, target) {
     this.loader = new three.ObjectLoader();
 
     this.#events = {
@@ -52,8 +52,8 @@ export class ScenePlayer {
     this.height = 500;
   }
 
-  load(json) {
-    const { project: p, scene, camera, scripts } = json;
+  load(data) {
+    const { project: p, scene, camera, scripts } = this.data = data;
     const { vr, shadows, shadowType, toneMapping, toneMappingExposure: te } = p;
     const { renderer, loader } = this;
     const events = this.#events;
@@ -64,7 +64,7 @@ export class ScenePlayer {
     (toneMapping !== undefined) && (renderer.toneMapping = toneMapping);
     (te !== undefined) && (renderer.toneMappingExposure = te);
 
-    this.setScene(loader.parse(scene)).setCamera(loader.parse(camera).clone());
+    this.setScene(loader.parse(scene)).setCamera(loader.parse(camera));
 
     let scriptWrapParams = 'player,renderer,scene,camera';
     const scriptWrapResultObj = {};

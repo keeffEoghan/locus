@@ -1,10 +1,10 @@
 import { each } from '@epok.tech/fn-lists/each';
 import { reduce } from '@epok.tech/fn-lists/reduce';
+import { map } from '@epok.tech/fn-lists/map';
 import { range } from '@epok.tech/fn-lists/range';
 import { fit } from '@thi.ng/math/fit';
 import { mix } from '@thi.ng/math/mix';
-import { clamp01 } from '@thi.ng/math/interval';
-import { inOpenRange } from '@thi.ng/math/interval';
+import { clamp01, inOpenRange } from '@thi.ng/math/interval';
 import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
 import throttle from 'lodash/fp/throttle';
@@ -26,6 +26,13 @@ function stopEvent(e) {
   stopEffect(e);
   stopBubble(e);
 }
+
+// Introduction animations.
+
+const $html = document.documentElement;
+
+setTimeout(() => $html.classList.add('info-hint'), 1e3);
+setTimeout(() => $html.classList.remove('info-hint'), 4e3);
 
 // Scroll if needed.
 
@@ -104,33 +111,35 @@ setInterval(tickTime, minute*0.5);
 
 // Subscription.
 
-const $subscribe = document.querySelector('#subscribe');
-const $submit = $subscribe.querySelector('[type="submit"]');
-const $optional = $subscribe.querySelector('.optional');
+const $subscribes = each(($subscribe) => {
+    const $submit = $subscribe.querySelector('[type="submit"]');
+    const $optional = $subscribe.querySelector('.optional');
 
-$subscribe.addEventListener('submit', async (e) => {
-  stopEffect(e);
-  $submit.disabled = true;
+    $subscribe.addEventListener('submit', async (e) => {
+      stopEffect(e);
+      $submit.disabled = true;
 
-  const body = new FormData($subscribe);
-  const r = await fetch($subscribe.action, { method: 'POST', body });
-  const valid = ((r.ok)? '' : "Couldn't send your details, please try again");
-  const cs = $subscribe.classList;
+      const body = new FormData($subscribe);
+      const r = await fetch($subscribe.action, { method: 'POST', body });
+      const valid = ((r.ok)? '' : "Can't send your details, please try again");
+      const cs = $subscribe.classList;
 
-  $submit.setCustomValidity(valid);
-  $submit.disabled = false;
+      $submit.setCustomValidity(valid);
+      $submit.disabled = false;
 
-  cs.toggle('success', $submit.reportValidity()) &&
-    setTimeout(() => {
-      cs.remove('success');
-      $subscribe.reset();
+      cs.toggle('success', $submit.reportValidity()) &&
+        setTimeout(() => {
+          cs.remove('success');
+          $subscribe.reset();
+        });
     });
-});
 
-$subscribe.addEventListener('focusin', () => {
-  scrollIntoView($subscribe);
-  scrollIntoView($optional);
-});
+    $subscribe.addEventListener('focusin', () => {
+      scrollIntoView($subscribe);
+      scrollIntoView($optional);
+    });
+  },
+  document.querySelectorAll('.subscribe'));
 
 // Concept art interactions.
 /** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
@@ -140,8 +149,8 @@ const $peelLayers = $peel.querySelectorAll('.peel-art-layer');
 const $peelStyle = $peel.querySelector('.peel-art-style');
 
 $peel.classList.add('peel-far', 'peel-intro');
-setTimeout(() => $peel.classList.remove('peel-far'), 100+2e3);
-setTimeout(() => $peel.classList.remove('peel-intro'), 4500+2e3);
+setTimeout(() => $peel.classList.remove('peel-far'), 100+1e3);
+setTimeout(() => $peel.classList.remove('peel-intro'), 6000+1e3);
 
 function peelOn(e) {
   $peel.classList.remove('peel-far', 'peel-intro');
@@ -290,47 +299,93 @@ peerIntersector.observe($peerDemo);
 
 const $exhibit = document.querySelector('.exhibit');
 let $exhibitDemo;
+let exhibitPlayer;
+let exhibitCameraDef;
+const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
+const exhibitCameras = {};
+const exhibitCameraPair = [{}, {}];
+
+function exhibitResize() {
+  const $p = $exhibitDemo.offsetParent;
+
+  if(!$p) { return exhibitPlayer.setSize(innerWidth, innerHeight); }
+
+  const { width: w, height: h } = $p.getBoundingClientRect();
+
+  return exhibitPlayer.setSize(w, h);
+}
+
+const exhibitIntersector = new IntersectionObserver((all) => {
+    const oy = innerHeight*0.5;
+    const [u, d] = exhibitCameraPair;
+
+    u.y = -(d.y = Infinity);
+    u.to = d.to = null;
+
+    const [{ to: uto, y: uy }, { to: dto, y: dy }] = reduce((pair, to) => {
+        if(!to.isIntersecting) { return pair; }
+
+        const { y: ty0, bottom: ty1 } = to.boundingClientRect;
+        const ty = mix(ty0, ty1, 0.5)-oy;
+        const i = +(ty > 0);
+        const p = pair[i];
+        const { to: pto, y: py } = p;
+
+        (!pto || ((i)? py > ty : py < ty)) && (p.to = to) && (p.y = ty);
+
+        return pair;
+      },
+      all, exhibitCameraPair);
+
+    const cs = exhibitCameras;
+    const cu = ((uto)? cs[uto.target.dataset.exhibitCamera] : exhibitCameraDef);
+    const cd = ((dto)? cs[dto.target.dataset.exhibitCamera] : exhibitCameraDef);
+
+    exhibitPlayer.camera.position.lerpVectors(cu.position, cd.position,
+      clamp01(fit(oy, uy, dy, 0, 1)));
+  },
+  { threshold: map((v, i, a) => i/(a.length-1), range(1e2), 0), root: null });
 
 async function exhibitLoad() {
   const exhibit = await import('../media/exhibit.json');
 
-  const player = api.player = new ScenePlayer(null, null, {
+  exhibitPlayer = api.exhibitPlayer = new ScenePlayer(null, {
     enablePan: false,
     minDistance: 2,
     maxDistance: 7,
-    // maxPolarAngle: pi*0.58,
-    maxPolarAngle: pi*0.5,
+    maxPolarAngle: pi*0.55,
     zoomSpeed: 2,
+    autoRotate: true,
     mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
     touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
   });
 
-  function exhibitResize() {
-    const $p = $exhibitDemo.offsetParent;
-
-    if(!$p) { return player.setSize(innerWidth, innerHeight); }
-
-    const { width: w, height: h } = $p.getBoundingClientRect();
-
-    return player.setSize(w, h);
-  }
-
-  player.load(exhibit);
-  player.play();
-  $exhibit.prepend($exhibitDemo = player.dom);
+  exhibitPlayer.load(exhibit);
+  exhibitPlayer.play();
+  $exhibit.prepend($exhibitDemo = exhibitPlayer.dom);
   $exhibitDemo.classList.add('exhibit-demo');
 
-  const { scene, orbit } = player;
+  const { scene, orbit, camera } = exhibitPlayer;
 
+  reduce((to, { dataset: { exhibitCamera: c } }) => {
+      to[c] ??= scene.getObjectByName(c);
+
+      return to;
+    },
+    $exhibitCameras, exhibitCameras);
+
+  exhibitCameraDef = camera.clone();
   scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
   orbit.update();
 
   addEventListener('resize', exhibitResize);
   exhibitResize();
+
+  // each(($c) => exhibitIntersector.observe($c), $exhibitCameras);
 }
 
 const exhibitReady = () =>
-  (document.readyState === 'complete') && exhibitLoad();
+  (document.readyState === 'interactive') && setTimeout(exhibitLoad, 500);
 
 ((exhibitReady() === false) &&
   document.addEventListener('readystatechange', exhibitReady));
