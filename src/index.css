@@ -73,6 +73,7 @@
   --c-jump-2: #2d9cdb88;
   --c-over-0: #0009;
   --c-over-1: #0001;
+  --c-over-3: #0006;
   --c-art-fill: #e6e6e6;
   --s-font-m: 1rem;
   --s-font-s: 0.6rem;
@@ -107,13 +108,14 @@
   --s-line-x: 30rem;
   --s-icon-m: 3rem;
   --s-icon-s: 1.5rem;
+  --s-icon-xs: 1.2rem;
   --s-input-x: 0.7rem;
   --s-input-y: 0.7rem;
   --s-input-r: 1.8rem;
   --s-jump-y: 9rem;
   --s-items-gap: 0.5rem 1.5rem;
-  --s-view-mid: 33vh;
-  --s-view-tall: 66vh;
+  --s-view-mid: 40vh;
+  --s-view-tall: 60vh;
   --s-tap-r: 30px;
   --z-jump: 0;
   --z-figure-flip: 1;
@@ -340,7 +342,7 @@ figure {
     background: var(--c-lo-1);
     font-weight: var(--font-w-2);
     padding: var(--s-s0-y) var(--s-s0-x);
-    margin: var(--s-icon-s);
+    margin: var(--s-icon-xs);
     border-radius: var(--s-s1-r) 0 var(--s-s1-r) var(--s-s1-r);
     font-size: var(--s-font-m);
     font-family: Inter, sans-serif;
@@ -361,8 +363,8 @@ figure {
     width: var(--s-icon-s);
     height: var(--s-icon-s);
     font-size: 1rem;
-    /* border: 1px solid currentColor;
-    border-radius: var(--s-icon-s); */
+    /* border: 1px solid currentColor; */
+    border-radius: var(--s-icon-s);
     color: var(--c-hi-1);
     text-shadow: 0 0 2px var(--c-lo-1),
       1px 1px 1px var(--c-lo-1),
@@ -1042,10 +1044,10 @@ cite {
 .exhibit {
   position: relative;
   flex-flow: column nowrap;
-  gap: var(--s-l2-y);
+  gap: var(--s-view-mid);
   overflow: hidden;
   min-height: var(--s-view-tall);
-  padding: var(--s-view-mid) var(--s-l0-x) var(--s-view-tall);
+  padding: var(--s-view-tall) var(--s-l0-x);
   clip-path: inset(0);
 }
 /*
@@ -1080,6 +1082,61 @@ cite {
     cursor: grab;
 
     &:active { cursor: grabbing; }
+  }
+}
+
+.exhibit-label {
+  display: block;
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--info-w);
+  max-width: calc(0.5*var(--s-line-x));
+  padding: var(--s-m2-y) var(--s-m2-x);
+  border: 1px solid var(--c-active);
+  font-size: var(--s-font-m);
+  font-family: Inter, sans-serif;
+  font-weight: var(--font-w-2);
+  cursor: help;
+  border-radius: var(--s-icon-xs);
+  backdrop-filter: invert(0.8) blur(var(--s-s1-r));
+  color: #0000;
+  background: var(--c-over-3);
+  clip-path: circle(var(--s-icon-xs));
+  transition: color 9e2ms ease-out,
+    background-color 9e2ms ease-out,
+    clip-path 9e2ms ease-out;
+  will-change: color, background-color, clip-path, transform, z-index;
+
+  &::before {
+    content: '✖';
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    font-size: 1rem;
+    color: var(--c-hi-0);
+    transform: rotate(45deg);
+    transition: opacity 9e2ms ease-in;
+    will-change: opacity;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--c-lo-1);
+    background-color: var(--c-hi-1);
+    clip-path: circle(100%);
+    transition: color 3e2ms ease-in,
+      background-color 3e2ms ease-in,
+      clip-path 5e2ms ease-in;
+
+    &::before {
+      opacity: 0;
+      transition: opacity 3e2ms ease-out;
+    }
   }
 }
 

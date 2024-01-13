@@ -10,6 +10,9 @@ import { setC2 } from '@thi.ng/vectors/setc';
 import throttle from 'lodash/fp/throttle';
 import { Vector3, MOUSE, TOUCH } from 'three';
 
+import { CSS2DRenderer, CSS2DObject }
+  from 'three/examples/jsm/renderers/CSS2DRenderer';
+
 import { ScenePlayer } from './scene-player';
 
 const { min, max, abs, round, floor, ceil, random, PI: pi } = Math;
@@ -310,58 +313,72 @@ peerIntersector.observe($peerDemo);
 const $exhibit = document.querySelector('.exhibit');
 const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
 let $exhibitDemo;
+let exhibitOn = false;
 const exhibitCameras = {};
 const exhibitCameraPair = [{}, {}];
 let exhibitPlayer;
 let exhibitCameraDef;
 let exhibitCameraTo;
+let exhibitInteract = false;
 const exhibitEase = 5e-2;
+let exhibit2DRenderer;
 
 function exhibitResize() {
+  let w = innerWidth;
+  let h = innerHeight;
   const $p = $exhibitDemo.offsetParent;
 
-  if(!$p) { return exhibitPlayer.setSize(innerWidth, innerHeight); }
-
-  const { width: w, height: h } = $p.getBoundingClientRect();
-
-  return exhibitPlayer.setSize(w, h);
+  $p && ({ width: w, height: h } = $p.getBoundingClientRect());
+  exhibit2DRenderer.setSize(w, h);
+  exhibitPlayer.setSize(w, h);
 }
 
 function exhibitScroll() {
-  if(!inView(false, $exhibit.getBoundingClientRect())) { return; }
+  const wasOn = exhibitOn;
+
+  if(!(exhibitOn = inView(false, $exhibit.getBoundingClientRect()))) {
+    return wasOn && console.log('Exhibit off', exhibitPlayer.stop());
+  }
+
+  !wasOn && console.log('Exhibit on', exhibitPlayer.play());
 
   const vy = innerHeight*0.5;
   const [u, d] = exhibitCameraPair;
 
-  u.y = d.y = u.$c = d.$c = undefined;
+  u.y = d.y = u.$ = d.$ = undefined;
 
-  const [{ $c: u$c, y: uy }, { $c: d$c, y: dy }] = reduce((pair, $c) => {
-      const { y: y0, bottom: y1 } = $c.getBoundingClientRect();
+  const [{ $: u$, y: uy = 0 }, { $: d$, y: dy = 0 }] = reduce((pair, $) => {
+      const { y: y0, bottom: y1 } = $.getBoundingClientRect();
       const y = mix(y0, y1, 0.5)-vy;
       const d = y > 0;
       const p = pair[+d];
-      const { $c: p$c, y: py } = p;
+      const { $: p$, y: py } = p;
 
-      (!p$c || (py == null) || ((d)? y < py : y > py)) &&
-        (p.$c = $c) && (p.y = y);
+      (!p$ || (py == null) || ((d)? y < py : y > py)) && (p.$ = $) && (p.y = y);
 
       return pair;
     },
     $exhibitCameras, exhibitCameraPair);
 
-  const cs = exhibitCameras;
-  // Assumes cameras are at the root of the scene.
-  const pu = ((u$c)? cs[u$c.dataset.exhibitCamera] : exhibitCameraDef).position;
-  const pd = ((d$c)? cs[d$c.dataset.exhibitCamera] : exhibitCameraDef).position;
+  const uc = u$?.dataset?.exhibitCamera;
+  const dc = d$?.dataset?.exhibitCamera;
+  const up = uc && exhibitCameras[uc]?.position;
+  const dp = dc && exhibitCameras[dc]?.position;
 
-  ((pu === pd)? exhibitCameraTo.copy(pu)
-  : exhibitCameraTo.lerpVectors(pu, pd,
-      clamp01(fit(0, uy ?? 0, dy ?? 0, 0, 1))));
+  // Assumes cameras are at the root of the scene.
+  ((!up)? dp && exhibitCameraTo.copy(dp)
+  : (!dp)? up && exhibitCameraTo.copy(up)
+  : (up === dp)? exhibitCameraTo.copy(up)
+  : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
 }
 
-function exhibitTween() {
-  exhibitPlayer.camera.position.lerp(exhibitCameraTo, exhibitEase);
-  requestAnimationFrame(exhibitTween);
+function exhibitAnimate() {
+  const { camera, scene } = exhibitPlayer;
+
+  !exhibitInteract && camera.position.lerp(exhibitCameraTo, exhibitEase);
+  exhibit2DRenderer.render(scene, camera);
+
+  requestAnimationFrame(exhibitAnimate);
 }
 
 async function exhibitLoad() {
@@ -373,17 +390,34 @@ async function exhibitLoad() {
     maxDistance: 7,
     maxPolarAngle: pi*0.55,
     zoomSpeed: 2,
-    // autoRotate: true,
     mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
     touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
   });
 
   exhibitPlayer.load(exhibit);
-  exhibitPlayer.play();
-  $exhibit.prepend($exhibitDemo = exhibitPlayer.dom);
-  $exhibitDemo.classList.add('exhibit-demo');
+  exhibitPlayer.render();
 
-  const { scene, orbit, camera } = exhibitPlayer;
+  const { dom, scene, orbit, camera } = exhibitPlayer;
+
+  $exhibit.prepend($exhibitDemo = dom);
+  $exhibitDemo.classList.add('exhibit-demo');
+  exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
+
+  scene.traverse((o) => {
+    const { userData: d, position: p } = o;
+    const label = d?.label;
+
+    if(!label) { return; }
+
+    const $label = document.createElement('small');
+    const to = new CSS2DObject($label);
+    const focus = d?.focus;
+
+    $label.textContent = label;
+    $label.classList.add('exhibit-label');
+    focus && to.position.set(...focus);
+    o.add(to);
+  });
 
   exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
 
@@ -396,15 +430,17 @@ async function exhibitLoad() {
 
   exhibitCameraTo = exhibitCameraDef.position.clone();
   scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
+  orbit.addEventListener('start', () => exhibitInteract = true);
+  orbit.addEventListener('end', () => exhibitInteract = false);
   orbit.update();
 
   addEventListener('resize', throttle(1e2, exhibitResize));
   exhibitResize();
 
-  addEventListener('scroll', throttle(1e2, exhibitScroll));
+  addEventListener('scroll', throttle(2e2, exhibitScroll));
   exhibitScroll();
 
-  exhibitTween();
+  exhibitAnimate();
 }
 
 const exhibitReady = () =>

@@ -158,10 +158,9 @@ export class ScenePlayer {
   animate() {
     const t = this.#t = performance.now();
     const { renderer, scene, camera } = this;
+    const event = this.#events.update;
 
-    try {
-      dispatch(this.#events.update, { time: t-this.#t0, delta: t-this.#tn });
-    }
+    try { dispatch(event, { time: t-this.#t0, delta: t-this.#tn }); }
     catch(e) { console.error((e.message || e), (e.stack || '')); }
 
     renderer.render(scene, camera);
@@ -208,7 +207,7 @@ export class ScenePlayer {
     cancelAnimationFrame(this.#frame);
   };
 
-  render(time) {
+  render(time = performance.now()) {
     const { renderer, scene, camera } = this;
 
     dispatch(this.#events.update, { time: time*1e3, delta: 0 /* TODO */ });
