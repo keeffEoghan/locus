@@ -821,7 +821,7 @@ strong { font-weight: 900; }
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
-  align-items: stretch;
+  align-items: flex-start;
   max-width: calc(var(--s-line-x)*var(--split-n));
 
   & > section {
@@ -878,7 +878,10 @@ strong { font-weight: 900; }
 }
 
 .peel-art-main,
-.peel-art-layer { pointer-events: none; }
+.peel-art-layer {
+  touch-action: none;
+  pointer-events: none;
+}
 
 .peel-art-main {
   max-height: 60vmin;

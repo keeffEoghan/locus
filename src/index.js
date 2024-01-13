@@ -8,7 +8,7 @@ import { clamp01, inOpenRange } from '@thi.ng/math/interval';
 import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
 import throttle from 'lodash/fp/throttle';
-import { MOUSE, TOUCH } from 'three';
+import { Vector3, MOUSE, TOUCH } from 'three';
 
 import { ScenePlayer } from './scene-player';
 
@@ -46,17 +46,21 @@ const scroll = {
   main: { block: 'start', behaviour: 'smooth', scrollMode: 'if-needed' }
 };
 
-function scrollIntoView($e, s = scroll.main) {
-  if(s.scrollMode !== 'if-needed') { return $e.scrollIntoView(s); }
+const empty = {};
 
-  const { y: t, right: r, bottom: b, x: l } = $e.getBoundingClientRect();
-  const w = innerWidth;
-  const h = innerHeight;
+function inView(contain, bounds, view = empty) {
+  const { y: bt, right: br, bottom: bb, x: bl } = bounds;
+  const { y: vt = 0, right: vr = innerWidth } = view;
+  const { bottom: vb = innerHeight, x: vl = 0 } = view;
 
-  return !(inOpenRange(t, 0, h) && inOpenRange(b, 0, h) &&
-    inOpenRange(l, 0, w) && inOpenRange(r, 0, w)) &&
-    ($e.scrollIntoView(s) ?? true);
+  return ((contain)? (bt >= vt) && (bb <= vb) && (bl >= vl) && (br <= vr)
+    : (bt <= vb) && (bb >= vt) && (bl <= vr) && (br >= vl));
 }
+
+const scrollIntoView = ($e, s = scroll.main) =>
+  ((s.scrollMode !== 'if-needed')? $e.scrollIntoView(s)
+  : ((inView(true, $e.getBoundingClientRect()))? false
+  : ($e.scrollIntoView(s) || true)));
 
 // Progressively load images.
 
@@ -304,12 +308,14 @@ peerIntersector.observe($peerDemo);
 // Exhibition scene.
 
 const $exhibit = document.querySelector('.exhibit');
-let $exhibitDemo;
-let exhibitPlayer;
-let exhibitCameraDef;
 const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
+let $exhibitDemo;
 const exhibitCameras = {};
 const exhibitCameraPair = [{}, {}];
+let exhibitPlayer;
+let exhibitCameraDef;
+let exhibitCameraTo;
+const exhibitEase = 5e-2;
 
 function exhibitResize() {
   const $p = $exhibitDemo.offsetParent;
@@ -321,36 +327,42 @@ function exhibitResize() {
   return exhibitPlayer.setSize(w, h);
 }
 
-const exhibitIntersector = new IntersectionObserver((all) => {
-    const oy = innerHeight*0.5;
-    const [u, d] = exhibitCameraPair;
+function exhibitScroll() {
+  if(!inView(false, $exhibit.getBoundingClientRect())) { return; }
 
-    u.y = -(d.y = Infinity);
-    u.to = d.to = null;
+  const vy = innerHeight*0.5;
+  const [u, d] = exhibitCameraPair;
 
-    const [{ to: uto, y: uy }, { to: dto, y: dy }] = reduce((pair, to) => {
-        if(!to.isIntersecting) { return pair; }
+  u.y = d.y = u.$c = d.$c = undefined;
 
-        const { y: ty0, bottom: ty1 } = to.boundingClientRect;
-        const ty = mix(ty0, ty1, 0.5)-oy;
-        const i = +(ty > 0);
-        const p = pair[i];
-        const { to: pto, y: py } = p;
+  const [{ $c: u$c, y: uy }, { $c: d$c, y: dy }] = reduce((pair, $c) => {
+      const { y: y0, bottom: y1 } = $c.getBoundingClientRect();
+      const y = mix(y0, y1, 0.5)-vy;
+      const d = y > 0;
+      const p = pair[+d];
+      const { $c: p$c, y: py } = p;
 
-        (!pto || ((i)? py > ty : py < ty)) && (p.to = to) && (p.y = ty);
+      (!p$c || (py == null) || ((d)? y < py : y > py)) &&
+        (p.$c = $c) && (p.y = y);
 
-        return pair;
-      },
-      all, exhibitCameraPair);
+      return pair;
+    },
+    $exhibitCameras, exhibitCameraPair);
 
-    const cs = exhibitCameras;
-    const cu = ((uto)? cs[uto.target.dataset.exhibitCamera] : exhibitCameraDef);
-    const cd = ((dto)? cs[dto.target.dataset.exhibitCamera] : exhibitCameraDef);
+  const cs = exhibitCameras;
+  // Assumes cameras are at the root of the scene.
+  const pu = ((u$c)? cs[u$c.dataset.exhibitCamera] : exhibitCameraDef).position;
+  const pd = ((d$c)? cs[d$c.dataset.exhibitCamera] : exhibitCameraDef).position;
 
-    exhibitPlayer.camera.position.lerpVectors(cu.position, cd.position,
-      clamp01(fit(oy, uy, dy, 0, 1)));
-  },
-  { threshold: map((v, i, a) => i/(a.length-1), range(1e2), 0), root: null });
+  ((pu === pd)? exhibitCameraTo.copy(pu)
+  : exhibitCameraTo.lerpVectors(pu, pd,
+      clamp01(fit(0, uy ?? 0, dy ?? 0, 0, 1))));
+}
+
+function exhibitTween() {
+  exhibitPlayer.camera.position.lerp(exhibitCameraTo, exhibitEase);
+  requestAnimationFrame(exhibitTween);
+}
 
 async function exhibitLoad() {
   const exhibit = await import('../media/exhibit.json');
@@ -361,7 +373,7 @@ async function exhibitLoad() {
     maxDistance: 7,
     maxPolarAngle: pi*0.55,
     zoomSpeed: 2,
-    autoRotate: true,
+    // autoRotate: true,
     mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
     touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
   });
@@ -373,6 +385,8 @@ async function exhibitLoad() {
 
   const { scene, orbit, camera } = exhibitPlayer;
 
+  exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
+
   reduce((to, { dataset: { exhibitCamera: c } }) => {
       to[c] ??= scene.getObjectByName(c);
 
@@ -380,14 +394,17 @@ async function exhibitLoad() {
     },
     $exhibitCameras, exhibitCameras);
 
-  exhibitCameraDef = camera.clone();
+  exhibitCameraTo = exhibitCameraDef.position.clone();
   scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
   orbit.update();
 
-  addEventListener('resize', exhibitResize);
+  addEventListener('resize', throttle(1e2, exhibitResize));
   exhibitResize();
 
-  // each(($c) => exhibitIntersector.observe($c), $exhibitCameras);
+  addEventListener('scroll', throttle(1e2, exhibitScroll));
+  exhibitScroll();
+
+  exhibitTween();
 }
 
 const exhibitReady = () =>
