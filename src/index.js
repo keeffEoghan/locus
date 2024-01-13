@@ -30,9 +30,15 @@ function stopEvent(e) {
 // Introduction animations.
 
 const $html = document.documentElement;
+const rootClass = $html.classList;
 
-setTimeout(() => $html.classList.add('info-hint'), 1e3);
-setTimeout(() => $html.classList.remove('info-hint'), 4e3);
+setTimeout(() => {
+    rootClass.add('info-hint');
+    rootClass.remove('wait');
+  },
+  1e2);
+
+setTimeout(() => rootClass.remove('info-hint'), 7e3);
 
 // Scroll if needed.
 
@@ -149,8 +155,8 @@ const $peelLayers = $peel.querySelectorAll('.peel-art-layer');
 const $peelStyle = $peel.querySelector('.peel-art-style');
 
 $peel.classList.add('peel-far', 'peel-intro');
-setTimeout(() => $peel.classList.remove('peel-far'), 100+1e3);
-setTimeout(() => $peel.classList.remove('peel-intro'), 6000+1e3);
+setTimeout(() => $peel.classList.remove('peel-far'), 1e2+1e3);
+setTimeout(() => $peel.classList.remove('peel-intro'), 6e3+1e3);
 
 function peelOn(e) {
   $peel.classList.remove('peel-far', 'peel-intro');

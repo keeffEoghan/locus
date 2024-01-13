@@ -134,18 +134,18 @@
 /** Intro animation. */
 
 html {
-  animation: 900ms ease-in 1 1800ms backwards text-contrast-0-1;
+  animation: 9e2ms ease-in 1 18e2ms backwards text-contrast-0-1;
   will-change: color, background-color;
 }
 
 nav {
-  animation: 900ms ease-in 1 1800ms backwards opacity-0-1;
+  animation: 9e2ms ease-in 1 18e2ms backwards opacity-0-1;
   will-change: opacity;
 }
 
 header,
 article {
-  animation: 900ms ease-in 1 900ms backwards opacity-0-1;
+  animation: 9e2ms ease-in 1 9e2ms backwards opacity-0-1;
   will-change: opacity;
 }
 
@@ -194,7 +194,6 @@ fieldset {
 
 nav {
   --c-text: #000c;
-  --c-hi-0: var(--c-lo-1);
   --c-base: var(--c-hi-1);
   --c-action-0: var(--c-hi-0);
   --c-action-1: var(--c-base);
@@ -243,13 +242,13 @@ form {
     border-radius: 0 0 var(--s-input-r) var(--s-input-r);
     color: var(--c-disable);
     font-style: italic;
-    transition: opacity 900ms ease-out;
+    transition: opacity 9e2ms ease-out;
     will-change: opacity;
   }
 
   &:not(:focus, :focus-within) .optional:not(:focus, :focus-within, :active) {
     opacity: 0;
-    transition: opacity 300ms ease-in;
+    transition: opacity 3e2ms ease-in;
     animation: pointer-events-auto-none 0ms 100ms both;
   }
 
@@ -337,8 +336,8 @@ figure {
     content: 'Tap for full-screen';
     display: block;
     border: 1px solid var(--c-active);
-    color: var(--c-lo-1);
-    background: var(--c-hi-1);
+    color: var(--c-hi-1);
+    background: var(--c-lo-1);
     font-weight: var(--font-w-2);
     padding: var(--s-s0-y) var(--s-s0-x);
     margin: var(--s-icon-s);
@@ -348,8 +347,8 @@ figure {
     pointer-events: none;
     opacity: 0;
     transform: translate(0.5rem, -0.5rem);
-    transition: opacity 500ms ease-in 700ms,
-      transform 500ms ease-in 700ms;
+    transition: opacity 5e2ms ease-in 3e2ms,
+      transform 5e2ms ease-in 3e2ms;
     will-change: opacity, transform;
   }
 
@@ -365,11 +364,15 @@ figure {
     /* border: 1px solid currentColor;
     border-radius: var(--s-icon-s); */
     color: var(--c-hi-1);
-    text-shadow: 0 0 2px var(--c-lo-1);
+    text-shadow: 0 0 2px var(--c-lo-1),
+      1px 1px 1px var(--c-lo-1),
+      -1px 1px 1px var(--c-lo-1),
+      1px -1px 1px var(--c-lo-1),
+      -1px -1px 1px var(--c-lo-1);
     opacity: 0;
     transform: rotate(45deg);
-    transition: transform 500ms cubic-bezier(0.55, -0.25, 0.45, 2) 400ms,
-      opacity 900ms ease-in 400ms;
+    transition: transform 5e2ms cubic-bezier(0.55, -0.25, 0.45, 2) 4e2ms,
+      opacity 9e2ms ease-in 4e2ms;
     will-change: transform, opacity;
   }
 
@@ -377,24 +380,33 @@ figure {
   &:focus,
   &:active,
   .info-hint & {
-    &::after { transform: rotate(135deg); }
+    &::after {
+      opacity: 1;
+      transform: rotate(-45deg);
+    }
   }
 
   &:hover,
   &:focus,
   &:active {
     &::after {
-      opacity: 1;
-      transition: transform 500ms cubic-bezier(0.55, -0.25, 0.45, 2) 400ms,
-        opacity 300ms ease-out 400ms;
+      transition: transform 5e2ms cubic-bezier(0.55, -0.25, 0.45, 2) 4e2ms,
+        opacity 3e2ms ease-out 4e2ms;
     }
   }
 
   .info-hint & {
-    &::before,
-    &::after { opacity: 1; }
+    &::before {
+      opacity: 1;
+      transform: none;
+      transition: opacity 5e2ms ease-in 3e3ms,
+        transform 5e2ms ease-in 3e3ms;
+    }
 
-    &::before { transform: none; }
+    &::after {
+      transition: transform 5e2ms cubic-bezier(0.55, -0.25, 0.45, 2) 3e3ms,
+        opacity 3e2ms ease-out 3e3ms;
+    }
   }
 
   &:fullscreen {
@@ -416,13 +428,14 @@ figcaption {
   margin: var(--s-s1-r);
   overflow: auto;
   border-radius: var(--s-s1-r);
-  background: var(--c-lo-0);
   text-align: center;
   cursor: auto;
+  color: var(--c-text);
+  background: var(--c-lo-0);
   backdrop-filter: invert(1) blur(3px) saturate(0.5);
-  transition: transform 300ms ease-out,
-    opacity 300ms ease-out,
-    backdrop-filter 300ms ease-out;
+  transition: transform 3e2ms ease-out,
+    opacity 3e2ms ease-out,
+    backdrop-filter 3e2ms ease-out;
   will-change: transform, opacity, backdrop-filter;
 
   figure:is(:hover, :focus, :active):not(:fullscreen) & {
@@ -430,10 +443,22 @@ figcaption {
       transform: translateY(100%) translateY(calc(-1*var(--s-s1-y)));
       opacity: 0.3;
       backdrop-filter: none;
-      transition: transform 900ms ease-in,
-        opacity 900ms ease-in,
-        backdrop-filter 900ms ease-in;
+      transition: transform 9e2ms ease-in,
+        opacity 9e2ms ease-in,
+        backdrop-filter 9e2ms ease-in;
     }
+  }
+
+  .info-hint & {
+    transition: transform 3e2ms ease-out 3e3ms,
+      opacity 3e2ms ease-out 3e3ms,
+      backdrop-filter 3e2ms ease-out 3e3ms;
+  }
+
+  .wait & {
+    opacity: 0;
+    transform: translateY(100%);
+    transition: none;
   }
 }
 
@@ -492,10 +517,10 @@ a {
     currentColor var(--s-s0-r), #0000 var(--s-s0-r));
   background-repeat: repeat no-repeat;
   background-position-y: 0;
-  transition: color 900ms ease-out,
-    border-color 900ms ease-out,
-    outline-color 900ms ease-out,
-    background-position-y 900ms ease-out;
+  transition: color 9e2ms ease-out,
+    border-color 9e2ms ease-out,
+    outline-color 9e2ms ease-out,
+    background-position-y 9e2ms ease-out;
   will-change: color, border-color, outline-color, background-position-y;
 
   &:hover,
@@ -506,10 +531,10 @@ a {
   &:hover,
   &:focus,
   &:active {
-    transition: color 300ms ease-in,
-      border-color 300ms ease-in,
-      outline-color 300ms ease-in,
-      background-position-y 300ms ease-in;
+    transition: color 3e2ms ease-in,
+      border-color 3e2ms ease-in,
+      outline-color 3e2ms ease-in,
+      background-position-y 3e2ms ease-in;
   }
 
   &.icon,
@@ -534,9 +559,9 @@ fieldset,
   text-decoration: none;
   background: var(--c-action-1);
   color: inherit;
-  transition: color 900ms ease-out,
-    border-color 900ms ease-out,
-    outline-color 900ms ease-out;
+  transition: color 9e2ms ease-out,
+    border-color 9e2ms ease-out,
+    outline-color 9e2ms ease-out;
   will-change: color, border-color, outline-color;
 }
 
@@ -550,9 +575,9 @@ fieldset {
   &:hover,
   &:focus,
   &:active {
-    transition: color 300ms ease-in,
-      border-color 300ms ease-in,
-      outline-color 300ms ease-in;
+    transition: color 3e2ms ease-in,
+      border-color 3e2ms ease-in,
+      outline-color 3e2ms ease-in;
   }
 }
 
@@ -629,8 +654,8 @@ input {
       pointer-events: none;
       color: #0000;
       opacity: 0;
-      transition: color 700ms ease-out,
-        opacity 700ms ease-out 500ms;
+      transition: color 7e2ms ease-out,
+        opacity 7e2ms ease-out 5e2ms;
       will-change: color, opacity;
     }
 
@@ -714,9 +739,9 @@ details {
   scroll-margin-top: var(--s-jump-y);
   border-radius: var(--s-input-r);
   border: 1px solid currentColor;
-  transition: color 900ms ease-out,
-    border-color 900ms ease-out,
-    outline-color 900ms ease-out;
+  transition: color 9e2ms ease-out,
+    border-color 9e2ms ease-out,
+    outline-color 9e2ms ease-out;
   will-change: color, border-color, outline-color;
 
   &:hover,
@@ -724,9 +749,9 @@ details {
   &:active {
     border-color: var(--c-active);
     outline-color: currentColor;
-    transition: color 300ms ease-in,
-      border-color 300ms ease-in,
-      outline-color 300ms ease-in;
+    transition: color 3e2ms ease-in,
+      border-color 3e2ms ease-in,
+      outline-color 3e2ms ease-in;
   }
 
   & > p,
@@ -744,7 +769,7 @@ summary {
   background: var(--c-action-1);
   vertical-align: middle;
   cursor: pointer;
-  transition: color 900ms ease-out;
+  transition: color 9e2ms ease-out;
   will-change: color;
 
   &.icon-in { padding: 0 0 0 var(--s-input-x); }
@@ -753,7 +778,7 @@ summary {
   details:focus > &,
   details:active > & {
     color: var(--c-active);
-    transition: color 300ms ease-in;
+    transition: color 3e2ms ease-in;
   }
 
   &::before {
@@ -781,12 +806,12 @@ strong { font-weight: 900; }
   border-radius: var(--s-s1-r);
   outline-offset: calc(-1*var(--s-s1-r));
   outline: var(--s-s1-r) solid #0000;
-  transition: outline-color 900ms ease-out;
+  transition: outline-color 9e2ms ease-out;
   will-change: outline-color;
 
   &:target {
     outline-color: var(--c-jump-2);
-    animation: 2000ms ease-in-out 1 outline-color-0-1-2 backwards;
+    animation: 2e3ms ease-in-out 1 outline-color-0-1-2 backwards;
   }
 }
 
@@ -817,11 +842,11 @@ strong { font-weight: 900; }
   --c-action-1: var(--c-cta);
   font-size: var(--s-font-cta);
   color: var(--c-action-0);
-  transition: color 900ms ease-out,
-    background-color 900ms ease-out,
-    border-color 900ms ease-out,
-    outline-color 900ms ease-out,
-    background-position-y 900ms ease-out;
+  transition: color 9e2ms ease-out,
+    background-color 9e2ms ease-out,
+    border-color 9e2ms ease-out,
+    outline-color 9e2ms ease-out,
+    background-position-y 9e2ms ease-out;
   will-change: color, background-color, border-color, outline-color,
     background-position-y;
 
@@ -830,11 +855,11 @@ strong { font-weight: 900; }
   &:active {
     --c-action-0: var(--c-cta);
     --c-action-1: var(--c-base);
-    transition: color 300ms ease-in,
-      background-color 300ms ease-in,
-      border-color 300ms ease-in,
-      outline-color 300ms ease-in,
-      background-position-y 300ms ease-in;
+    transition: color 3e2ms ease-in,
+      background-color 3e2ms ease-in,
+      border-color 3e2ms ease-in,
+      outline-color 3e2ms ease-in,
+      background-position-y 3e2ms ease-in;
   }
 }
 
@@ -872,7 +897,7 @@ strong { font-weight: 900; }
   width: 100%;
   height: 100%;
   clip-path: polygon(-140% 0%, -100% 0%, -200% 100%, -240% 100%);
-  transition: clip-path 900ms ease-in;
+  transition: clip-path 9e2ms ease-in;
   will-change: clip-path;
 
   &:nth-child(3) {
@@ -952,14 +977,14 @@ strong { font-weight: 900; }
   &.peel-art-layer-fill {
     background-color: inherit;
     clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
-    transition: clip-path 1500ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 800ms;
+    transition: clip-path 15e2ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 8e2ms;
 
     .peel-far & {
       clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
 
     .peel-intro & {
-      transition: clip-path 1500ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 5500ms;
+      transition: clip-path 15e2ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 55e2ms;
     }
   }
 
@@ -968,12 +993,19 @@ strong { font-weight: 900; }
     &.peel-art-layer-fill { transition: none; }
   }
 
-  .peel-art:hover & { transition: clip-path 300ms ease-out; }
+  .peel-art:hover & { transition: clip-path 3e2ms ease-out; }
+}
+
+.peel-far ~ figcaption {
+  opacity: 0;
+  transform: translateY(100%);
+  transition: none;
 }
 
 .peel-intro ~ figcaption {
-  opacity: 0;
-  transform: translateY(100%);
+  transition: transform 3e2ms ease-out 5e3ms,
+    opacity 3e2ms ease-out 5e3ms,
+    backdrop-filter 3e2ms ease-out 5e3ms;
 }
 
 blockquote {
@@ -994,8 +1026,8 @@ blockquote {
 cite {
   display: block;
   margin-top: 2em;
-  font-size: 0.6em;
-  font-weight: var(--font-w-0);
+  font-size: 0.66em;
+  font-weight: var(--font-w-1);
   font-style: italic;
 
   &::before {
@@ -1035,7 +1067,8 @@ cite {
   position: fixed;
   inset: 0;
   backface-visibility: hidden;
-  animation: 900ms ease-in 1 backwards opacity-0-1;
+  touch-action: pan-x pan-y;
+  animation: 9e2ms ease-in 1 backwards opacity-0-1;
   will-change: opacity;
 
   & > canvas {
@@ -1077,7 +1110,7 @@ cite {
   left: 50%;
   transform: translateX(-50%);
   opacity: 0.5;
-  transition: opacity 900ms ease-out;
+  transition: opacity 9e2ms ease-out;
   will-change: opacity;
   text-transform: uppercase;
 
@@ -1085,7 +1118,7 @@ cite {
   &:focus,
   &:active {
     opacity: 1;
-    transition: opacity 300ms ease-in;
+    transition: opacity 3e2ms ease-in;
   }
 
   &.disabled {
@@ -1138,7 +1171,7 @@ cite {
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 900ms ease-out;
+    transition: opacity 9e2ms ease-out;
     will-change: opacity, pointer-events;
 
     /* .artifact-view:hover &,
@@ -1153,7 +1186,7 @@ cite {
     &:playing,
     &.playing {
       opacity: 1;
-      transition: opacity 300ms ease-in;
+      transition: opacity 3e2ms ease-in;
       animation: pointer-events-auto-none 0ms 150ms reverse both;
     }
   }
@@ -1242,8 +1275,8 @@ cite {
     pointer-events: none;
     opacity: 0;
     transform: translateY(0.5rem);
-    transition: opacity 500ms ease-in 500ms,
-      transform 500ms ease-in 500ms;
+    transition: opacity 5e2ms ease-in 5e2ms,
+      transform 5e2ms ease-in 5e2ms;
     will-change: opacity, transform;
   }
 
@@ -1253,8 +1286,8 @@ cite {
     &::before {
       opacity: 1;
       transform: none;
-      transition: opacity 300ms ease-out 300ms,
-        transform 300ms ease-out 300ms;
+      transition: opacity 3e2ms ease-out 3e2ms,
+        transform 3e2ms ease-out 3e2ms;
     }
   }
 }

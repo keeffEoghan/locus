@@ -33,7 +33,9 @@ class OrbitControls extends EventDispatcher {
 
     this.object = object;
     this.domElement = domElement;
-    this.domElement.style.touchAction = 'none'; // disable touch scroll
+
+    // Disable touches handled here
+    // this.domElement.style.touchAction = 'none';
 
     // Set to false to disable this control
     this.enabled = true;
