@@ -312,6 +312,7 @@ peerIntersector.observe($peerDemo);
 
 const $exhibit = document.querySelector('.exhibit');
 const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
+const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
 let $exhibitDemo;
 let exhibitOn = false;
 const exhibitCameras = {};
@@ -430,9 +431,26 @@ async function exhibitLoad() {
 
   exhibitCameraTo = exhibitCameraDef.position.clone();
   scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
-  orbit.addEventListener('start', () => exhibitInteract = true);
-  orbit.addEventListener('end', () => exhibitInteract = false);
+
+  let interactWait;
+
+  orbit.addEventListener('start', () => {
+    clearTimeout(interactWait);
+    exhibitInteract = true;
+  });
+
+  orbit.addEventListener('end', () => {
+    clearTimeout(interactWait);
+    interactWait = setTimeout(() => exhibitInteract = false, 9e2);
+  });
+
   orbit.update();
+
+  const infoTouch = (e) =>
+    $exhibitInfoTouch.classList.toggle('show', e.targetTouches.length !== 2);
+
+  $exhibitDemo.addEventListener('touchstart', infoTouch);
+  $exhibitDemo.addEventListener('touchend', infoTouch);
 
   addEventListener('resize', throttle(1e2, exhibitResize));
   exhibitResize();
