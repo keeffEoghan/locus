@@ -1171,6 +1171,7 @@ cite {
   opacity: 0;
   padding: var(--s-m1-y) var(--s-m1-x);
   margin: var(--s-m0-y) auto;
+  pointer-events: none;
   transition: opacity 9e2ms ease-in;
   will-change: opacity;
 
