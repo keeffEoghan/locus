@@ -127,6 +127,7 @@ setInterval(tickTime, minute*0.5);
 const $subscribes = each(($subscribe) => {
     const $submit = $subscribe.querySelector('[type="submit"]');
     const $optional = $subscribe.querySelector('.optional');
+    let successWait;
 
     $subscribe.addEventListener('submit', async (e) => {
       stopEffect(e);
@@ -139,12 +140,15 @@ const $subscribes = each(($subscribe) => {
 
       $submit.setCustomValidity(valid);
       $submit.disabled = false;
+      clearTimeout(successWait);
+      cs.remove('success');
 
       cs.toggle('success', $submit.reportValidity()) &&
-        setTimeout(() => {
-          cs.remove('success');
-          $subscribe.reset();
-        });
+        (successWait = setTimeout(() => {
+            cs.remove('success');
+            $subscribe.reset();
+          },
+          1e2));
     });
 
     $subscribe.addEventListener('focusin', () => {
@@ -313,7 +317,7 @@ peerIntersector.observe($peerDemo);
 const $exhibit = document.querySelector('.exhibit');
 const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
 const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
-let $exhibitDemo;
+let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
 let exhibitOn = false;
 const exhibitCameras = {};
 const exhibitCameraPair = [{}, {}];
@@ -338,10 +342,10 @@ function exhibitScroll() {
   const wasOn = exhibitOn;
 
   if(!(exhibitOn = inView(false, $exhibit.getBoundingClientRect()))) {
-    return wasOn && console.log('Exhibit off', exhibitPlayer.stop());
+    return wasOn && exhibitPlayer.stop();
   }
 
-  !wasOn && console.log('Exhibit on', exhibitPlayer.play());
+  !wasOn && exhibitPlayer.play();
 
   const vy = innerHeight*0.5;
   const [u, d] = exhibitCameraPair;
@@ -400,7 +404,7 @@ async function exhibitLoad() {
 
   const { dom, scene, orbit, camera } = exhibitPlayer;
 
-  $exhibit.prepend($exhibitDemo = dom);
+  $exhibitDemo.replaceWith($exhibitDemo = dom);
   $exhibitDemo.classList.add('exhibit-demo');
   exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
 

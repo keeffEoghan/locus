@@ -49,7 +49,7 @@
 :root {
   --c-hi-0: #fffc;
   --c-hi-1: #fff;
-  --c-lo-0: #333c;
+  --c-lo-0: #6669;
   --c-lo-1: #000;
   --c-base-root: #161616;
   --c-base: var(--c-base-root);
@@ -508,7 +508,17 @@ fieldset {
   &.icon { border-radius: var(--s-icon-m); }
 
   &.icon-in { padding: 0 0 0 var(--s-input-x); }
+}
 
+a,
+input,
+button,
+.button,
+label,
+fieldset,
+em,
+strong,
+code {
   em,
   strong,
   code { color: inherit; }
@@ -782,6 +792,13 @@ summary {
   transition: color 9e2ms ease-out;
   will-change: color;
 
+  &,
+  &.jump {
+    border-radius: var(--s-input-r);
+
+    [open] > & { border-radius: var(--s-input-r) var(--s-input-r) 0 0; }
+  }
+
   &.icon-in { padding: 0 0 0 var(--s-input-x); }
 
   details:hover > &,
@@ -941,7 +958,7 @@ cite {
   width: 100%;
   height: 100%;
   clip-path: polygon(-140% 0%, -100% 0%, -200% 100%, -240% 100%);
-  transition: clip-path 9e2ms ease-in;
+  transition: clip-path 2e3ms ease-in;
   will-change: clip-path;
 
   &:nth-child(3) {
@@ -1016,12 +1033,12 @@ cite {
     }
   }
 
-  .peel-intro & { transition: clip-path 6000ms ease-in; }
+  .peel-intro & { transition: clip-path 6e3ms ease-in; }
 
   &.peel-art-layer-fill {
     background-color: inherit;
     clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
-    transition: clip-path 15e2ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 8e2ms;
+    transition: clip-path 15e2ms cubic-bezier(0.2, 0.5, 0.8, 0.3) 2e3ms;
 
     .peel-far & {
       clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
@@ -1086,6 +1103,11 @@ cite {
   inset: 0;
   backface-visibility: hidden;
   touch-action: pan-x pan-y;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('../media/exhibit-participant.jpg?width=1600'),
+    url('../media/exhibit-participant.jpg?width=160'),
+    url('../media/exhibit-participant.jpg?width=16');
   animation: 9e2ms ease-in 1 backwards opacity-0-1;
   will-change: opacity;
 
