@@ -380,7 +380,13 @@ function exhibitScroll() {
 function exhibitAnimate() {
   const { camera, scene } = exhibitPlayer;
 
-  !exhibitInteract && camera.position.lerp(exhibitCameraTo, exhibitEase);
+  if(!exhibitInteract) {
+    const p = camera.position;
+
+    ((p.distanceToSquared(exhibitCameraTo) < 2e-3)? p.copy(exhibitCameraTo)
+    : p.lerp(exhibitCameraTo, exhibitEase));
+  }
+
   exhibit2DRenderer.render(scene, camera);
 
   requestAnimationFrame(exhibitAnimate);

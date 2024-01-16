@@ -203,9 +203,10 @@ nav {
   --c-action-1: var(--c-base);
   --s-font-m: 1.1rem;
   position: sticky;
-  inset: var(--s-s1-r) 0;
-  margin: var(--s-l0-y) auto;
+  inset: var(--s-s1-r) auto auto 0;
+  margin: var(--s-l0-y) var(--s-m2-x);
   padding: var(--s-m2-y) var(--s-m2-x);
+  align-self: center;
   gap: var(--s-items-gap);
   z-index: var(--z-nav);
   font-weight: var(--font-w-3);
@@ -340,8 +341,8 @@ figure {
     content: 'Tap for full-screen';
     display: block;
     border: 1px solid var(--c-active);
-    color: var(--c-hi-1);
-    background: var(--c-lo-1);
+    color: var(--c-lo-1);
+    background: var(--c-hi-1);
     font-weight: var(--font-w-2);
     padding: var(--s-s0-y) var(--s-s0-x);
     margin: var(--s-icon-s);
@@ -375,8 +376,8 @@ figure {
       0 0 3px var(--c-lo-1);
     opacity: 0;
     transform: rotate(75deg);
-    transition: transform 5e2ms cubic-bezier(0.55, -0.25, 0.45, 2) 4e2ms,
-      opacity 9e2ms ease-in 4e2ms;
+    transition: transform 9e2ms cubic-bezier(0.5, -1, 0.2, 0.2) 4e2ms,
+      opacity 8e2ms ease-in 5e2ms;
     will-change: transform, opacity;
   }
 
@@ -394,7 +395,7 @@ figure {
   &:focus,
   &:active {
     &::after {
-      transition: transform 5e2ms cubic-bezier(0.55, -0.25, 0.45, 2) 4e2ms,
+      transition: transform 5e2ms cubic-bezier(0.2, 0.2, 0.5, 2) 4e2ms,
         opacity 3e2ms ease-out 4e2ms;
     }
   }
@@ -819,6 +820,8 @@ strong { color: var(--c-hi-1); }
 
 strong { font-weight: 900; }
 
+small { font-size: 0.9em; }
+
 blockquote {
   --s-line-x: 30em;
   display: flex;
@@ -885,7 +888,7 @@ cite {
   & > section {
     position: relative;
     flex: 1 1 calc((100%)/var(--split-n));
-    min-width: calc(0.75*var(--s-line-x));
+    min-width: calc(0.85*var(--s-line-x));
     max-width: calc(var(--s-line-x)+(var(--s-l0-x)*2));
     border: var(--s-s1-r) solid #0000;
     margin: 0 auto;
