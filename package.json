@@ -33,7 +33,9 @@
   "devDependencies": {
     "@parcel/core": "^2.10.3",
     "@parcel/optimizer-data-url": "2.10.3",
+    "@parcel/packager-raw-url": "2.10.3",
     "@parcel/transformer-inline-string": "2.10.3",
+    "@parcel/transformer-webmanifest": "2.10.3",
     "markdown-it-attrs": "^4.1.6",
     "parcel": "^2.10.3",
     "postcss": "^8.0.0",

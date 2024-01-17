@@ -543,6 +543,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@parcel/packager-raw-url@npm:2.10.3":
+  version: 2.10.3
+  resolution: "@parcel/packager-raw-url@npm:2.10.3"
+  dependencies:
+    "@parcel/plugin": 2.10.3
+    "@parcel/utils": 2.10.3
+  checksum: eb4f0abe077abfda48f72dbc0175dd295cfa873e08f7461f7fd44676651084a3fcbfe6a9d1bfac1a88ed0ff91e0660c60786ac550793884ff5305034d433174c
+  languageName: node
+  linkType: hard
+
 "@parcel/packager-raw@npm:2.10.3":
   version: 2.10.3
   resolution: "@parcel/packager-raw@npm:2.10.3"
@@ -865,6 +875,18 @@ __metadata:
     posthtml-render: ^3.0.0
     semver: ^7.5.2
   checksum: aa1c3378fc4b809cca9dd90804030d204a587e3a4bebf5f0cf3853eaf6eff0cf82b47e304df2b532831eaabe48143a996a789d3d199f156de534ff03c68a3c8e
+  languageName: node
+  linkType: hard
+
+"@parcel/transformer-webmanifest@npm:2.10.3":
+  version: 2.10.3
+  resolution: "@parcel/transformer-webmanifest@npm:2.10.3"
+  dependencies:
+    "@mischnic/json-sourcemap": ^0.1.0
+    "@parcel/diagnostic": 2.10.3
+    "@parcel/plugin": 2.10.3
+    "@parcel/utils": 2.10.3
+  checksum: a408d76dec14d9e271596f44f138bc850bb6f748dde964d9a2196f9faa91ddb767546bc7794100f13dbe13730f6511b3f59ab7b11893d7b12a9dc15f3395e3b2
   languageName: node
   linkType: hard
 
@@ -2570,7 +2592,9 @@ __metadata:
     "@epok.tech/fn-lists": ^0.1.4
     "@parcel/core": ^2.10.3
     "@parcel/optimizer-data-url": 2.10.3
+    "@parcel/packager-raw-url": 2.10.3
     "@parcel/transformer-inline-string": 2.10.3
+    "@parcel/transformer-webmanifest": 2.10.3
     "@thi.ng/math": ^5.7.7
     "@thi.ng/vectors": ^7.8.13
     lodash: ^4.17.21
