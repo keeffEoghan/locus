@@ -138,6 +138,7 @@ const $subscribes = each(($subscribe) => {
       const valid = ((r.ok)? '' : "Can't send your details, please try again");
       const cs = $subscribe.classList;
 
+      console.log('Subscribed', r);
       $submit.setCustomValidity(valid);
       $submit.disabled = false;
       clearTimeout(successWait);

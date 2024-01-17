@@ -1,4 +1,7 @@
 /**
+ * WIP copying R1C1 forumlas.
+ * @see [API](https://developers.google.com/apps-script/reference/spreadsheet/range#setFormulaR1C1(String))
+ *
  * Latest code from https://github.com/NoahThatsWack/HTML-Form-to-Google-Sheets
  * Updated for 2021 and ES6 standards in https://github.com/levinunnink/html-form-to-google-sheet
  * Original code from https://github.com/jamiewilson/form-to-google-sheets
@@ -116,8 +119,9 @@ function setup() {
 }
 
 function doPost(d) {
-  let to;
   const lock = LockService.getScriptLock();
+  let to;
+  const p = d.parameter;
 
   lock.tryLock(10000);
 
@@ -127,11 +131,26 @@ function doPost(d) {
     const lastColumn = sheet.getLastColumn();
     const headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0];
     const nextRow = sheet.getLastRow()+1;
+    const nextRange = sheet.getRange(nextRow, 1, 1, headers.length);
 
-    const toRow = headers.map((header) =>
-      ((header === 'Date')? new Date() : xssEscape(d.parameter[header])));
+    headers.forEach(function(header, column) {
+      const cell = sheet.getCell(nextRow, column);
 
-    sheet.getRange(nextRow, 1, 1, toRow.length).setValues([toRow]);
+      if(header in p) {
+        return cell.setValue((header === 'Date')? new Date()
+          : xssEscape(p[header]));
+      }
+
+      const template = sheet.getCell(2, column);
+      const static = template.getValue();
+
+      if(static) { return cell.setValue(static); }
+
+      const formula = template.getForumlaR1C1();
+
+      if(formulas) { return cell.setForumlaR1C1(formula); }
+    });
+
     to = { 'result': 'success', 'row': nextRow };
   }
   catch(e) { to = { 'result': 'error', 'error': e }; }
