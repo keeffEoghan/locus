@@ -410,10 +410,44 @@ async function exhibitLoad() {
   exhibitPlayer.render();
 
   const { dom, scene, orbit, camera } = exhibitPlayer;
+  let interactWait;
+  let labelWait;
 
   $exhibitDemo.replaceWith($exhibitDemo = dom);
   $exhibitDemo.classList.add('exhibit-demo');
   exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
+
+  function interactStart() {
+    clearTimeout(interactWait);
+    exhibitInteract = true;
+  }
+
+  function interactEnd() {
+    clearTimeout(interactWait);
+    interactWait = setTimeout(() => exhibitInteract = false, 2e3);
+  }
+
+  orbit.addEventListener('start', interactStart);
+  orbit.addEventListener('end', interactEnd);
+  orbit.update();
+
+  const infoTouch = (e) =>
+    $exhibitInfoTouch.classList.toggle('show', e.targetTouches.length !== 2);
+
+  $exhibitDemo.addEventListener('touchstart', infoTouch);
+  $exhibitDemo.addEventListener('touchend', infoTouch);
+
+  function labelOpen() {
+    interactStart();
+    clearTimeout(labelWait);
+    orbit.enabled = false;
+  }
+
+  function labelShut() {
+    interactEnd();
+    clearTimeout(labelWait);
+    labelWait = setTimeout(() => orbit.enabled = true, 2e3);
+  }
 
   scene.traverse((o) => {
     const { userData: d, position: p } = o;
@@ -429,6 +463,8 @@ async function exhibitLoad() {
     $label.classList.add('exhibit-label');
     focus && to.position.set(...focus);
     o.add(to);
+    $label.addEventListener('pointerenter', labelOpen);
+    $label.addEventListener('pointerleave', labelShut);
   });
 
   exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
@@ -442,26 +478,6 @@ async function exhibitLoad() {
 
   exhibitCameraTo = exhibitCameraDef.position.clone();
   scene.getObjectByName('ScreenCircle').getWorldPosition(orbit.target);
-
-  let interactWait;
-
-  orbit.addEventListener('start', () => {
-    clearTimeout(interactWait);
-    exhibitInteract = true;
-  });
-
-  orbit.addEventListener('end', () => {
-    clearTimeout(interactWait);
-    interactWait = setTimeout(() => exhibitInteract = false, 9e2);
-  });
-
-  orbit.update();
-
-  const infoTouch = (e) =>
-    $exhibitInfoTouch.classList.toggle('show', e.targetTouches.length !== 2);
-
-  $exhibitDemo.addEventListener('touchstart', infoTouch);
-  $exhibitDemo.addEventListener('touchend', infoTouch);
 
   addEventListener('resize', throttle(1e2, exhibitResize));
   exhibitResize();
