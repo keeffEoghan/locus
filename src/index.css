@@ -1337,7 +1337,7 @@ cite {
   aspect-ratio: 16/9;
   width: auto;
   height: var(--s-view-tall);
-  max-height: 1080px;
+  max-height: 720px;
   max-width: 100%;
   margin: var(--s-m0-y) var(--s-m0-x);
   background: var(--c-accent);
