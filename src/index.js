@@ -277,6 +277,7 @@ const $peerView = document.querySelector('.peer-view');
 const $peerRandom = $peerView.querySelector('.peer-random');
 const $peerCamera = $peerView.querySelector('.peer-camera');
 const $peerFlip = $peerView.querySelector('#peer-flip');
+const $peerFill = $peerView.querySelector('.peer-fill');
 const $peerDemo = $peerView.querySelector('.peer-demo');
 // Seeds that look good and are easy to use.
 const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
@@ -304,14 +305,20 @@ $peerCamera.addEventListener('change', () => {
 });
 
 $peerFlip.addEventListener('change', () =>
-  (($peerFlip.checked)? $peerView.prepend($peerDemo) : $peerDemo.remove()));
+  (($peerFlip.checked)? $peerView.prepend($peerFill) : $peerFill.remove()));
 
 /** @see [Infinite scroll example](https://googlechrome.github.io/samples/intersectionobserver/) */
-const peerIntersector = new IntersectionObserver((all) =>
+const peerFillIntersector = new IntersectionObserver((all) =>
+  ((!all.some((e) => e.isIntersecting))? $peerDemo.remove()
+  : $peerFill.append($peerDemo)));
+
+peerFillIntersector.observe($peerFill);
+
+const peerDemoIntersector = new IntersectionObserver((all) =>
     all.some((e) => e.isIntersecting) && ($peerDemo.src = $peerDemo.src),
   { threshold: 0.5 });
 
-peerIntersector.observe($peerDemo);
+peerDemoIntersector.observe($peerDemo);
 
 // Exhibition scene.
 

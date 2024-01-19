@@ -1318,8 +1318,6 @@ cite {
 
 .peer { flex-flow: row-reverse wrap; }
 
-.peer-view { max-width: 2000px; }
-
 .peer-view,
 .peer-controls {
   display: flex;
@@ -1328,12 +1326,14 @@ cite {
   gap: var(--s-items-gap);
 }
 
-.peer-view { flex-flow: column nowrap; }
+.peer-view {
+  max-width: 2000px;
+  flex-flow: column nowrap;
+}
 
 .peer-controls { flex-flow: row wrap; }
 
-.peer-demo {
-  display: block;
+.peer-fill {
   aspect-ratio: 16/9;
   width: auto;
   height: var(--s-view-tall);
@@ -1341,6 +1341,16 @@ cite {
   max-width: 100%;
   margin: var(--s-m0-y) var(--s-m0-x);
   background: var(--c-accent);
+}
+
+.peer-demo {
+  display: block;
+  aspect-ratio: inherit;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
 }
 
 .peer-camera,
