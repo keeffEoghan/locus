@@ -1128,7 +1128,6 @@ cite {
   position: absolute;
   inset: 0 auto auto 0;
   width: var(--info-w);
-  max-width: calc(0.5*var(--s-line-x));
   padding: var(--s-m2-y) var(--s-m2-x);
   font-size: var(--s-font-m);
   font-family: Inter, sans-serif;
@@ -1136,14 +1135,24 @@ cite {
   cursor: help;
   border-radius: var(--s-icon-xs);
   backdrop-filter: invert(0.8) blur(var(--s-s1-r));
+  max-width: calc(2*var(--s-icon-xs));
+  max-height: calc(2*var(--s-icon-xs));
+  clip-path: circle(var(--s-icon-xs));
   color: #0000;
   background: var(--c-over-3);
-  clip-path: circle(var(--s-icon-xs));
-  transition: color 9e2ms ease-out,
-    background-color 9e2ms ease-out,
+  transition: max-width 0ms linear 9e2ms,
+    max-height 0ms linear 9e2ms,
     clip-path 9e2ms ease-out,
+    color 9e2ms ease-out,
+    background-color 9e2ms ease-out,
     z-index 9e2ms linear;
-  will-change: color, background-color, clip-path, transform, z-index;
+  will-change: max-width,
+    max-height,
+    clip-path,
+    color,
+    background-color,
+    transform,
+    z-index;
 
   &::before {
     content: '✖';
@@ -1165,13 +1174,17 @@ cite {
   &:focus,
   &:active,
   &.show {
+    max-width: calc(0.5*var(--s-line-x));
+    max-height: 200vh;
+    clip-path: circle(100%);
     color: var(--c-lo-1);
     background-color: var(--c-hi-1);
-    clip-path: circle(100%);
     z-index: var(--z-exhibit-label) !important;
-    transition: color 3e2ms ease-in,
-      background-color 3e2ms ease-in,
+    transition: max-width 0ms,
+      max-height 0ms,
       clip-path 5e2ms ease-in,
+      color 3e2ms ease-in,
+      background-color 3e2ms ease-in,
       z-index 0ms linear;
 
     &::before {
