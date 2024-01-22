@@ -453,26 +453,33 @@ figcaption {
   background: var(--c-lo-0);
   /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
   /* backdrop-filter: invert(0.8); */
-  transition: transform 3e2ms ease-out,
+  /* transition: transform 3e2ms ease-out,
     opacity 3e2ms ease-out,
-    backdrop-filter 3e2ms ease-out;
-  will-change: transform, opacity, backdrop-filter;
+    backdrop-filter 3e2ms ease-out; */
+  transition: transform 3e2ms ease-out,
+    opacity 3e2ms ease-out;
+  /* will-change: transform, opacity, backdrop-filter; */
+  will-change: transform, opacity;
 
   figure:is(:hover, :focus, :active):not(:fullscreen) & {
     &:not(:hover, :focus, :active) {
       transform: translateY(100%) translateY(calc(-1*var(--s-s1-y)));
       opacity: 0.3;
-      backdrop-filter: none;
-      transition: transform 9e2ms ease-in,
+      /* backdrop-filter: none; */
+      /* transition: transform 9e2ms ease-in,
         opacity 9e2ms ease-in,
-        backdrop-filter 9e2ms ease-in;
+        backdrop-filter 9e2ms ease-in; */
+      transition: transform 9e2ms ease-in,
+        opacity 9e2ms ease-in;
     }
   }
 
   .info-hint & {
-    transition: transform 3e2ms ease-out 3e3ms,
+    /* transition: transform 3e2ms ease-out 3e3ms,
       opacity 3e2ms ease-out 3e3ms,
-      backdrop-filter 3e2ms ease-out 3e3ms;
+      backdrop-filter 3e2ms ease-out 3e3ms; */
+    transition: transform 3e2ms ease-out 3e3ms,
+      opacity 3e2ms ease-out 3e3ms;
   }
 
   .wait & {
@@ -1076,9 +1083,11 @@ cite {
 }
 
 .peel-intro ~ figcaption {
-  transition: transform 3e2ms ease-out 5e3ms,
+  /* transition: transform 3e2ms ease-out 5e3ms,
     opacity 3e2ms ease-out 5e3ms,
-    backdrop-filter 3e2ms ease-out 5e3ms;
+    backdrop-filter 3e2ms ease-out 5e3ms; */
+  transition: transform 3e2ms ease-out 5e3ms,
+    opacity 3e2ms ease-out 5e3ms;
 }
 
 #inspiration { z-index: var(--z-exhibit-over); }
