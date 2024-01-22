@@ -451,7 +451,8 @@ figcaption {
   cursor: auto;
   color: var(--c-text);
   background: var(--c-lo-0);
-  backdrop-filter: invert(1) blur(3px) saturate(0.5);
+  /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
+  /* backdrop-filter: invert(0.8); */
   transition: transform 3e2ms ease-out,
     opacity 3e2ms ease-out,
     backdrop-filter 3e2ms ease-out;
@@ -1141,6 +1142,7 @@ cite {
   cursor: help;
   border-radius: var(--s-icon-xs);
   /* backdrop-filter: invert(0.8) blur(var(--s-s1-r)); */
+  /* backdrop-filter: invert(0.8); */
   max-width: calc(2*var(--s-icon-xs));
   max-height: calc(2*var(--s-icon-xs));
   clip-path: circle(var(--s-icon-xs));
@@ -1204,6 +1206,7 @@ cite {
   position: relative;
   background: var(--c-over-0);
   /* backdrop-filter: invert(0.8) blur(var(--s-s1-r)); */
+  /* backdrop-filter: invert(0.8); */
   border-radius: var(--s-s1-r);
   z-index: var(--z-exhibit-over);
 }
