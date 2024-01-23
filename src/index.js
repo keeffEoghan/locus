@@ -336,6 +336,18 @@ let exhibitInteract = false;
 const exhibitEase = 5e-2;
 let exhibit2DRenderer;
 
+function exhibitPlay() {
+  exhibitPlayer.play();
+  $exhibit.classList.add('exhibit-play');
+  $exhibit.classList.remove('exhibit-stop');
+}
+
+function exhibitStop() {
+  exhibitPlayer.stop();
+  $exhibit.classList.add('exhibit-stop');
+  $exhibit.classList.remove('exhibit-play');
+}
+
 function exhibitResize() {
   let w = innerWidth;
   let h = innerHeight;
@@ -350,10 +362,10 @@ function exhibitScroll() {
   const wasOn = exhibitOn;
 
   if(!(exhibitOn = inView(false, $exhibit.getBoundingClientRect()))) {
-    return wasOn && exhibitPlayer.stop();
+    return wasOn && exhibitStop();
   }
 
-  !wasOn && exhibitPlayer.play();
+  !wasOn && exhibitPlay();
 
   const vy = innerHeight*0.5;
   const [u, d] = exhibitCameraPair;

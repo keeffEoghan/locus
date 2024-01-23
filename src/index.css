@@ -72,8 +72,7 @@
   --c-jump-1: var(--c-active);
   --c-jump-2: #2d9cdb88;
   --c-over-0: #0009;
-  --c-over-1: #0001;
-  --c-over-3: #0004;
+  --c-over-1: #0004;
   --c-art-fill: #e6e6e6;
   --s-font-m: 1rem;
   --s-font-s: 0.6rem;
@@ -145,18 +144,20 @@ html {
 }
 
 nav {
-  animation: 9e2ms ease-in 1 18e2ms backwards opacity-0-1;
-  will-change: opacity;
+  animation: 9e2ms ease-in 1 18e2ms backwards opacity-0-1,
+    9e2ms ease-in 1 18e2ms backwards text-contrast-0-1;
+  will-change: color, background-color;
 }
 
 header,
 article {
-  animation: 9e2ms ease-in 1 9e2ms backwards opacity-0-1;
-  will-change: opacity;
+  animation: 9e2ms ease-in 1 9e2ms backwards opacity-0-1,
+    9e2ms ease-in 1 18e2ms backwards text-contrast-0-1;
+  will-change: color, background-color;
 }
 
 .exhibit-demo {
-  animation: 9e2ms ease-in 1 2e3ms backwards opacity-0-1;
+  animation: 9e2ms ease-in 1 3e3ms backwards opacity-0-1;
   will-change: opacity;
 }
 
@@ -450,7 +451,7 @@ figcaption {
   text-align: center;
   cursor: auto;
   color: var(--c-text);
-  background: var(--c-lo-0);
+  background: var(--c-over-0);
   /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
   /* backdrop-filter: invert(0.8); */
   /* transition: transform 3e2ms ease-out,
@@ -1137,6 +1138,10 @@ cite {
 
     &:active { cursor: grabbing; }
   }
+
+  .exhibit-play & { opacity: 1; }
+
+  .exhibit-stop & { opacity: 0; }
 }
 
 .exhibit-label {
@@ -1156,7 +1161,7 @@ cite {
   max-height: calc(2*var(--s-icon-xs));
   clip-path: circle(var(--s-icon-xs));
   color: #0000;
-  background: var(--c-over-3);
+  background: var(--c-over-1);
   transition: max-width 0ms linear 9e2ms,
     max-height 0ms linear 9e2ms,
     clip-path 9e2ms ease-out,
