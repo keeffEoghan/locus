@@ -1139,9 +1139,15 @@ cite {
     &:active { cursor: grabbing; }
   }
 
-  .exhibit-play & { opacity: 1; }
+  .exhibit-play & {
+    opacity: 1;
+    transition: opacity 500ms ease-out;
+  }
 
-  .exhibit-stop & { opacity: 0; }
+  .exhibit-stop & {
+    opacity: 0;
+    transition: opacity 100ms ease-in;
+  }
 }
 
 .exhibit-label {
@@ -1363,14 +1369,14 @@ cite {
 }
 
 .peer-view {
+  flex: 1 1 auto;
   flex-flow: column nowrap;
-  width: 100%;
 }
 
 .peer-controls { flex-flow: row wrap; }
 
 .peer-fill {
-  align-self: stretch;
+  width: 100%;
   height: var(--s-view-tall);
   max-height: 720px;
   max-width: 1280px;
