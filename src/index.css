@@ -70,8 +70,9 @@
   --c-nth: #0000;
   --c-jump-0: #0000;
   --c-jump-1: var(--c-active);
-  --c-jump-2: #2d9cdb88;
-  --c-over-0: #0009;
+  --c-jump-2: #2d9cdb77;
+  --c-jump-cta: #1ccc6c77;
+  --c-over-0: #000b;
   --c-over-1: #0004;
   --c-art-fill: #e6e6e6;
   --s-font-m: 1rem;
@@ -223,6 +224,13 @@ nav {
   z-index: var(--z-nav);
   font-weight: var(--font-w-3);
   box-shadow: 0 0 var(--s-s1-r) 0 var(--c-base-root);
+
+  &.round {
+    inset: var(--s-s1-r) auto auto 0;
+    margin: var(--s-l0-y) var(--s-m2-x);
+    align-self: center;
+    border-radius: var(--s-nav-r);
+  }
 }
 
 form,
@@ -452,27 +460,32 @@ figcaption {
   cursor: auto;
   color: var(--c-text);
   background: var(--c-over-0);
-  /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
-  /* backdrop-filter: invert(0.8); */
-  /* transition: transform 3e2ms ease-out,
-    opacity 3e2ms ease-out,
-    backdrop-filter 3e2ms ease-out; */
-  transition: transform 3e2ms ease-out,
-    opacity 3e2ms ease-out;
   /* will-change: transform, opacity, backdrop-filter; */
   will-change: transform, opacity;
 
-  figure:is(:hover, :focus, :active):not(:fullscreen) & {
-    &:not(:hover, :focus, :active) {
-      transform: translateY(100%) translateY(calc(-1*var(--s-s1-y)));
-      opacity: 0.3;
-      /* backdrop-filter: none; */
-      /* transition: transform 9e2ms ease-in,
-        opacity 9e2ms ease-in,
-        backdrop-filter 9e2ms ease-in; */
-      transition: transform 9e2ms ease-in,
-        opacity 9e2ms ease-in;
-    }
+  &,
+  figure:is(:hover, :focus, :active) &.shy {
+    transform: none;
+    opacity: 1;
+    /* backdrop-filter: invert(1) blur(3px) saturate(0.5); */
+    /* backdrop-filter: invert(0.8); */
+    /* transition: transform 3e2ms ease-out,
+      opacity 3e2ms ease-out,
+      backdrop-filter 3e2ms ease-out; */
+    transition: transform 3e2ms ease-out,
+      opacity 3e2ms ease-out;
+  }
+
+  &.shy,
+  figure:is(:hover, :focus, :active):not(:fullscreen) &:not(.shy):not(:hover, :focus, :active) {
+    transform: translateY(100%) translateY(calc(-1*var(--s-s1-y)));
+    opacity: 0.3;
+    /* backdrop-filter: none; */
+    /* transition: transform 3e2ms ease-in,
+      opacity 3e2ms ease-in,
+      backdrop-filter 3e2ms ease-in; */
+    transition: transform 3e2ms ease-in,
+      opacity 3e2ms ease-in;
   }
 
   .info-hint & {
@@ -837,7 +850,11 @@ strong { color: var(--c-hi-1); }
 
 strong { font-weight: 900; }
 
-small { font-size: 0.9em; }
+small {
+  font-size: 0.9em;
+  font-style: italic;
+  opacity: 0.9;
+}
 
 blockquote {
   --s-line-x: 30em;
@@ -1141,12 +1158,12 @@ cite {
 
   .exhibit-play & {
     opacity: 1;
-    transition: opacity 500ms ease-out;
+    transition: opacity 900ms ease-out;
   }
 
   .exhibit-stop & {
     opacity: 0;
-    transition: opacity 100ms ease-in;
+    transition: opacity 0ms linear;
   }
 }
 
@@ -1160,6 +1177,7 @@ cite {
   font-family: Inter, sans-serif;
   font-weight: var(--font-w-2);
   cursor: help;
+  font-style: normal;
   border-radius: var(--s-icon-xs);
   /* backdrop-filter: invert(0.8) blur(var(--s-s1-r)); */
   /* backdrop-filter: invert(0.8); */
@@ -1192,6 +1210,7 @@ cite {
     inset: 0;
     pointer-events: none;
     font-size: 1rem;
+    font-style: inherit;
     color: var(--c-hi-0);
     transform: rotate(45deg);
     transition: opacity 9e2ms ease-in;
@@ -1292,6 +1311,39 @@ cite {
   left: 50%;
   transform: translateX(-50%);
   text-transform: uppercase;
+}
+
+.video-view-wide {
+  aspect-ratio: 16/9;
+  flex: 1 0 auto;
+  width: 300px;
+  height: auto;
+  max-width: 900px;
+}
+
+.video-embed {
+  width: 100%;
+  height: 100%;
+}
+
+.references {
+  display: block;
+  columns: auto 300px;
+  gap: 0;
+
+  & > section,
+  & > figure {
+    width: 100%;
+    break-inside: avoid-column;
+  }
+}
+
+.artizen-info {
+  --c-jump-0: #0000;
+  --c-jump-1: var(--c-cta);
+  --c-jump-2: var(--c-jump-cta);
+  border-left: var(--s-s1-r) solid var(--c-cta);
+  border-right: var(--s-s1-r) solid var(--c-cta);
 }
 
 .artizen-laurel {
@@ -1412,18 +1464,7 @@ cite {
   & ~ [for="peer-flip"] > .icon::after { content: 'preview'; }
 }
 
-.face-view {
-  aspect-ratio: 16/9;
-  flex: 1 0 auto;
-  width: 300px;
-  height: auto;
-  max-width: 600px;
-}
-
-.face-video {
-  width: 100%;
-  height: 100%;
-}
+.face-view {}
 
 .info,
 .copy {

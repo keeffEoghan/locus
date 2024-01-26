@@ -279,6 +279,7 @@ const $peerCamera = $peerView.querySelector('.peer-camera');
 const $peerFlip = $peerView.querySelector('#peer-flip');
 const $peerFill = $peerView.querySelector('.peer-fill');
 const $peerDemo = $peerView.querySelector('.peer-demo');
+const $peerCameraOn = document.querySelector('.peer-camera-on');
 // Seeds that look good and are easy to use.
 const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
 
@@ -302,6 +303,11 @@ $peerCamera.addEventListener('change', () => {
 
   $peerDemo.allow = to;
   $peerDemo.src = $peerDemo.src;
+});
+
+$peerCameraOn.addEventListener('click', (e) => {
+  !$peerCamera.checked && $peerCamera.click();
+  stopEvent(e);
 });
 
 $peerFlip.addEventListener('change', () =>
@@ -337,13 +343,13 @@ const exhibitEase = 5e-2;
 let exhibit2DRenderer;
 
 function exhibitPlay() {
-  exhibitPlayer.play();
+  exhibitPlayer?.play?.();
   $exhibit.classList.add('exhibit-play');
   $exhibit.classList.remove('exhibit-stop');
 }
 
 function exhibitStop() {
-  exhibitPlayer.stop();
+  exhibitPlayer?.stop?.();
   $exhibit.classList.add('exhibit-stop');
   $exhibit.classList.remove('exhibit-play');
 }
@@ -366,6 +372,8 @@ function exhibitScroll() {
   }
 
   !wasOn && exhibitPlay();
+
+  if(!exhibitPlayer) { return; }
 
   const vy = innerHeight*0.5;
   const [u, d] = exhibitCameraPair;
@@ -501,11 +509,13 @@ async function exhibitLoad() {
   addEventListener('resize', throttle(1e2, exhibitResize));
   exhibitResize();
 
-  addEventListener('scroll', throttle(2e2, exhibitScroll));
-  exhibitScroll();
-
+  exhibitPlayer.play();
   exhibitAnimate();
+  exhibitScroll();
 }
+
+addEventListener('scroll', throttle(2e2, exhibitScroll));
+exhibitScroll();
 
 const exhibitReady = () =>
   (document.readyState === 'interactive') && setTimeout(exhibitLoad, 500);
