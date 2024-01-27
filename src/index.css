@@ -128,8 +128,8 @@
   --s-jump-y: 9rem;
   --s-jump-r-0: 0;
   --s-jump-o-0: 0;
-  --s-jump-r-1: 12px;
-  --s-jump-o-1: -12px;
+  --s-jump-r-1: 11px;
+  --s-jump-o-1: -11px;
   --s-jump-r-2: 3px;
   --s-jump-o-2: -3px;
   --s-items-gap: 0.5rem 1.5rem;
@@ -201,10 +201,9 @@ html {
   font-family: Inter, sans-serif;
   font-weight: var(--font-w-2);
   overflow: hidden auto;
-  scroll-behavior: smooth;
 }
 
-.wait { scroll-behavior: auto; }
+.smooth-scroll { scroll-behavior: smooth; }
 
 body {
   min-height: 100%;
@@ -1393,7 +1392,17 @@ img,
   padding: var(--s-m0-r);
 }
 
-.pay-split { background: var(--c-accent); }
+.pay-method {
+  background: var(--c-accent);
+
+  &.timed-out {
+    .times-out { cursor: help; }
+
+    .times-fade { opacity: 0.5; }
+  }
+
+  &:not(.timed-out) .times-in { display: none; }
+}
 
 .h-flex {
   display: flex;

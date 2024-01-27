@@ -45,10 +45,7 @@ setTimeout(() => rootClass.remove('info-hint'), 7e3);
 
 // Scroll if needed.
 
-const scroll = {
-  main: { block: 'start', behaviour: 'smooth', scrollMode: 'if-needed' }
-};
-
+const scroll = { block: 'start', scrollMode: 'if-needed' };
 const empty = {};
 
 function inView(contain, bounds, view = empty) {
@@ -60,7 +57,7 @@ function inView(contain, bounds, view = empty) {
     : (bt <= vb) && (bb >= vt) && (bl <= vr) && (br >= vl));
 }
 
-const scrollIntoView = ($e, s = scroll.main) =>
+const scrollIntoView = ($e, s = scroll) =>
   $e &&
     ((s.scrollMode !== 'if-needed')? $e.scrollIntoView(s)
     : ((inView(true, $e.getBoundingClientRect()))? false
@@ -89,7 +86,9 @@ each(($f) => $f.addEventListener('click', stopBubble),
 
 each(($a) => $a.addEventListener('click', () => {
     location.hash = '';
-    scrollIntoView(document.querySelector($a.getAttribute('href')));
+
+    setTimeout(() =>
+      scrollIntoView(document.querySelector($a.getAttribute('href'))));
   }),
   document.querySelectorAll('a[href^="#"]'));
 
@@ -105,6 +104,10 @@ const hour = 60*minute;
 const day = 24*hour;
 const etaCrypto = new Date('2024-01-29T09:00:00-08:00');
 const etaCard = new Date('2024-01-27T09:00:00-08:00');
+const $etaCrypto = document.querySelectorAll('.eta-crypto');
+const $etaCard = document.querySelectorAll('.eta-card');
+const $giveCrypto = document.querySelector('#contribute-crypto');
+const $giveCard = document.querySelector('#contribute-card');
 
 function toTil(t, s) {
   const d = floor(t/day);
@@ -114,19 +117,37 @@ function toTil(t, s) {
   return s.replace(/\$d/g, d).replace(/\$h/g, h).replace(/\$m/g, m);
 }
 
+const fillTil = (t, $all) => each(($e) => {
+    const { dataset: { til, title }, classList } = $e;
+
+    $e.textContent = toTil(t, til);
+    title && ($e.title = title) && classList.add('info');
+  },
+  $all);
+
+function timeOut(t, $give) {
+  const c = $give.classList;
+
+  (c.contains('timed-out') !== c.toggle('timed-out', !t)) &&
+    each(($t) => {
+        $t.getAttribute('href') &&
+          ($t.dataset.href = $t.href) && ($t.href = '#contact');
+
+        $t.target && ($t.target = '');
+        $t.title = 'This option timed out! Try another or contact us for help';
+      },
+      $give.querySelectorAll('.times-out'));
+}
+
 function tickTime() {
   const now = new Date();
+  const tCrypto = max(0, etaCrypto-now);
+  const tCard = max(0, etaCard-now);
 
-  const fillTil = (t, match) => each(($e) => {
-      const { dataset: { til, title }, classList } = $e;
-
-      $e.textContent = toTil(t, til);
-      title && ($e.title = title) && classList.add('info');
-    },
-    document.querySelectorAll(match));
-
-  fillTil(etaCrypto-now, '.eta-crypto');
-  fillTil(etaCard-now, '.eta-card');
+  fillTil(tCrypto, $etaCrypto);
+  fillTil(tCard, $etaCard);
+  timeOut(tCrypto, $giveCrypto);
+  timeOut(tCard, $giveCard);
 }
 
 tickTime();
@@ -379,13 +400,11 @@ function exhibitStop() {
 }
 
 function exhibitScroll() {
-  const wasOn = exhibitOn;
+  const bounds = $exhibit.getBoundingClientRect();
+  const changeOn = exhibitOn !== (exhibitOn = inView(false, bounds));
 
-  if(!(exhibitOn = inView(false, $exhibit.getBoundingClientRect()))) {
-    return (wasOn !== exhibitOn) && exhibitStop();
-  }
-
-  !(wasOn !== exhibitOn) && exhibitPlay();
+  if(!exhibitOn) { return changeOn && exhibitStop(); }
+  else { changeOn && exhibitPlay(); }
 
   if(!exhibitPlayer) { return; }
 
@@ -536,3 +555,13 @@ const exhibitReady = () =>
 
 ((exhibitReady() === false) &&
   document.addEventListener('readystatechange', exhibitReady));
+
+function scrollReady() {
+  if(document.readyState !== 'complete') { return false; }
+
+  rootClass.add('smooth-scroll');
+  scroll.behaviour = 'smooth';
+}
+
+((scrollReady() === false) &&
+  document.addEventListener('readystatechange', scrollReady));
