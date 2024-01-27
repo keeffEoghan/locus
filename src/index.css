@@ -942,7 +942,9 @@ img,
     outline-color: var(--c-jump-2);
     outline-width: var(--s-jump-r-2);
     outline-offset: var(--s-jump-o-2);
-    animation: 4e3ms ease-in-out 1 outline-0-1-2 backwards;
+    animation: 3e3ms ease-in-out 1 outline-0-1-2 backwards;
+
+    .jumping & { animation: none; }
   }
 }
 
@@ -1398,7 +1400,7 @@ img,
   &.timed-out {
     .times-out { cursor: help; }
 
-    .times-fade { opacity: 0.5; }
+    .times-fade { opacity: 0.4; }
   }
 
   &:not(.timed-out) .times-in { display: none; }

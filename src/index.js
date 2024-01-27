@@ -85,10 +85,12 @@ each(($f) => $f.addEventListener('click', stopBubble),
 // Ensure anchors scroll.
 
 each(($a) => $a.addEventListener('click', () => {
-    location.hash = '';
+    rootClass.add('jumping');
 
-    setTimeout(() =>
-      scrollIntoView(document.querySelector($a.getAttribute('href'))));
+    setTimeout(() => {
+      rootClass.remove('jumping');
+      scrollIntoView(document.querySelector($a.getAttribute('href')));
+    });
   }),
   document.querySelectorAll('a[href^="#"]'));
 
@@ -134,7 +136,9 @@ function timeOut(t, $give) {
           ($t.dataset.href = $t.href) && ($t.href = '#contact');
 
         $t.target && ($t.target = '');
-        $t.title = 'This option timed out! Try another or contact us for help';
+
+        $t.title = 'This option timed out! '+
+          'Try another or contact us to arrange an alternative';
       },
       $give.querySelectorAll('.times-out'));
 }
