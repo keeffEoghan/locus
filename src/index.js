@@ -61,17 +61,19 @@ function inView(contain, bounds, view = empty) {
 }
 
 const scrollIntoView = ($e, s = scroll.main) =>
-  ((s.scrollMode !== 'if-needed')? $e.scrollIntoView(s)
-  : ((inView(true, $e.getBoundingClientRect()))? false
-  : ($e.scrollIntoView(s) || true)));
+  $e &&
+    ((s.scrollMode !== 'if-needed')? $e.scrollIntoView(s)
+    : ((inView(true, $e.getBoundingClientRect()))? false
+    : ($e.scrollIntoView(s) || true)));
 
 // Progressively load images.
+// @todo Also handle videos and other types of elements?
 
 const loaded = ($l) => $l.classList.add('loaded');
 
 each(($l) =>
     (($l.complete)? loaded($l) : $l.addEventListener('load', () => loaded($l))),
-  document.querySelectorAll('.load'));
+  document.querySelectorAll('img.load'));
 
 // Figures.
 
@@ -82,6 +84,14 @@ each(($f) => $f.addEventListener('click', () =>
 
 each(($f) => $f.addEventListener('click', stopBubble),
   document.querySelectorAll('figcaption'));
+
+// Ensure anchors scroll.
+
+each(($a) => $a.addEventListener('click', () => {
+    location.hash = '';
+    scrollIntoView(document.querySelector($a.getAttribute('href')));
+  }),
+  document.querySelectorAll('a[href^="#"]'));
 
 // Details.
 
@@ -332,7 +342,7 @@ const $exhibit = document.querySelector('.exhibit');
 const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
 const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
 let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
-let exhibitOn = false;
+let exhibitOn;
 const exhibitCameras = {};
 const exhibitCameraPair = [{}, {}];
 let exhibitPlayer;
@@ -341,18 +351,6 @@ let exhibitCameraTo;
 let exhibitInteract = false;
 const exhibitEase = 5e-2;
 let exhibit2DRenderer;
-
-function exhibitPlay() {
-  exhibitPlayer?.play?.();
-  $exhibit.classList.add('exhibit-play');
-  $exhibit.classList.remove('exhibit-stop');
-}
-
-function exhibitStop() {
-  exhibitPlayer?.stop?.();
-  $exhibit.classList.add('exhibit-stop');
-  $exhibit.classList.remove('exhibit-play');
-}
 
 function exhibitResize() {
   let w = innerWidth;
@@ -364,14 +362,30 @@ function exhibitResize() {
   exhibitPlayer.setSize(w, h);
 }
 
+function exhibitPlay() {
+  const c = $exhibit.classList;
+
+  c.add('exhibit-play');
+  c.remove('exhibit-stop');
+  exhibitPlayer?.play?.();
+}
+
+function exhibitStop() {
+  const c = $exhibit.classList;
+
+  c.add('exhibit-stop');
+  c.remove('exhibit-play');
+  exhibitPlayer?.stop?.();
+}
+
 function exhibitScroll() {
   const wasOn = exhibitOn;
 
   if(!(exhibitOn = inView(false, $exhibit.getBoundingClientRect()))) {
-    return wasOn && exhibitStop();
+    return (wasOn !== exhibitOn) && exhibitStop();
   }
 
-  !wasOn && exhibitPlay();
+  !(wasOn !== exhibitOn) && exhibitPlay();
 
   if(!exhibitPlayer) { return; }
 
