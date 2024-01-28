@@ -219,14 +219,14 @@ function peelOff(e) {
 function peelMove(e) {
   const { clientX: cx, clientY: cy } = e;
   const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
-  const [v0, v1] = (cache.peelMove ?? [range(2, Infinity), []]);
+  const [v0, v1] = cache.peelMove ?? [range(2, Infinity), []];
   const [x1, y1] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
 
   if(distSq2(v0, v1) < 5e-2) { return; }
 
   const x = clamp01(x1)*($peelLayers.length+1);
   const y = clamp01(y1);
-  const w = mix(3e-2, 1.1, y);
+  const w = mix(1.1, 3e-2, y);
   const d = $peelStyle.disabled;
 
   $peelStyle.textContent = reduce((to, $l, i) => {
@@ -443,6 +443,8 @@ function exhibitScroll() {
 }
 
 function exhibitAnimate() {
+  if(!exhibitOn) { return requestAnimationFrame(exhibitAnimate); }
+
   const { camera, scene } = exhibitPlayer;
 
   if(!exhibitInteract) {
@@ -555,7 +557,7 @@ addEventListener('scroll', throttle(2e2, exhibitScroll));
 exhibitScroll();
 
 const exhibitReady = () =>
-  (document.readyState === 'interactive') && setTimeout(exhibitLoad, 500);
+  (document.readyState === 'interactive') && setTimeout(exhibitLoad, 1e3);
 
 ((exhibitReady() === false) &&
   document.addEventListener('readystatechange', exhibitReady));
