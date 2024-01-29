@@ -120,7 +120,7 @@ function toTil(t, s) {
 }
 
 const fillTil = (t, $all) => each(($e) => {
-    const { dataset: { til, title }, classList } = $e;
+    const { dataset: { til,  title }, classList } = $e;
 
     $e.textContent = toTil(t, til);
     title && ($e.title = title) && classList.add('info');
