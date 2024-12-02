@@ -15,7 +15,9 @@ function dispatch(array, event) {
 export class ScenePlayer {
   #events;
 
-  constructor(dom, orbitProps, target) {
+  constructor(dom, orbitProps, target, state) {
+    const { pixelRatio = devicePixelRatio ?? 1 } = state;
+
     this.loader = new three.ObjectLoader();
 
     this.#events = {
@@ -37,7 +39,7 @@ export class ScenePlayer {
     this.onPointerMove = (event) => dispatch(this.#events.pointermove, event);
 
     this.renderer = new three.WebGLRenderer({ antialias: true });
-    this.renderer.setPixelRatio(devicePixelRatio); // TODO: Use player.setPixelRatio()
+    this.renderer.setPixelRatio(pixelRatio); // TODO: Use player.setPixelRatio()
     this.vrButton = VRButton.createButton(this.renderer); // eslint-disable-line no-undef
 
     (this.dom = dom ?? document.createElement('div'))

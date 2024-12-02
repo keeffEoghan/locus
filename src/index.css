@@ -37,11 +37,6 @@
   100% { pointer-events: none; }
 }
 
-@keyframes position-relative-absolute {
-  0% { position: relative; }
-  100% { position: absolute; }
-}
-
 @font-face {
   /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
   font-family: 'Material Symbols Rounded';
@@ -881,9 +876,9 @@ strong { color: var(--c-hi-1); }
 strong { font-weight: 900; }
 
 small {
-  font-size: 0.9em;
+  font-size: 0.85em;
   font-style: italic;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 blockquote {
@@ -907,7 +902,7 @@ cite {
   margin-top: 2em;
   font-size: var(--s-font-cite-3);
   font-weight: var(--font-w-1);
-  font-style: italic;
+  font-style: normal;
 
   &::before {
     content: '—';
@@ -993,6 +988,17 @@ img,
       border-color 3e2ms ease-in,
       outline-color 3e2ms ease-in,
       background-position-y 3e2ms ease-in;
+  }
+}
+
+.key-cta {
+  &,
+  &.button {
+    --c-text: #000c;
+    --c-action-0: var(--c-hi-1);
+    display: block;
+    text-align: center;
+    margin: var(--s-l1-y) auto;
   }
 }
 
@@ -1180,6 +1186,15 @@ img,
   &::after { inset: 0 0 0 auto; }
 } */
 
+.exhibit-video {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  z-index: -1;
+}
+
 .exhibit-demo {
   position: fixed;
   inset: 0;
@@ -1294,14 +1309,24 @@ img,
   z-index: var(--z-exhibit-over);
 }
 
+.exhibit-info-instruct {
+  padding: var(--s-m1-y) var(--s-m1-x);
+  margin: var(--s-m0-y) auto;
+  pointer-events: none;
+}
+
+.exhibit-info-intro,
+.exhibit-info-outro { position: absolute; }
+
+.exhibit-info-intro { top: 0; }
+
+.exhibit-info-outro { bottom: 0; }
+
 .exhibit-info-touch {
   position: fixed;
   inset: auto auto 0 50%;
   transform: translateX(-50%);
   opacity: 0;
-  padding: var(--s-m1-y) var(--s-m1-x);
-  margin: var(--s-m0-y) auto;
-  pointer-events: none;
   transition: opacity 9e2ms ease-in;
   will-change: opacity;
 
@@ -1382,12 +1407,41 @@ img,
   }
 }
 
+.progress-mpm-view {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  min-width: 66%;
+}
+
+.progress-mpm-fill {
+  width: 100%;
+  height: var(--s-view-tall);
+  max-height: 720px;
+  max-width: 1280px;
+  margin: var(--s-m0-y) 0;
+  background: var(--c-accent);
+}
+
+.progress-mpm-demo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+}
+
 .artizen-info {
   --c-jump-1: var(--c-cta);
   --c-jump-2: var(--c-jump-cta);
   border-left: var(--s-s1-r) solid var(--c-cta);
   border-right: var(--s-s1-r) solid var(--c-cta);
 }
+
+.artizen-cta { align-self: center; }
 
 .artizen-laurel {
   flex: 0 1 16rem;
