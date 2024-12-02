@@ -57,7 +57,7 @@
         "browsers": "last 2 versions, > 0.5%, not dead"
       },
       "distDir": "docs/",
-      "source": ["src/index.html", "src/immerse.html"],
+      "source": ["src/index.html", "src/immersive-arts.html"],
       "publicUrl": "./"
     }
   }
