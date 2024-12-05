@@ -535,7 +535,7 @@ canvas {
 code {
   display: inline-block;
   font-family: monospace, sans-serif;
-  font-size: 0.9em;
+  font-size: 0.8em;
   font-weight: var(--font-w-1);
   border-radius: var(--s-s1-r);
   padding: var(--s-s0-y) var(--s-s0-x);
