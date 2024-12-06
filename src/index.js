@@ -329,10 +329,14 @@ each(($demoView) => {
 const $mpmView = document.querySelector('.progress-mpm-view');
 const $mpmDemo = $mpmView?.querySelector?.('.progress-mpm-demo');
 const $mpmQualities = $mpmView?.querySelectorAll?.('.progress-mpm-quality');
+const $mpmFullscreen = $mpmView?.querySelector?.('.progress-mpm-fullscreen');
 
 $mpmDemo && each(($mpmQuality) => $mpmQuality.addEventListener('click',
     () => $mpmDemo.src = $mpmQuality.dataset.src),
   $mpmQualities);
+
+$mpmDemo && $mpmFullscreen?.addEventListener?.('click',
+  () => $mpmDemo.requestFullscreen());
 
 // Reward: `Artifact`.
 

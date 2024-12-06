@@ -266,7 +266,7 @@
           <div class="progress-mpm-fill demo-fill">
             <iframe class="progress-mpm-demo demo-live"
               loading="lazy" frameborder="0" allowfullscreen allow="camera *"
-              src="https://epok.tech/wip-gl-mpm-demo/"
+              src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false"
               sandbox="allow-scripts allow-same-origin">
             </iframe>
           </div>
@@ -281,16 +281,19 @@
               Demo or video<span class="icon material-symbols-rounded"></span>
             </label>
             <button class="progress-mpm-quality demo-control icon-in"
-              data-src="https://epok.tech/wip-gl-mpm-demo/?grid.detail=7e1&gridToPoints.gpgpu.scale=8&gridToScreen.on=false">
+              data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&grid.detail=7e1&gridToPoints.gpgpu.scale=8&gridToScreen.on=false">
               Lower quality<span class="icon material-symbols-rounded">width_normal</span>
             </button>
             <button class="progress-mpm-quality demo-control icon-in"
-              data-src="https://epok.tech/wip-gl-mpm-demo/">
+              data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false">
               Medium quality<span class="icon material-symbols-rounded">width_wide</span>
             </button>
             <button class="progress-mpm-quality demo-control icon-in"
-              data-src="https://epok.tech/wip-gl-mpm-demo/?grid.detail=1.5e2&gridToPoints.gpgpu.scale=10">
+              data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&grid.detail=1.5e2&gridToPoints.gpgpu.scale=10">
               Higher quality<span class="icon material-symbols-rounded">width_full</span>
+            </button>
+            <button class="progress-mpm-fullscreen demo-control icon-in">
+              Fullscreen<span class="icon material-symbols-rounded">fullscreen</span>
             </button>
           </div>
         </section>
