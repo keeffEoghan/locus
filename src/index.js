@@ -60,8 +60,8 @@ function inView(contain, bounds, view = empty) {
 const scrollIntoView = ($e, s = scroll) =>
   $e &&
     ((s.scrollMode !== 'if-needed')? $e.scrollIntoView(s)
-    : ((inView(true, $e.getBoundingClientRect()))? false
-    : ($e.scrollIntoView(s) || true)));
+    : (inView(true, $e.getBoundingClientRect())? false
+    : $e.scrollIntoView(s) || true));
 
 // Progressively load images.
 // @todo Also handle videos and other types of elements?
@@ -109,53 +109,57 @@ const etaCard = new Date('2025-01-11T09:00:00-08:00');
 const $etaCrypto = document.querySelectorAll('.eta-crypto');
 const $etaCard = document.querySelectorAll('.eta-card');
 const $giveCrypto = document.querySelector('#contribute-crypto');
+const $timedOutCrypto = $giveCrypto?.querySelectorAll?.('.times-out');
 const $giveCard = document.querySelector('#contribute-card');
+const $timedOutCard = $giveCard?.querySelectorAll?.('.times-out');
 
-function toTil(t, s) {
-  const d = floor(t/day);
-  const h = floor((t -= (day*d))/hour);
-  const m = floor((t -= (hour*h))/minute);
+if($etaCrypto || $etaCard || $giveCrypto || $giveCard) {
+  function toTil(t, s) {
+    const d = floor(t/day);
+    const h = floor((t -= (day*d))/hour);
+    const m = floor((t -= (hour*h))/minute);
 
-  return s.replace(/\$d/g, d).replace(/\$h/g, h).replace(/\$m/g, m);
+    return s.replace(/\$d/g, d).replace(/\$h/g, h).replace(/\$m/g, m);
+  }
+
+  const fillTil = (t, $all) => each(($e) => {
+      const { dataset: { til,  title }, classList } = $e;
+
+      $e.textContent = toTil(t, til);
+      title && ($e.title = title) && classList.add('info');
+    },
+    $all);
+
+  function timeOut(t, $give, $over) {
+    const c = $give?.classList;
+
+    c && $over && (c.contains('timed-out') !== c.toggle('timed-out', !t)) &&
+      each(($t) => {
+          $t.getAttribute('href') &&
+            ($t.dataset.href = $t.href) && ($t.href = '#contact');
+
+          $t.target && ($t.target = '');
+
+          $t.title = 'This option timed out! '+
+            'Try another or contact us to arrange an alternative';
+        },
+        $over);
+  }
+
+  function tickTime() {
+    const now = new Date();
+    const tCrypto = max(0, etaCrypto-now);
+    const tCard = max(0, etaCard-now);
+
+    fillTil(tCrypto, $etaCrypto);
+    fillTil(tCard, $etaCard);
+    timeOut(tCrypto, $giveCrypto, $timedOutCrypto);
+    timeOut(tCard, $giveCard, $timedOutCard);
+  }
+
+  tickTime();
+  setInterval(tickTime, minute*0.5);
 }
-
-const fillTil = (t, $all) => each(($e) => {
-    const { dataset: { til,  title }, classList } = $e;
-
-    $e.textContent = toTil(t, til);
-    title && ($e.title = title) && classList.add('info');
-  },
-  $all);
-
-function timeOut(t, $give) {
-  const c = $give?.classList;
-
-  c && (c.contains('timed-out') !== c.toggle('timed-out', !t)) &&
-    each(($t) => {
-        $t.getAttribute('href') &&
-          ($t.dataset.href = $t.href) && ($t.href = '#contact');
-
-        $t.target && ($t.target = '');
-
-        $t.title = 'This option timed out! '+
-          'Try another or contact us to arrange an alternative';
-      },
-      $give.querySelectorAll('.times-out'));
-}
-
-function tickTime() {
-  const now = new Date();
-  const tCrypto = max(0, etaCrypto-now);
-  const tCard = max(0, etaCard-now);
-
-  fillTil(tCrypto, $etaCrypto);
-  fillTil(tCard, $etaCard);
-  timeOut(tCrypto, $giveCrypto);
-  timeOut(tCard, $giveCard);
-}
-
-tickTime();
-setInterval(tickTime, minute*0.5);
 
 // Subscription.
 
@@ -198,61 +202,63 @@ const $subscribes = each(($subscribe) => {
 /** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
 
 const $peel = document.querySelector('.peel-art');
-const $peelLayers = $peel.querySelectorAll('.peel-art-layer');
-const $peelStyle = $peel.querySelector('.peel-art-style');
+const $peelLayers = $peel?.querySelectorAll?.('.peel-art-layer');
+const $peelStyle = $peel?.querySelector?.('.peel-art-style');
 
-$peel.classList.add('peel-far', 'peel-intro');
-setTimeout(() => $peel.classList.remove('peel-far'), 1e2+1e3);
-setTimeout(() => $peel.classList.remove('peel-intro'), 6e3+1e3);
+if($peel && $peelLayers && $peelStyle) {
+  $peel.classList.add('peel-far', 'peel-intro');
+  setTimeout(() => $peel.classList.remove('peel-far'), 1e2+1e3);
+  setTimeout(() => $peel.classList.remove('peel-intro'), 6e3+1e3);
 
-function peelOn(e) {
-  $peel.classList.remove('peel-far', 'peel-intro');
-  $peel.parentElement.focus();
-  $peelStyle.disabled = false;
+  function peelOn(e) {
+    $peel.classList.remove('peel-far', 'peel-intro');
+    $peel.parentElement.focus();
+    $peelStyle.disabled = false;
+  }
+
+  function peelOff(e) {
+    $peel.parentElement.blur();
+    $peelStyle.disabled = true;
+  }
+
+  function peelMove(e) {
+    const { clientX: cx, clientY: cy } = e;
+    const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
+    const [v0, v1] = cache.peelMove ?? [range(2, Infinity), []];
+    const [x1, y1] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
+
+    if(distSq2(v0, v1) < 5e-2) { return; }
+
+    const x = clamp01(x1)*($peelLayers.length+1);
+    const y = clamp01(y1);
+    const w = mix(1.1, 3e-2, y);
+    const d = $peelStyle.disabled;
+
+    $peelStyle.textContent = reduce((to, $l, i) => {
+        const n = indexOf.call($peel.children, $l)+1;
+        const o = 0.5+((i-x)*w);
+        const fill = $l.classList.contains('peel-art-layer-fill');
+        const pl = mix(0, 1e2, 1-fill && o);
+        const pr = mix(0, 1e2, +fill || (o+w));
+        const p = `polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%)`;
+
+        return to+
+          `.peel-art-layer:nth-child(${n}) { clip-path: ${p} !important; }\n`;
+      },
+      $peelLayers, '');
+
+    // $peelStyle.disabled = ((x1 < 0) || (x1 > 1) || (y1 < 0) || (y1 > 1));
+    $peelStyle.disabled = d;
+    setC2(cache.peelMove, v1, v0);
+  }
+
+  $peel.addEventListener('pointermove', throttle(3e2, peelMove));
+  $peel.addEventListener('pointerdown', peelOn);
+  $peel.addEventListener('pointerenter', peelOn);
+  $peel.addEventListener('pointerout', peelOff);
+  $peel.addEventListener('pointerup', peelOff);
+  $peel.addEventListener('contextmenu', stopEvent);
 }
-
-function peelOff(e) {
-  $peel.parentElement.blur();
-  $peelStyle.disabled = true;
-}
-
-function peelMove(e) {
-  const { clientX: cx, clientY: cy } = e;
-  const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
-  const [v0, v1] = cache.peelMove ?? [range(2, Infinity), []];
-  const [x1, y1] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
-
-  if(distSq2(v0, v1) < 5e-2) { return; }
-
-  const x = clamp01(x1)*($peelLayers.length+1);
-  const y = clamp01(y1);
-  const w = mix(1.1, 3e-2, y);
-  const d = $peelStyle.disabled;
-
-  $peelStyle.textContent = reduce((to, $l, i) => {
-      const n = indexOf.call($peel.children, $l)+1;
-      const o = 0.5+((i-x)*w);
-      const fill = $l.classList.contains('peel-art-layer-fill');
-      const pl = mix(0, 1e2, 1-fill && o);
-      const pr = mix(0, 1e2, +fill || (o+w));
-      const p = `polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%)`;
-
-      return to+
-        `.peel-art-layer:nth-child(${n}) { clip-path: ${p} !important; }\n`;
-    },
-    $peelLayers, '');
-
-  // $peelStyle.disabled = ((x1 < 0) || (x1 > 1) || (y1 < 0) || (y1 > 1));
-  $peelStyle.disabled = d;
-  setC2(cache.peelMove, v1, v0);
-}
-
-$peel.addEventListener('pointermove', throttle(3e2, peelMove));
-$peel.addEventListener('pointerdown', peelOn);
-$peel.addEventListener('pointerenter', peelOn);
-$peel.addEventListener('pointerout', peelOff);
-$peel.addEventListener('pointerup', peelOff);
-$peel.addEventListener('contextmenu', stopEvent);
 
 // Crypto and currency conversion.
 
@@ -276,6 +282,7 @@ each(async ($c) => {
   },
   document.querySelectorAll(`[data-coin-at],[data-coin-to],[data-coin-sum],
     [data-coin-text],[data-coin-title]`));
+
 // Copy to clipboard.
 
 const { clipboard } = navigator;
@@ -292,32 +299,48 @@ each(($c) => $c.addEventListener('click', async () => {
   }),
   document.querySelectorAll('.copy'));
 
+// Progress and demos.
+
+each(($demoView) => {
+    const $demoFill = $demoView.querySelector('.demo-fill');
+    const $demoLive = $demoView.querySelector('.demo-live');
+    const $demoVideo = $demoView.querySelector('.demo-video');
+    const $demoFlip = $demoView.querySelector('.demo-flip');
+
+    $demoFlip && $demoFill && $demoFlip.addEventListener('change', () => {
+      (($demoFlip.checked)? $demoView.prepend($demoFill) : $demoFill.remove());
+      $demoLive.src = $demoLive.src;
+      $demoVideo.src = $demoVideo.src;
+    });
+
+    if($demoLive && $demoFill) {
+      /** @see [Infinite scroll example](https://googlechrome.github.io/samples/intersectionobserver/) */
+      const demoFillIntersector = new IntersectionObserver((es) =>
+        ((!es.some((e) => e.isIntersecting))? $demoLive.remove()
+        : $demoFill.append($demoLive)));
+
+      demoFillIntersector.observe($demoFill);
+    }
+  },
+  document.querySelectorAll('.demo-view'));
+
 // MPM progress demo.
 
 const $mpmView = document.querySelector('.progress-mpm-view');
-const $mpmFill = $mpmView.querySelector('.progress-mpm-fill');
-const $mpmDemo = $mpmView.querySelector('.progress-mpm-demo');
+const $mpmDemo = $mpmView?.querySelector?.('.progress-mpm-demo');
+const $mpmQualities = $mpmView?.querySelectorAll?.('.progress-mpm-quality');
 
-/** @see [Infinite scroll example](https://googlechrome.github.io/samples/intersectionobserver/) */
-const mpmFillIntersector = new IntersectionObserver((all) =>
-  ((!all.some((e) => e.isIntersecting))? $mpmDemo.remove()
-  : $mpmFill.append($mpmDemo)));
-
-mpmFillIntersector.observe($mpmFill);
-
-const mpmDemoIntersector = new IntersectionObserver((all) =>
-    all.some((e) => e.isIntersecting) && ($mpmDemo.src = $mpmDemo.src),
-  { threshold: 0.5 });
-
-mpmDemoIntersector.observe($mpmDemo);
+$mpmDemo && each(($mpmQuality) => $mpmQuality.addEventListener('click',
+    () => $mpmDemo.src = $mpmQuality.dataset.src),
+  $mpmQualities);
 
 // Reward: `Artifact`.
 
 const $artifactView = document.querySelector('.artifact-view');
-const $artifactVideo = $artifactView.querySelector('.artifact-video');
-const $artifactStill = $artifactView.querySelector('.artifact-still');
+const $artifactVideo = $artifactView?.querySelector?.('.artifact-video');
+const $artifactStill = $artifactView?.querySelector?.('.artifact-still');
 
-if($artifactVideo) {
+if($artifactVideo && $artifactStill) {
   const artifactFlip = () =>
     $artifactVideo.classList.toggle('playing', !$artifactVideo.paused);
 
@@ -330,271 +353,261 @@ if($artifactVideo) {
 // Reward: `Peer into the Flow`.
 
 const $peerView = document.querySelector('.peer-view');
-const $peerRandom = $peerView.querySelector('.peer-random');
-const $peerCamera = $peerView.querySelector('.peer-camera');
-const $peerFlip = $peerView.querySelector('#peer-flip');
-const $peerFill = $peerView.querySelector('.peer-fill');
-const $peerDemo = $peerView.querySelector('.peer-demo');
+const $peerDemo = $peerView?.querySelector?.('.peer-demo');
+const $peerRandom = $peerView?.querySelector?.('.peer-random');
+const $peerCamera = $peerView?.querySelector?.('.peer-camera');
 const $peerCameraOn = document.querySelector('.peer-camera-on');
-// Seeds that look good and are easy to use.
-const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
 
-const peerSeed = (to = ceil(random()*66)) =>
-  $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
-    const q = new URLSearchParams($2);
+if($peerDemo && $peerRandom) {
+  // Seeds that look good and are easy to use.
+  const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
 
-    q.set('seed', to);
+  const peerSeed = (to = ceil(random()*66)) =>
+    $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
+      const q = new URLSearchParams($2);
 
-    return $1+q;
+      q.set('seed', to);
+
+      return $1+q;
+    });
+
+  peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
+  $peerRandom.addEventListener('click', () => peerSeed());
+}
+
+if($peerDemo && $peerCamera) {
+  $peerCamera.addEventListener('change', () => {
+    const { allow, dataset } = $peerDemo;
+    const to = dataset[(($peerCamera.checked)? 'y' : 'n')];
+
+    if(allow === to) { return; }
+
+    $peerDemo.allow = to;
+    $peerDemo.src = $peerDemo.src;
   });
 
-peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
-$peerRandom.addEventListener('click', () => peerSeed());
-
-$peerCamera.addEventListener('change', () => {
-  const { allow, dataset } = $peerDemo;
-  const to = dataset[(($peerCamera.checked)? 'y' : 'n')];
-
-  if(allow === to) { return; }
-
-  $peerDemo.allow = to;
-  $peerDemo.src = $peerDemo.src;
-});
-
-$peerCameraOn.addEventListener('click', (e) => {
-  !$peerCamera.checked && $peerCamera.click();
-  stopEvent(e);
-});
-
-$peerFlip.addEventListener('change', () =>
-  (($peerFlip.checked)? $peerView.prepend($peerFill) : $peerFill.remove()));
-
-/** @see [Infinite scroll example](https://googlechrome.github.io/samples/intersectionobserver/) */
-const peerFillIntersector = new IntersectionObserver((all) =>
-  ((!all.some((e) => e.isIntersecting))? $peerDemo.remove()
-  : $peerFill.append($peerDemo)));
-
-peerFillIntersector.observe($peerFill);
-
-const peerDemoIntersector = new IntersectionObserver((all) =>
-    all.some((e) => e.isIntersecting) && ($peerDemo.src = $peerDemo.src),
-  { threshold: 0.5 });
-
-peerDemoIntersector.observe($peerDemo);
+  $peerCameraOn?.addEventListener?.('click', (e) => {
+    !$peerCamera.checked && $peerCamera.click();
+    stopEvent(e);
+  });
+}
 
 // Exhibition scene.
 
 const $exhibit = document.querySelector('.exhibit');
-const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
-const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
-let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
-let exhibitOn;
-const exhibitCameras = {};
-const exhibitCameraPair = [{}, {}];
-let exhibitPlayer;
-let exhibitCameraDef;
-let exhibitCameraTo;
-let exhibitInteract = false;
-const exhibitEase = 5e-2;
-let exhibit2DRenderer;
 
-function exhibitResize() {
-  let w = innerWidth;
-  let h = innerHeight;
-  const $p = $exhibitDemo.offsetParent;
+if($exhibit) {
+  const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
+  const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
+  let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
+  let exhibitOn;
+  const exhibitCameras = {};
+  const exhibitCameraPair = [{}, {}];
+  let exhibitPlayer;
+  let exhibitCameraDef;
+  let exhibitCameraTo;
+  let exhibitInteract = false;
+  const exhibitEase = 5e-2;
+  let exhibit2DRenderer;
 
-  $p && ({ width: w, height: h } = $p.getBoundingClientRect());
-  exhibit2DRenderer.setSize(w, h);
-  exhibitPlayer.setSize(w, h);
-}
+  function exhibitResize() {
+    let w = innerWidth;
+    let h = innerHeight;
+    const $p = $exhibitDemo.offsetParent;
 
-function exhibitPlay() {
-  const c = $exhibit.classList;
-
-  c.add('exhibit-play');
-  c.remove('exhibit-stop');
-  exhibitPlayer?.play?.();
-}
-
-function exhibitStop() {
-  const c = $exhibit.classList;
-
-  c.add('exhibit-stop');
-  c.remove('exhibit-play');
-  exhibitPlayer?.stop?.();
-}
-
-function exhibitScroll() {
-  const bounds = $exhibit.getBoundingClientRect();
-  const changeOn = exhibitOn !== (exhibitOn = inView(false, bounds));
-
-  if(!exhibitOn) { return changeOn && exhibitStop(); }
-  else { changeOn && exhibitPlay(); }
-
-  if(!exhibitPlayer) { return; }
-
-  const vy = innerHeight*0.5;
-  const [u, d] = exhibitCameraPair;
-
-  u.y = d.y = u.$ = d.$ = undefined;
-
-  const [{ $: u$, y: uy = 0 }, { $: d$, y: dy = 0 }] = reduce((pair, $) => {
-      const { y: y0, bottom: y1 } = $.getBoundingClientRect();
-      const y = mix(y0, y1, 0.5)-vy;
-      const d = y > 0;
-      const p = pair[+d];
-      const { $: p$, y: py } = p;
-
-      (!p$ || (py == null) || ((d)? y < py : y > py)) && (p.$ = $) && (p.y = y);
-
-      return pair;
-    },
-    $exhibitCameras, exhibitCameraPair);
-
-  const uc = u$?.dataset?.exhibitCamera;
-  const dc = d$?.dataset?.exhibitCamera;
-  const up = uc && exhibitCameras[uc]?.position;
-  const dp = dc && exhibitCameras[dc]?.position;
-
-  // Assumes cameras are at the root of the scene.
-  ((!up)? dp && exhibitCameraTo.copy(dp)
-  : (!dp)? up && exhibitCameraTo.copy(up)
-  : (up === dp)? exhibitCameraTo.copy(up)
-  : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
-}
-
-function exhibitAnimate() {
-  if(!exhibitOn) { return requestAnimationFrame(exhibitAnimate); }
-
-  const { camera, scene } = exhibitPlayer;
-
-  if(!exhibitInteract) {
-    const p = camera.position;
-
-    ((p.distanceToSquared(exhibitCameraTo) < 2e-3)? p.copy(exhibitCameraTo)
-    : p.lerp(exhibitCameraTo, exhibitEase));
+    $p && ({ width: w, height: h } = $p.getBoundingClientRect());
+    exhibit2DRenderer.setSize(w, h);
+    exhibitPlayer.setSize(w, h);
   }
 
-  exhibit2DRenderer.render(scene, camera);
+  function exhibitPlay() {
+    const c = $exhibit.classList;
 
-  requestAnimationFrame(exhibitAnimate);
-}
-
-async function exhibitLoad() {
-  const exhibit = await import('../media/exhibit.json');
-
-  exhibitPlayer = api.exhibitPlayer = new ScenePlayer(null, {
-      enablePan: false,
-      minDistance: 2,
-      maxDistance: 7,
-      maxPolarAngle: pi*0.55,
-      zoomSpeed: 2,
-      mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
-      touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
-    },
-    null, { pixelRatio: 1 });
-
-  exhibitPlayer.load(exhibit);
-  exhibitPlayer.render();
-
-  const $exhibitVideo = $exhibitDemo.querySelector('.exhibit-video');
-  const { dom, scene, orbit, camera } = exhibitPlayer;
-  let interactWait;
-  let labelWait;
-
-  $exhibitDemo.replaceWith($exhibitDemo = dom);
-  $exhibitDemo.appendChild($exhibitVideo);
-  $exhibitDemo.classList.add('exhibit-demo');
-  exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
-
-  function interactStart() {
-    clearTimeout(interactWait);
-    exhibitInteract = true;
+    c.add('exhibit-play');
+    c.remove('exhibit-stop');
+    exhibitPlayer?.play?.();
   }
 
-  function interactEnd() {
-    clearTimeout(interactWait);
-    interactWait = setTimeout(() => exhibitInteract = false, 3e3);
+  function exhibitStop() {
+    const c = $exhibit.classList;
+
+    c.add('exhibit-stop');
+    c.remove('exhibit-play');
+    exhibitPlayer?.stop?.();
   }
 
-  orbit.addEventListener('start', interactStart);
-  orbit.addEventListener('end', interactEnd);
-  orbit.update();
+  function exhibitScroll() {
+    const bounds = $exhibit.getBoundingClientRect();
+    const changeOn = exhibitOn !== (exhibitOn = inView(false, bounds));
 
-  const infoTouch = (e) =>
-    $exhibitInfoTouch.classList.toggle('show', e.targetTouches.length !== 2);
+    if(!exhibitOn) { return changeOn && exhibitStop(); }
+    else { changeOn && exhibitPlay(); }
 
-  $exhibitDemo.addEventListener('touchstart', infoTouch);
-  $exhibitDemo.addEventListener('touchend', infoTouch);
+    if(!exhibitPlayer) { return; }
 
-  function labelOpen() {
-    interactStart();
-    clearTimeout(labelWait);
-    orbit.enabled = false;
+    const vy = innerHeight*0.5;
+    const [u, d] = exhibitCameraPair;
+
+    u.y = d.y = u.$ = d.$ = undefined;
+
+    const [{ $: u$, y: uy = 0 }, { $: d$, y: dy = 0 }] = reduce((pair, $) => {
+        const { y: y0, bottom: y1 } = $.getBoundingClientRect();
+        const y = mix(y0, y1, 0.5)-vy;
+        const d = y > 0;
+        const p = pair[+d];
+        const { $: p$, y: py } = p;
+
+        (!p$ || (py == null) || ((d)? y < py : y > py)) && (p.$ = $) && (p.y = y);
+
+        return pair;
+      },
+      $exhibitCameras, exhibitCameraPair);
+
+    const uc = u$?.dataset?.exhibitCamera;
+    const dc = d$?.dataset?.exhibitCamera;
+    const up = uc && exhibitCameras[uc]?.position;
+    const dp = dc && exhibitCameras[dc]?.position;
+
+    // Assumes cameras are at the root of the scene.
+    ((!up)? dp && exhibitCameraTo.copy(dp)
+    : (!dp)? up && exhibitCameraTo.copy(up)
+    : (up === dp)? exhibitCameraTo.copy(up)
+    : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
   }
 
-  function labelShut() {
-    interactEnd();
-    clearTimeout(labelWait);
-    labelWait = setTimeout(() => orbit.enabled = true, 3e3);
+  function exhibitAnimate() {
+    if(!exhibitOn) { return requestAnimationFrame(exhibitAnimate); }
+
+    const { camera, scene } = exhibitPlayer;
+
+    if(!exhibitInteract) {
+      const p = camera.position;
+
+      ((p.distanceToSquared(exhibitCameraTo) < 2e-3)? p.copy(exhibitCameraTo)
+      : p.lerp(exhibitCameraTo, exhibitEase));
+    }
+
+    exhibit2DRenderer.render(scene, camera);
+
+    requestAnimationFrame(exhibitAnimate);
   }
 
-  scene.traverse((o) => {
-    const { userData: d, position: p } = o;
-    const label = d?.label;
+  async function exhibitLoad() {
+    const exhibit = await import('../media/exhibit.json');
 
-    if(!label) { return; }
+    exhibitPlayer = api.exhibitPlayer = new ScenePlayer(null, {
+        enablePan: false,
+        minDistance: 2,
+        maxDistance: 7,
+        maxPolarAngle: pi*0.55,
+        zoomSpeed: 2,
+        mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
+        touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
+      },
+      null, { pixelRatio: 1 });
 
-    const $label = document.createElement('small');
-    const to = new CSS2DObject($label);
-    const focus = d?.focus;
+    exhibitPlayer.load(exhibit);
+    exhibitPlayer.render();
 
-    $label.textContent = label;
-    $label.classList.add('exhibit-label');
-    focus && to.position.set(...focus);
-    o.add(to);
-    $label.addEventListener('pointerenter', labelOpen);
-    $label.addEventListener('pointerleave', labelShut);
-  });
+    const $exhibitVideo = $exhibitDemo.querySelector('.exhibit-video');
+    const { dom, scene, orbit, camera } = exhibitPlayer;
+    let interactWait;
+    let labelWait;
 
-  exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
+    $exhibitDemo.replaceWith($exhibitDemo = dom);
+    $exhibitDemo.appendChild($exhibitVideo);
+    $exhibitDemo.classList.add('exhibit-demo');
+    exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
 
-  reduce((to, { dataset: { exhibitCamera: c } }) => {
-      to[c] ??= scene.getObjectByName(c);
+    function interactStart() {
+      clearTimeout(interactWait);
+      exhibitInteract = true;
+    }
 
-      return to;
-    },
-    $exhibitCameras, exhibitCameras);
+    function interactEnd() {
+      clearTimeout(interactWait);
+      interactWait = setTimeout(() => exhibitInteract = false, 3e3);
+    }
 
-  exhibitCameraTo = exhibitCameraDef.position.clone();
+    orbit.addEventListener('start', interactStart);
+    orbit.addEventListener('end', interactEnd);
+    orbit.update();
 
-  const screenCircle = scene.getObjectByName('ScreenCircle');
+    const infoTouch = (e) =>
+      $exhibitInfoTouch.classList.toggle('show', e.targetTouches.length !== 2);
 
-  screenCircle.getWorldPosition(orbit.target);
+    $exhibitDemo.addEventListener('touchstart', infoTouch);
+    $exhibitDemo.addEventListener('touchend', infoTouch);
 
-  const animateScreen = () =>
-    screenCircle.material.emissiveMap = new VideoTexture($exhibitVideo);
+    function labelOpen() {
+      interactStart();
+      clearTimeout(labelWait);
+      orbit.enabled = false;
+    }
 
-  (($exhibitVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)?
-      animateScreen()
-    : $exhibitVideo.addEventListener('canplaythrough', animateScreen));
+    function labelShut() {
+      interactEnd();
+      clearTimeout(labelWait);
+      labelWait = setTimeout(() => orbit.enabled = true, 3e3);
+    }
 
-  addEventListener('resize', throttle(3e2, exhibitResize));
-  exhibitResize();
+    scene.traverse((o) => {
+      const { userData: d, position: p } = o;
+      const label = d?.label;
 
-  exhibitPlayer.play();
-  exhibitAnimate();
+      if(!label) { return; }
+
+      const $label = document.createElement('small');
+      const to = new CSS2DObject($label);
+      const focus = d?.focus;
+
+      $label.textContent = label;
+      $label.classList.add('exhibit-label');
+      focus && to.position.set(...focus);
+      o.add(to);
+      $label.addEventListener('pointerenter', labelOpen);
+      $label.addEventListener('pointerleave', labelShut);
+    });
+
+    exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
+
+    reduce((to, { dataset: { exhibitCamera: c } }) => {
+        to[c] ??= scene.getObjectByName(c);
+
+        return to;
+      },
+      $exhibitCameras, exhibitCameras);
+
+    exhibitCameraTo = exhibitCameraDef.position.clone();
+
+    const screenCircle = scene.getObjectByName('ScreenCircle');
+
+    screenCircle.getWorldPosition(orbit.target);
+
+    const animateScreen = () =>
+      screenCircle.material.emissiveMap = new VideoTexture($exhibitVideo);
+
+    (($exhibitVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)?
+        animateScreen()
+      : $exhibitVideo.addEventListener('canplaythrough', animateScreen));
+
+    addEventListener('resize', throttle(3e2, exhibitResize));
+    exhibitResize();
+
+    exhibitPlayer.play();
+    exhibitAnimate();
+    exhibitScroll();
+  }
+
+  addEventListener('scroll', throttle(3e2, exhibitScroll));
   exhibitScroll();
+
+  const exhibitReady = () =>
+    (document.readyState === 'interactive') && setTimeout(exhibitLoad, 1e3);
+
+  ((exhibitReady() === false) &&
+    document.addEventListener('readystatechange', exhibitReady));
 }
-
-addEventListener('scroll', throttle(3e2, exhibitScroll));
-exhibitScroll();
-
-const exhibitReady = () =>
-  (document.readyState === 'interactive') && setTimeout(exhibitLoad, 1e3);
-
-((exhibitReady() === false) &&
-  document.addEventListener('readystatechange', exhibitReady));
 
 function scrollReady() {
   if(document.readyState !== 'complete') { return false; }

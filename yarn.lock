@@ -2599,6 +2599,7 @@ __metadata:
     "@thi.ng/vectors": ^7.8.13
     lodash: ^4.17.21
     markdown-it-attrs: ^4.1.6
+    material-symbols: ^0.27.2
     parcel: ^2.10.3
     postcss: ^8.0.0
     postcss-import: ^15.1.0
@@ -2683,6 +2684,13 @@ __metadata:
   bin:
     markdown-it: bin/markdown-it.js
   checksum: 890555711c1c00fa03b936ca2b213001a3b9b37dea140d8445ae4130ce16628392aad24b12e2a0a9935336ca5951f2957a38f4e5309a2e38eab44e25ff32a41e
+  languageName: node
+  linkType: hard
+
+"material-symbols@npm:^0.27.2":
+  version: 0.27.2
+  resolution: "material-symbols@npm:0.27.2"
+  checksum: c1572d86aa69b355dd273ba1a9bea06f09310451a3384e846f6282240097215e8713bc3918a08e0d786be1c0d8405ca15d2bfc0817385fc2ce6f6d747e041344
   languageName: node
   linkType: hard
 

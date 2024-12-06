@@ -1,3 +1,5 @@
+@import 'material-symbols/rounded';
+
 @keyframes opacity-0-1 {
   0% { opacity: 0; }
   100% { opacity: 1; }
@@ -35,22 +37,6 @@
 @keyframes pointer-events-auto-none {
   0% { pointer-events: auto; }
   100% { pointer-events: none; }
-}
-
-@font-face {
-  /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
-  font-family: 'Material Symbols Rounded';
-  font-style: normal;
-  font-weight: 400;
-  src: url(../fonts/material-symbols/MaterialSymbolsRounded-FILL-GRAD-opsz-wght.woff2) format('woff2'),
-    url(../fonts/material-symbols/MaterialSymbolsRounded-FILL-GRAD-opsz-wght.ttf) format('truetype');
-
-  /**
-   * @todo Fix the flash of icon fallback text.
-   * @see [SO to watch for the font load](https://stackoverflow.com/a/48121477)
-   * @see [SO for `font-display`](https://stackoverflow.com/a/53301684)
-   */
-  font-display: block;
 }
 
 :root {
@@ -685,6 +671,12 @@ input {
   &[type="email"] { background: var(--c-interact); }
 }
 
+/**
+ * Used in combination with `.material-symbols-rounded`,
+ * `.material-symbols-outlined`, or `.material-symbols-sharp`.
+ *
+ * @see [`material-symbols`](https://github.com/marella/material-symbols/tree/main/material-symbols)
+ */
 .icon {
   display: inline-flex;
   justify-content: center;
@@ -692,20 +684,7 @@ input {
   width: var(--s-icon-m);
   height: var(--s-icon-m);
   vertical-align: middle;
-  /** @see [Google Material Symbols guide](https://developers.google.com/fonts/docs/material_symbols#use_in_web) */
-  font-family: 'Material Symbols Rounded';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 1.5rem;
-  /* display: inline-block; */
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 1;
 
   &[type="submit"] {
     position: relative;
@@ -1407,16 +1386,24 @@ img,
   }
 }
 
-.progress-mpm-view {
-  flex: 1 1 auto;
+.demo-view,
+.demo-controls {
   display: flex;
-  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  gap: var(--s-items-gap);
+}
+
+.demo-view {
+  flex: 1 1 auto;
+  flex-flow: column nowrap;
   min-width: 66%;
 }
 
-.progress-mpm-fill {
+.demo-controls { flex-flow: row wrap; }
+
+.demo-fill,
+.demo-video {
   width: 100%;
   height: var(--s-view-tall);
   max-height: 720px;
@@ -1425,13 +1412,29 @@ img,
   background: var(--c-accent);
 }
 
-.progress-mpm-demo {
+.demo-fill ~ .demo-video { display: none; }
+
+.demo-live {
   display: block;
   width: 100%;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
   margin: auto;
+}
+
+.demo-control { display: none; }
+
+.demo-flip { display: none; }
+
+/* .demo-flip-label > .icon::after { content: 'preview_off'; } */
+.demo-flip-label > .icon::after { content: 'movie'; }
+
+.demo-flip:checked {
+  & ~ .demo-control { display: block; }
+
+  /* & ~ .demo-flip-label > .icon::after { content: 'preview'; } */
+  & ~ .demo-flip-label > .icon::after { content: 'simulation'; }
 }
 
 .artizen-info {
@@ -1519,56 +1522,14 @@ img,
 
 .peer { flex-flow: row-reverse wrap; }
 
-.peer-view,
-.peer-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--s-items-gap);
-}
+.peer-view { min-width: 50%; }
 
-.peer-view {
-  flex: 1 1 auto;
-  flex-flow: column nowrap;
-}
-
-.peer-controls { flex-flow: row wrap; }
-
-.peer-fill {
-  width: 100%;
-  height: var(--s-view-tall);
-  max-height: 720px;
-  max-width: 1280px;
-  margin: var(--s-m0-y) 0;
-  background: var(--c-accent);
-}
-
-.peer-demo {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  margin: auto;
-}
-
-.peer-camera,
-#peer-flip { display: none; }
+.peer-camera { display: none; }
 
 .peer-camera {
   & ~ .icon::after { content: 'videocam_off'; }
 
   &:checked ~ .icon::after { content: 'video_call'; }
-}
-
-.peer-control { display: none; }
-
-[for="peer-flip"] > .icon::after { content: 'preview_off'; }
-
-#peer-flip:checked {
-  & ~ .peer-control { display: block; }
-
-  & ~ [for="peer-flip"] > .icon::after { content: 'preview'; }
 }
 
 .face-view {}

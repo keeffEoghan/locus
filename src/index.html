@@ -148,7 +148,7 @@
               placeholder="Email address" />
             <span class="placeholder">Subscribe by email</span>
           </label>
-          <button type="submit" class="icon" title="Subscribe">send</button>
+          <button type="submit" class="icon material-symbols-rounded" title="Subscribe">send</button>
           <fieldset class="optional">
             <label>
               <input name="Name" type="text" placeholder="Name">
@@ -262,18 +262,36 @@
         </blockquote>
       </article>
       <article id="progress-demo-mpm" class="bleed-inset jump">
-        <section class="progress-mpm-view">
-          <div class="progress-mpm-fill">
-            <iframe class="progress-mpm-demo"
+        <section class="progress-mpm-view demo-view">
+          <div class="progress-mpm-fill demo-fill">
+            <iframe class="progress-mpm-demo demo-live"
               loading="lazy" frameborder="0" allowfullscreen allow="camera *"
               src="https://epok.tech/wip-gl-mpm-demo/"
               sandbox="allow-scripts allow-same-origin">
             </iframe>
           </div>
-          <div md>
-            See this demo in [a new tab](https://epok.tech/wip-gl-mpm-demo/){target="_blank"}, [lower quality](https://epok.tech/wip-gl-mpm-demo/?grid.detail=7e1&gridToPoints.gpgpu.scale=8&gridToScreen.on=false){target="_blank"}, [higher quality](https://epok.tech/wip-gl-mpm-demo/?grid.detail=1.5e2&gridToPoints.gpgpu.scale=10){target="_blank"}.
-            <br/>
-            Is this early demo not working for you? See [the video recording](https://youtu.be/M9Fjef_Czlg){target="_blank"}.
+          <iframe class="demo-video video-embed"
+            loading="lazy" frameborder="0" allowfullscreen
+            src="https://www.youtube.com/embed/M9Fjef_Czlg?si=q0ND4aJFxri5acra&rel=0&color=white" title="Demo of Material Point Method prototype"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
+          </iframe>
+          <div class="demo-controls">
+            <input type="checkbox" class="demo-flip" id="progress-mpm-flip" checked />
+            <label class="icon-in demo-flip-label" for="progress-mpm-flip">
+              Demo or video<span class="icon material-symbols-rounded"></span>
+            </label>
+            <button class="progress-mpm-quality demo-control icon-in"
+              data-src="https://epok.tech/wip-gl-mpm-demo/?grid.detail=7e1&gridToPoints.gpgpu.scale=8&gridToScreen.on=false">
+              Lower quality<span class="icon material-symbols-rounded">width_normal</span>
+            </button>
+            <button class="progress-mpm-quality demo-control icon-in"
+              data-src="https://epok.tech/wip-gl-mpm-demo/">
+              Medium quality<span class="icon material-symbols-rounded">width_wide</span>
+            </button>
+            <button class="progress-mpm-quality demo-control icon-in"
+              data-src="https://epok.tech/wip-gl-mpm-demo/?grid.detail=1.5e2&gridToPoints.gpgpu.scale=10">
+              Higher quality<span class="icon material-symbols-rounded">width_full</span>
+            </button>
           </div>
         </section>
         <section class="progress-mpm-info" md>
@@ -358,7 +376,7 @@
               <br/>
               See full details in the [*crypto supporter guide*](#crypto-guide).
 
-              [<span>Support by crypto</span><span class="icon">send_money</span>](https://artizen.fund/index/p/locus?season=4){.times-out .button .icon-in target="_blank"}
+              [<span>Support by crypto</span><span class="icon material-symbols-rounded">send_money</span>](https://artizen.fund/index/p/locus?season=4){.times-out .button .icon-in target="_blank"}
 
               <details>
                 <summary id="crypto-guide" class="jump">Crypto supporter guide</summary>
@@ -388,7 +406,7 @@
               <br/>
               See full details in the [card supporter guide](#card-guide).
 
-              [<span>Support by card</span><span class="icon">credit_card</span>](https://artizen.link/pay){.times-out .button .icon-in target="_blank"}
+              [<span>Support by card</span><span class="icon material-symbols-rounded">credit_card</span>](https://artizen.link/pay){.times-out .button .icon-in target="_blank"}
 
               <details>
                 <summary id="card-guide" class="jump">Card supporter guide</summary>
@@ -498,9 +516,9 @@
               </section>
             </section>
           </section>
-          <section class="peer-view">
-            <div class="peer-fill">
-              <iframe class="peer-demo"
+          <section class="peer-view demo-view">
+            <div class="peer-fill demo-fill">
+              <iframe class="peer-demo demo-live"
                 loading="lazy" frameborder="0" allowfullscreen
                 data-y="camera *" data-n=""
                 src="https://arweave.net/wU9gVLoAt_sMwiE6_2kv4zGFcQw7xxqCLCnBY2_FRGM/?address=0x6d24ce4c32e556313b431fb156edf2060680a998&seed=65"
@@ -508,18 +526,23 @@
                 sandbox="allow-scripts allow-same-origin">
               </iframe>
             </div>
-            <div class="peer-controls">
+            <iframe class="demo-video video-embed"
+              loading="lazy" frameborder="0" allowfullscreen
+              src="https://www.youtube.com/embed/Hj00C751OgM?si=36PPWIJUkWa5XgLa&rel=0&color=white" title="Demos of Peer into te Flow NFT editions"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
+            </iframe>
+            <div class="peer-controls demo-controls">
               <!-- @todo Use `<details>` instead of this checkbox? Layout's tricky -->
-              <input type="checkbox" id="peer-flip" checked />
-              <label class="icon-in" for="peer-flip">
-                Toggle preview<span class="icon"></span>
+              <input type="checkbox" class="demo-flip" id="peer-flip" checked />
+              <label class="icon-in demo-flip-label" for="peer-flip">
+                Demo or video<span class="icon material-symbols-rounded"></span>
               </label>
-              <button class="peer-random peer-control icon-in">
-                See a random edition<span class="icon">shuffle</span>
+              <button class="peer-random demo-control icon-in">
+                Random edition<span class="icon material-symbols-rounded">shuffle</span>
               </button>
-              <label class="peer-control icon-in">
+              <label class="demo-control icon-in">
                 <input type="checkbox" class="peer-camera" />
-                Camera face interaction<span class="icon"></span>
+                Camera face interaction<span class="icon material-symbols-rounded"></span>
               </label>
             </div>
           </section>
@@ -890,7 +913,7 @@
         <section md>
           ## Contact the *Locus* team
 
-          [**epok.tech@gmail.com**<span class="icon">outgoing_mail</span>](mailto:epok.tech@gmail.com){.button .icon-in target="_blank" title="Contact us by email on epok.tech@gmail.com"}
+          [**epok.tech@gmail.com**<span class="icon material-symbols-rounded">outgoing_mail</span>](mailto:epok.tech@gmail.com){.button .icon-in target="_blank" title="Contact us by email on epok.tech@gmail.com"}
         </section>
       </article>
     </main>
