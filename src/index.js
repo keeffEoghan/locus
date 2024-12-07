@@ -333,22 +333,23 @@ each(($demoView) => {
       demoFillIntersector.observe($demoFill);
     }
 
-    if($demoLive && $demoCamera) {
-      $demoCamera.addEventListener('change', () => {
-        const { allow, dataset } = $demoLive;
-        const to = dataset[(($demoCamera.checked)? 'y' : 'n')];
+    $demoLive && $demoCamera?.addEventListener?.('change', () => {
+      const { allow, dataset } = $demoLive;
+      const to = dataset[(($demoCamera.checked)? 'y' : 'n')];
 
-        if(allow === to) { return; }
+      if(allow === to) { return; }
 
-        $demoLive.allow = to;
-        $demoLive.src = $demoLive.src;
-      });
+      const { src } = $demoLive;
 
-      $demoCameraOn?.addEventListener?.('click', (e) => {
-        !$demoCamera.checked && $demoCamera.click();
-        stopEvent(e);
-      });
-    }
+      $demoLive.src = '';
+      $demoLive.allow = to;
+      setTimeout(() => $demoLive.src = src);
+    });
+
+    $demoCamera && $demoCameraOn?.addEventListener?.('click', (e) => {
+      !$demoCamera.checked && $demoCamera.click();
+      stopEvent(e);
+    });
 
     $demoLive && $demoFull?.addEventListener?.('click',
       () => $demoLive.requestFullscreen());
