@@ -1446,6 +1446,14 @@ img,
   & ~ .demo-flip-label > .icon::after { content: 'simulation'; }
 }
 
+.demo-camera { display: none; }
+
+.demo-camera {
+  & ~ .icon::after { content: 'videocam_off'; }
+
+  &:checked ~ .icon::after { content: 'video_call'; }
+}
+
 .progress-demo  > section { align-self: center; }
 
 .progress-demo-flip { flex-direction: row-reverse; }
@@ -1537,14 +1545,6 @@ img,
 }
 
 .peer-view { min-width: 50%; }
-
-.peer-camera { display: none; }
-
-.peer-camera {
-  & ~ .icon::after { content: 'videocam_off'; }
-
-  &:checked ~ .icon::after { content: 'video_call'; }
-}
 
 .face-view {}
 

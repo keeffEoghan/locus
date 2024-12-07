@@ -312,6 +312,11 @@ each(($demoView) => {
     const $demoLive = $demoView.querySelector('.demo-live');
     const $demoVideo = $demoView.querySelector('.demo-video');
     const $demoFlip = $demoView.querySelector('.demo-flip');
+    const $demoFull = $demoView.querySelector('.demo-fullscreen');
+    const $demoCamera = $demoView.querySelector('.demo-camera');
+
+    const $demoCameraOn =
+      $demoView.parentElement?.querySelector?.('.demo-camera-on');
 
     $demoFlip && $demoFill && $demoFlip.addEventListener('change', () => {
       (($demoFlip.checked)? $demoView.prepend($demoFill) : $demoFill.remove());
@@ -327,24 +332,65 @@ each(($demoView) => {
 
       demoFillIntersector.observe($demoFill);
     }
+
+    if($demoLive && $demoCamera) {
+      $demoCamera.addEventListener('change', () => {
+        const { allow, dataset } = $demoLive;
+        const to = dataset[(($demoCamera.checked)? 'y' : 'n')];
+
+        if(allow === to) { return; }
+
+        $demoLive.allow = to;
+        $demoLive.src = $demoLive.src;
+      });
+
+      $demoCameraOn?.addEventListener?.('click', (e) => {
+        !$demoCamera.checked && $demoCamera.click();
+        stopEvent(e);
+      });
+    }
+
+    $demoLive && $demoFull?.addEventListener?.('click',
+      () => $demoLive.requestFullscreen());
   },
   document.querySelectorAll('.demo-view'));
 
 // MPM progress demo.
 
 each(($mpmView) => {
-    const $mpmDemo = $mpmView.querySelector('.progress-mpm-demo');
-    const $mpmQualities = $mpmView.querySelectorAll('.progress-mpm-quality');
-    const $mpmFull = $mpmView.querySelector('.progress-mpm-fullscreen');
+    const $mpmDemo = $mpmView.querySelector('.mpm-demo');
+    const $mpmQualities = $mpmView.querySelectorAll('.mpm-quality');
 
     $mpmDemo && each(($mpmQuality) => $mpmQuality.addEventListener('click',
         () => $mpmDemo.src = $mpmQuality.dataset.src),
       $mpmQualities);
-
-    $mpmDemo && $mpmFull?.addEventListener?.('click',
-      () => $mpmDemo.requestFullscreen());
   },
-  document.querySelectorAll('.progress-mpm-view'));
+  document.querySelectorAll('.mpm-view'));
+
+// `Peer into the Flow`.
+
+each(($peerView) => {
+    const $peerDemo = $peerView.querySelector('.peer-demo');
+    const $peerRandom = $peerView.querySelector('.peer-random');
+
+    if($peerDemo && $peerRandom) {
+      // Seeds that look good and are easy to use.
+      const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
+
+      const peerSeed = (to = ceil(random()*66)) =>
+        $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
+          const q = new URLSearchParams($2);
+
+          q.set('seed', to);
+
+          return $1+q;
+        });
+
+      peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
+      $peerRandom.addEventListener('click', () => peerSeed());
+    }
+  },
+  document.querySelectorAll('.peer-view'));
 
 // Reward: `Artifact`.
 
@@ -363,57 +409,6 @@ each(($artifactView) => {
     }
   },
   document.querySelectorAll('.artifact-view'));
-
-// Reward: `Peer into the Flow`.
-
-each(($peerView) => {
-    const $peerDemo = $peerView.querySelector('.peer-demo');
-    const $peerRandom = $peerView.querySelector('.peer-random');
-    const $peerCamera = $peerView.querySelector('.peer-camera');
-
-    const $peerCameraOn =
-      $peerView.parentElement?.querySelector?.('.peer-camera-on');
-
-    const $peerFull = $peerView.querySelector('.peer-fullscreen');
-
-    if($peerDemo && $peerRandom) {
-      // Seeds that look good and are easy to use.
-      const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
-
-      const peerSeed = (to = ceil(random()*66)) =>
-        $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
-          const q = new URLSearchParams($2);
-
-          q.set('seed', to);
-
-          return $1+q;
-        });
-
-      peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
-      $peerRandom.addEventListener('click', () => peerSeed());
-    }
-
-    if($peerDemo && $peerCamera) {
-      $peerCamera.addEventListener('change', () => {
-        const { allow, dataset } = $peerDemo;
-        const to = dataset[(($peerCamera.checked)? 'y' : 'n')];
-
-        if(allow === to) { return; }
-
-        $peerDemo.allow = to;
-        $peerDemo.src = $peerDemo.src;
-      });
-
-      $peerCameraOn?.addEventListener?.('click', (e) => {
-        !$peerCamera.checked && $peerCamera.click();
-        stopEvent(e);
-      });
-    }
-
-    $peerDemo && $peerFull?.addEventListener?.('click',
-      () => $peerDemo.requestFullscreen());
-  },
-  document.querySelectorAll('.peer-view'));
 
 // Exhibition scene.
 

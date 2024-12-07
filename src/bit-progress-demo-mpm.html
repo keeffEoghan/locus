@@ -1,6 +1,6 @@
 <article id="progress-demo-mpm" class="progress-demo bleed-inset jump">
   <a href="#progress-demo-mpm" class="jump-share material-symbols-rounded"></a>
-  <section class="progress-mpm-info" md>
+  <section class="mpm-info" md>
     ### Progress demo ~ `Material Point Method`
 
     Work-in-progress developing the multi-material physics simulation technology for **Locus**.
@@ -11,13 +11,14 @@
 
     Integrates [`gl-gpgpu`](https://epk.tech/gl-gpgpu){target="_blank"} to simulate all the physics and several other aspects, while supporting `WebGL 1.0` for equity of access on many devices.
     <br/>
-    Integrates [`glsl-optical-flow`](https://epok.tech/glsl-optical-flow){target="_blank"} for natural-motion interaction via camera to affect fluid particle flow.
+    Integrates [`glsl-optical-flow`](https://epok.tech/glsl-optical-flow){target="_blank"} for natural-motion interaction via camera to affect fluid particle flow, with the [camera enabled](#){.demo-camera-on}.
   </section>
-  <section class="progress-mpm-view demo-view">
-    <div class="progress-mpm-fill demo-fill">
-      <iframe class="progress-mpm-demo demo-live"
-        loading="lazy" frameborder="0" allowfullscreen allow="camera *"
-        src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false"
+  <section class="mpm-view demo-view">
+    <div class="mpm-fill demo-fill">
+      <iframe class="mpm-demo demo-live"
+        loading="lazy" frameborder="0" allowfullscreen
+        allow="" data-y="camera *" data-n=""
+        src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&g[1]=0.5"
         sandbox="allow-scripts allow-same-origin">
       </iframe>
     </div>
@@ -27,27 +28,32 @@
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
     </iframe>
     <div class="demo-controls">
-      <input type="checkbox" class="demo-flip" id="progress-mpm-flip" checked />
-      <label class="icon-in demo-flip-label" for="progress-mpm-flip">
+      <input type="checkbox" class="demo-flip" id="mpm-flip" checked />
+      <label class="icon-in demo-flip-label" for="mpm-flip">
         <span class="icon material-symbols-rounded"></span>
         demo or video
       </label>
-      <button class="progress-mpm-quality demo-control icon-in"
-        data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&grid.detail=7e1&gridToPoints.gpgpu.scale=8&gridToScreen.on=false">
+      <button class="mpm-quality demo-control icon-in"
+        data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&g[1]=0.5&grid.detail=7e1&gridToPoints.gpgpu.scale=8&gridToScreen.on=false">
         <span class="icon material-symbols-rounded">brightness_3</span>
         low quality
       </button>
-      <button class="progress-mpm-quality demo-control icon-in"
-        data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false">
+      <button class="mpm-quality demo-control icon-in"
+        data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&g[1]=0.5">
         <span class="icon material-symbols-rounded">brightness_2</span>
         medium quality
       </button>
-      <button class="progress-mpm-quality demo-control icon-in"
-        data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&grid.detail=1.5e2&gridToPoints.gpgpu.scale=10">
+      <button class="mpm-quality demo-control icon-in"
+        data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&g[1]=0.5&grid.detail=1.5e2&gridToPoints.gpgpu.scale=10">
         <span class="icon material-symbols-rounded">brightness_1</span>
         high quality
       </button>
-      <button class="progress-mpm-fullscreen demo-control icon-in">
+      <label class="demo-control icon-in">
+        <input type="checkbox" class="mpm-camera demo-camera" />
+        <span class="icon material-symbols-rounded"></span>
+        camera optical-flow
+      </label>
+      <button class="mpm-fullscreen demo-fullscreen demo-control icon-in">
         <span class="icon material-symbols-rounded">open_in_full</span>
         fullscreen
       </button>
