@@ -339,11 +339,8 @@ each(($demoView) => {
 
       if(allow === to) { return; }
 
-      const { src } = $demoLive;
-
-      $demoLive.src = '';
       $demoLive.allow = to;
-      setTimeout(() => $demoLive.src = src);
+      $demoLive.src = $demoLive.src;
     });
 
     $demoCamera && $demoCameraOn?.addEventListener?.('click', (e) => {
