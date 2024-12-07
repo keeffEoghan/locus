@@ -1461,15 +1461,27 @@ img,
   & > section { align-self: center; }
 
   .mpm-fill {
-    background-image: url('../media/gl-mpm-cover-0.png?width=2562'),
-      url('../media/gl-mpm-cover-0.png?width=256'),
-      url('../media/gl-mpm-cover-0.png?width=26');
+    background-image: url('../media/demo-mpm-cover-0.png?width=2562'),
+      url('../media/demo-mpm-cover-0.png?width=256'),
+      url('../media/demo-mpm-cover-0.png?width=26');
   }
 
   .peer-fill {
-    background-image: url('../media/peer-cover-0.png?width=2544'),
-      url('../media/peer-cover-0.png?width=254'),
-      url('../media/peer-cover-0.png?width=25');
+    background-image: url('../media/demo-peer-cover-0.png?width=2544'),
+      url('../media/demo-peer-cover-0.png?width=254'),
+      url('../media/demo-peer-cover-0.png?width=25');
+  }
+
+  .gpgpu-fill {
+    background-image: url('../media/demo-gpgpu-cover-0.png?width=1081'),
+      url('../media/demo-gpgpu-cover-0.png?width=108'),
+      url('../media/demo-gpgpu-cover-0.png?width=11');
+  }
+
+  .optical-flow-fill {
+    background-image: url('../media/demo-optical-flow-cover-0.png?width=1050'),
+      url('../media/demo-optical-flow-cover-0.png?width=105'),
+      url('../media/demo-optical-flow-cover-0.png?width=11');
   }
 }
 
@@ -1522,9 +1534,9 @@ img,
   .peer-view { min-width: 50%; }
 
   .peer-fill {
-    background-image: url('../media/peer-cover-1.png?width=2146'),
-      url('../media/peer-cover-1.png?width=215'),
-      url('../media/peer-cover-1.png?width=22');
+    background-image: url('../media/demo-peer-cover-1.png?width=2146'),
+      url('../media/demo-peer-cover-1.png?width=215'),
+      url('../media/demo-peer-cover-1.png?width=22');
   }
 }
 

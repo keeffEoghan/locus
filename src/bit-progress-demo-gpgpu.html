@@ -1,0 +1,44 @@
+<article id="progress-demo-gpgpu" class="progress-demo bleed-inset jump {{ classes }}">
+  <a href="#progress-demo-gpgpu" class="jump-share material-symbols-rounded"></a>
+  <section class="gpgpu-info" md>
+    ### Progress demo ~ `GPGPU`
+
+    Developed [`gl-gpgpu`](https://epok.tech/gl-gpgpu){target="_blank"}, a *General-Processing GPU* tool, [`GPGPU`](https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units), to compute optimally with high parallelism on the *GPU* via [`WebGL 1.0`](https://www.khronos.org/webgl/) and [`GLSL`](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)).
+
+    <!-- Useful in tasks like [real-time physics, particle systems](https://epok.tech/gl-gpgpu), of which [***Locus***](https://epok.tech/locus/) has many.
+
+    Developed and published [*Open](https://www.npmjs.com/package/@epok.tech/gl-gpgpu)-[Source](https://github.com/keeffEoghan/gl-gpgpu)*, to the same community [***Locus***](https://epok.tech/locus/) will serve.
+
+    Tested in several real projects with real audiences like others shown here.
+
+    Develops and tests the equity of access that [***Locus***](https://epok.tech/locus/) centres, high-performance parallel computation of complex systems without needing to rely on the availability of compute-shaders or [`WebGPU`](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API), just the more widely-available [`WebGL 1.0`](https://www.khronos.org/webgl/), which will keep [***Locus***](https://epok.tech/locus/) accessible on as many devices as possible; those audiences may own personally, not just high-end devices dedicated to exhibitions.
+
+    Tested the capacity of such a system to simulate and render the necessary millions of particles that [***Locus***](https://epok.tech/locus/) will require. -->
+  </section>
+  <section class="gpgpu-view demo-view">
+    <div class="gpgpu-fill demo-fill">
+      <iframe class="gpgpu-demo demo-live"
+        loading="lazy" frameborder="0" allowfullscreen
+        allow="" data-y="camera *" data-n=""
+        src="https://epok.tech/gl-gpgpu?guide=false"
+        sandbox="allow-scripts allow-same-origin">
+      </iframe>
+    </div>
+    <iframe class="demo-video video-embed"
+      loading="lazy" frameborder="0" allowfullscreen
+      src="https://www.youtube.com/embed/ddt3YA2J1ys?si=s7G3w4QzJb3cMd9L&rel=0&color=white" title="Demo of Material Point Method prototype"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
+    </iframe>
+    <div class="demo-controls">
+      <input type="checkbox" class="demo-flip" id="gpgpu-flip" checked />
+      <label class="icon-in demo-flip-label" for="gpgpu-flip">
+        <span class="icon material-symbols-rounded"></span>
+        demo or video
+      </label>
+      <button class="gpgpu-fullscreen demo-fullscreen demo-control icon-in">
+        <span class="icon material-symbols-rounded">fullscreen</span>
+        fullscreen
+      </button>
+    </div>
+  </section>
+</article>

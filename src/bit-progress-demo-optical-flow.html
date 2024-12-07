@@ -1,0 +1,41 @@
+<article id="progress-demo-optical-flow" class="progress-demo bleed-inset jump {{ classes }}">
+  <a href="#progress-demo-optical-flow" class="jump-share material-symbols-rounded"></a>
+  <section class="optical-flow-info" md>
+    ### Progress demo ~ `Optical-Flow`
+
+    Developed [`glsl-optical-flow`](https://epok.tech/glsl-optical-flow){target="_blank"}, an `Optical-Flow` Computer-Vision method for natural-motion interaction via video – try it with the [camera enabled](#){.demo-camera-on}.
+
+    <small>Ddeveloped to run optimally on the `GPU` via `GLSL`, and published [Open](https://www.npmjs.com/package/@epok.tech/glsl-optical-flow)-[Source](https://github.com/keeffEoghan/glsl-optical-flow).</small>
+  </section>
+  <section class="optical-flow-view demo-view">
+    <div class="optical-flow-fill demo-fill">
+      <iframe class="optical-flow-demo demo-live"
+        loading="lazy" frameborder="0" allowfullscreen
+        allow="" data-y="camera *" data-n=""
+        src="https://epok.tech/glsl-optical-flow"
+        sandbox="allow-scripts allow-same-origin">
+      </iframe>
+    </div>
+    <iframe class="demo-video video-embed"
+      loading="lazy" frameborder="0" allowfullscreen
+      src="https://www.youtube.com/embed/ClTmZ3s7Uls?si=S8NTqkawc9BO48o6&rel=0&color=white" title="Demo of Material Point Method prototype"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
+    </iframe>
+    <div class="demo-controls">
+      <input type="checkbox" class="demo-flip" id="optical-flow-flip" checked />
+      <label class="icon-in demo-flip-label" for="optical-flow-flip">
+        <span class="icon material-symbols-rounded"></span>
+        demo or video
+      </label>
+      <label class="demo-control icon-in">
+        <input type="checkbox" class="optical-flow-camera demo-camera" />
+        <span class="icon material-symbols-rounded"></span>
+        camera optical-flow
+      </label>
+      <button class="optical-flow-fullscreen demo-fullscreen demo-control icon-in">
+        <span class="icon material-symbols-rounded">fullscreen</span>
+        fullscreen
+      </button>
+    </div>
+  </section>
+</article>
