@@ -7,6 +7,7 @@ import { mix } from '@thi.ng/math/mix';
 import { clamp01, inOpenRange } from '@thi.ng/math/interval';
 import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
+import { shuffle } from '@thi.ng/arrays/shuffle';
 import throttle from 'lodash/fp/throttle';
 import { Vector3, VideoTexture, MOUSE, TOUCH } from 'three';
 
@@ -307,49 +308,76 @@ each(($c) => $c.addEventListener('click', async () => {
 
 // Progress and demos.
 
-each(($demoView) => {
-    const $demoFill = $demoView.querySelector('.demo-fill');
-    const $demoLive = $demoView.querySelector('.demo-live');
-    const $demoVideo = $demoView.querySelector('.demo-video');
-    const $demoFlip = $demoView.querySelector('.demo-flip');
-    const $demoFull = $demoView.querySelector('.demo-fullscreen');
-    const $demoCamera = $demoView.querySelector('.demo-camera');
+let demoFillIntersects;
+let demoFillIntersector;
 
-    const $demoCameraOn =
-      $demoView.parentElement?.querySelector?.('.demo-camera-on');
+each(($view) => {
+    const $fill = $view.querySelector('.demo-fill');
+    const $live = $view.querySelector('.demo-live');
+    const $video = $view.querySelector('.demo-video');
+    const $flip = $view.querySelector('.demo-flip');
+    const $full = $view.querySelector('.demo-fullscreen');
+    const $camera = $view.querySelector('.demo-camera');
+    const $cameraOn =$view.parentElement?.querySelector?.('.demo-camera-on');
 
-    $demoFlip && $demoFill && $demoFlip.addEventListener('change', () => {
-      (($demoFlip.checked)? $demoView.prepend($demoFill) : $demoFill.remove());
-      $demoLive.src = $demoLive.src;
-      $demoVideo.src = $demoVideo.src;
+    $flip && $fill && $flip.addEventListener('change', () => {
+      (($flip.checked)? $view.prepend($fill) : $fill.remove());
+      $live.src = $live.src;
+      $video.src = $video.src;
     });
 
-    if($demoLive && $demoFill) {
-      /** @see [Infinite scroll example](https://googlechrome.github.io/samples/intersectionobserver/) */
-      const demoFillIntersector = new IntersectionObserver((es) =>
-        ((!es.some((e) => e.isIntersecting))? $demoLive.remove()
-        : $demoFill.append($demoLive)));
+    if($live && $fill) {
+      (demoFillIntersects ??= new Map())
+        .set($fill, { $fill, $live, time: 0, ratio: 0 });
 
-      demoFillIntersector.observe($demoFill);
+      /** @see [Infinite scroll example](https://googlechrome.github.io/samples/intersectionobserver/) */
+      demoFillIntersector ??= new IntersectionObserver((os) => {
+          // Update all newer intersections.
+          each((o) => {
+              const { target: $fill, time, intersectionRatio: ratio } = o;
+              const intersect = demoFillIntersects.get($fill);
+
+              (time > intersect.time) &&
+                (intersect.time = time) && (intersect.ratio = ratio);
+            },
+            os);
+
+          // Add the demo with the greatest intersection ratio, remove others.
+          let to;
+
+          demoFillIntersects.forEach((at) => {
+            if(at.ratio < to?.ratio) { return at.$live.remove(); }
+
+            to?.$live?.remove?.();
+            to = at;
+          });
+
+          const { $fill, $live } = to;
+
+          ($live.parentElement !== $fill) && $fill.append($live);
+        },
+        { threshold: map((_, i, a) => i/(a.length-1), range(10), 0) });
+
+      demoFillIntersector.observe($fill);
     }
 
-    $demoLive && $demoCamera?.addEventListener?.('change', () => {
-      const { allow, dataset } = $demoLive;
-      const to = dataset[(($demoCamera.checked)? 'y' : 'n')];
+    $live && $camera?.addEventListener?.('change', () => {
+      const { allow, dataset } = $live;
+      const to = dataset[(($camera.checked)? 'y' : 'n')];
 
       if(allow === to) { return; }
 
-      $demoLive.allow = to;
-      $demoLive.src = $demoLive.src;
+      $live.allow = to;
+      $live.src = $live.src;
     });
 
-    $demoCamera && $demoCameraOn?.addEventListener?.('click', (e) => {
-      !$demoCamera.checked && $demoCamera.click();
+    $camera && $cameraOn?.addEventListener?.('click', (e) => {
+      !$camera.checked && $camera.click();
       stopEvent(e);
     });
 
-    $demoLive && $demoFull?.addEventListener?.('click',
-      () => $demoLive.requestFullscreen());
+    $live && $full?.addEventListener?.('click',
+      () => $live.requestFullscreen());
   },
   document.querySelectorAll('.demo-view'));
 
@@ -367,24 +395,33 @@ each(($mpmView) => {
 
 // `Peer into the Flow`.
 
+// Seeds that look good and are easy to use.
+let peerSeeds;
+// The current peer seed, so multiple demos aren't the same.
+let peerSeedAt = 0;
+
 each(($peerView) => {
     const $peerDemo = $peerView.querySelector('.peer-demo');
     const $peerRandom = $peerView.querySelector('.peer-random');
 
     if($peerDemo && $peerRandom) {
-      // Seeds that look good and are easy to use.
-      const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
+      peerSeeds ??= [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
 
-      const peerSeed = (to = ceil(random()*66)) =>
+      function peerSeed() {
+        !peerSeedAt && shuffle(peerSeeds);
+
         $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
           const q = new URLSearchParams($2);
 
-          q.set('seed', to);
+          q.set('seed', peerSeeds[peerSeedAt]);
 
           return $1+q;
         });
 
-      peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
+        peerSeedAt = (peerSeedAt+1)%peerSeeds.length;
+      }
+
+      peerSeed();
       $peerRandom.addEventListener('click', () => peerSeed());
     }
   },
