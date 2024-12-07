@@ -1,5 +1,6 @@
 {
   "plugins": {
+    "posthtml-modules": {},
     "posthtml-markdownit": {
       "markdownit": {
         "html": true,

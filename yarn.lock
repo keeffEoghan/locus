@@ -2019,6 +2019,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fclone@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "fclone@npm:1.0.11"
+  checksum: 016eb1eac443b0c896adf938f6b300bfc86365444f5160ccf3d68a598d1372d00ca96ab8e116185dc9f316cec83de5f2df157fe7fe365a57bcba1ccc17491f61
+  languageName: node
+  linkType: hard
+
 "fill-range@npm:^7.0.1":
   version: 7.0.1
   resolution: "fill-range@npm:7.0.1"
@@ -2605,7 +2612,9 @@ __metadata:
     postcss-import: ^15.1.0
     postcss-nesting: ^12.0.1
     postcss-url: ^10.1.3
+    posthtml: ^0.16.6
     posthtml-markdownit: ^1.3.1
+    posthtml-modules: ^0.9.1
     sharp: ^0.31.1
     three: ^0.160.0
     typescript: ^4.9.5
@@ -3251,6 +3260,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"posthtml-expressions@npm:^1.11.0":
+  version: 1.11.4
+  resolution: "posthtml-expressions@npm:1.11.4"
+  dependencies:
+    fclone: ^1.0.11
+    posthtml: ^0.16.5
+    posthtml-match-helper: ^1.0.1
+    posthtml-parser: ^0.10.0
+    posthtml-render: ^3.0.0
+  checksum: 000934f79973ecaffa85a4da99a58ee863ca56b487ca7ebec39e95a34d89d4e94a27e0297fb8ca0f8db19a054ddf088c768e386f32edae69aea51f9ff31a6799
+  languageName: node
+  linkType: hard
+
 "posthtml-markdownit@npm:^1.3.1":
   version: 1.3.1
   resolution: "posthtml-markdownit@npm:1.3.1"
@@ -3264,7 +3286,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthtml-parser@npm:^0.10.1":
+"posthtml-match-helper@npm:^1.0.1, posthtml-match-helper@npm:^1.0.3":
+  version: 1.0.4
+  resolution: "posthtml-match-helper@npm:1.0.4"
+  peerDependencies:
+    posthtml: ">=0.5.0"
+  checksum: a135feba0f356e4b394d2d53ab29e063017638a5aa9a25b1f2de7614c279fb890aeadeec915edb51c6dea0e377773395edfc0d17f6e078f82b56801c5ef91363
+  languageName: node
+  linkType: hard
+
+"posthtml-modules@npm:^0.9.1":
+  version: 0.9.1
+  resolution: "posthtml-modules@npm:0.9.1"
+  dependencies:
+    is-json: ^2.0.1
+    lodash: ^4.17.21
+    posthtml-expressions: ^1.11.0
+    posthtml-match-helper: ^1.0.3
+    posthtml-render: ^3.0.0
+  checksum: 147f714ec66741d66b816727c5f95c6173c90828577a92aa68bdefa9dfb9ac67c9ed073e304ff966b0f56f7282b64e214df5597164a2cd76ebac03c4efc5b1c3
+  languageName: node
+  linkType: hard
+
+"posthtml-parser@npm:^0.10.0, posthtml-parser@npm:^0.10.1":
   version: 0.10.2
   resolution: "posthtml-parser@npm:0.10.2"
   dependencies:
@@ -3326,7 +3370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthtml@npm:^0.16.4, posthtml@npm:^0.16.5":
+"posthtml@npm:^0.16.4, posthtml@npm:^0.16.5, posthtml@npm:^0.16.6":
   version: 0.16.6
   resolution: "posthtml@npm:0.16.6"
   dependencies:

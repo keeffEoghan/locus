@@ -18,6 +18,7 @@ import { ScenePlayer } from './scene-player';
 const { min, max, abs, round, floor, ceil, random, PI: pi } = Math;
 const { indexOf } = Array.prototype;
 const { parse } = JSON;
+const { clipboard } = navigator;
 
 const api = self.locus = {};
 const cache = {};
@@ -89,7 +90,9 @@ each(($a) => $a.addEventListener('click', () => {
 
     setTimeout(() => {
       rootClass.remove('jumping');
-      scrollIntoView(document.querySelector($a.getAttribute('href')));
+
+      try { scrollIntoView(document.querySelector($a.getAttribute('href'))); }
+      catch(e) { console.warn(e); }
     });
   }),
   document.querySelectorAll('a[href^="#"]'));
@@ -283,9 +286,12 @@ each(async ($c) => {
   document.querySelectorAll(`[data-coin-at],[data-coin-to],[data-coin-sum],
     [data-coin-text],[data-coin-title]`));
 
-// Copy to clipboard.
+// Copy jump shares.
 
-const { clipboard } = navigator;
+each(($a) => ($a.dataset.copy = $a.href) && $a.classList.add('copy'),
+  document.querySelectorAll('.jump-share'));
+
+// Copy to clipboard.
 
 each(($c) => $c.addEventListener('click', async () => {
     const { textContent, dataset, classList } = $c;
@@ -326,292 +332,308 @@ each(($demoView) => {
 
 // MPM progress demo.
 
-const $mpmView = document.querySelector('.progress-mpm-view');
-const $mpmDemo = $mpmView?.querySelector?.('.progress-mpm-demo');
-const $mpmQualities = $mpmView?.querySelectorAll?.('.progress-mpm-quality');
-const $mpmFullscreen = $mpmView?.querySelector?.('.progress-mpm-fullscreen');
+each(($mpmView) => {
+    const $mpmDemo = $mpmView.querySelector('.progress-mpm-demo');
+    const $mpmQualities = $mpmView.querySelectorAll('.progress-mpm-quality');
+    const $mpmFull = $mpmView.querySelector('.progress-mpm-fullscreen');
 
-$mpmDemo && each(($mpmQuality) => $mpmQuality.addEventListener('click',
-    () => $mpmDemo.src = $mpmQuality.dataset.src),
-  $mpmQualities);
+    $mpmDemo && each(($mpmQuality) => $mpmQuality.addEventListener('click',
+        () => $mpmDemo.src = $mpmQuality.dataset.src),
+      $mpmQualities);
 
-$mpmDemo && $mpmFullscreen?.addEventListener?.('click',
-  () => $mpmDemo.requestFullscreen());
+    $mpmDemo && $mpmFull?.addEventListener?.('click',
+      () => $mpmDemo.requestFullscreen());
+  },
+  document.querySelectorAll('.progress-mpm-view'));
 
 // Reward: `Artifact`.
 
-const $artifactView = document.querySelector('.artifact-view');
-const $artifactVideo = $artifactView?.querySelector?.('.artifact-video');
-const $artifactStill = $artifactView?.querySelector?.('.artifact-still');
+each(($artifactView) => {
+    const $artifactVideo = $artifactView.querySelector('.artifact-video');
+    const $artifactStill = $artifactView.querySelector('.artifact-still');
 
-if($artifactVideo && $artifactStill) {
-  const artifactFlip = () =>
-    $artifactVideo.classList.toggle('playing', !$artifactVideo.paused);
+    if($artifactVideo && $artifactStill) {
+      const artifactFlip = () =>
+        $artifactVideo.classList.toggle('playing', !$artifactVideo.paused);
 
-  $artifactVideo.addEventListener('play', artifactFlip);
-  $artifactVideo.addEventListener('pause', artifactFlip);
-  $artifactVideo.addEventListener('click', stopBubble);
-  $artifactStill.addEventListener('click', stopBubble);
-}
+      $artifactVideo.addEventListener('play', artifactFlip);
+      $artifactVideo.addEventListener('pause', artifactFlip);
+      $artifactVideo.addEventListener('click', stopBubble);
+      $artifactStill.addEventListener('click', stopBubble);
+    }
+  },
+  document.querySelectorAll('.artifact-view'));
 
 // Reward: `Peer into the Flow`.
 
-const $peerView = document.querySelector('.peer-view');
-const $peerDemo = $peerView?.querySelector?.('.peer-demo');
-const $peerRandom = $peerView?.querySelector?.('.peer-random');
-const $peerCamera = $peerView?.querySelector?.('.peer-camera');
-const $peerCameraOn = document.querySelector('.peer-camera-on');
+each(($peerView) => {
+    const $peerDemo = $peerView.querySelector('.peer-demo');
+    const $peerRandom = $peerView.querySelector('.peer-random');
+    const $peerCamera = $peerView.querySelector('.peer-camera');
 
-if($peerDemo && $peerRandom) {
-  // Seeds that look good and are easy to use.
-  const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
+    const $peerCameraOn =
+      $peerView.parentElement?.querySelector?.('.peer-camera-on');
 
-  const peerSeed = (to = ceil(random()*66)) =>
-    $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
-      const q = new URLSearchParams($2);
+    const $peerFull = $peerView.querySelector('.peer-fullscreen');
 
-      q.set('seed', to);
+    if($peerDemo && $peerRandom) {
+      // Seeds that look good and are easy to use.
+      const peerSeeds = [65, 62, 33, 19, 24, 12, 13, 11, 5, 1];
 
-      return $1+q;
-    });
+      const peerSeed = (to = ceil(random()*66)) =>
+        $peerDemo.src = $peerDemo.src.replace(/(^.*\?)(.*$)/, (s, $1, $2) => {
+          const q = new URLSearchParams($2);
 
-  peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
-  $peerRandom.addEventListener('click', () => peerSeed());
-}
+          q.set('seed', to);
 
-if($peerDemo && $peerCamera) {
-  $peerCamera.addEventListener('change', () => {
-    const { allow, dataset } = $peerDemo;
-    const to = dataset[(($peerCamera.checked)? 'y' : 'n')];
+          return $1+q;
+        });
 
-    if(allow === to) { return; }
+      peerSeed(peerSeeds[floor(random()*peerSeeds.length)]);
+      $peerRandom.addEventListener('click', () => peerSeed());
+    }
 
-    $peerDemo.allow = to;
-    $peerDemo.src = $peerDemo.src;
-  });
+    if($peerDemo && $peerCamera) {
+      $peerCamera.addEventListener('change', () => {
+        const { allow, dataset } = $peerDemo;
+        const to = dataset[(($peerCamera.checked)? 'y' : 'n')];
 
-  $peerCameraOn?.addEventListener?.('click', (e) => {
-    !$peerCamera.checked && $peerCamera.click();
-    stopEvent(e);
-  });
-}
+        if(allow === to) { return; }
+
+        $peerDemo.allow = to;
+        $peerDemo.src = $peerDemo.src;
+      });
+
+      $peerCameraOn?.addEventListener?.('click', (e) => {
+        !$peerCamera.checked && $peerCamera.click();
+        stopEvent(e);
+      });
+    }
+
+    $peerDemo && $peerFull?.addEventListener?.('click',
+      () => $peerDemo.requestFullscreen());
+  },
+  document.querySelectorAll('.peer-view'));
 
 // Exhibition scene.
 
-const $exhibit = document.querySelector('.exhibit');
+each(($exhibit) => {
+    const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
+    const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
+    let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
+    let exhibitOn;
+    const exhibitCameras = {};
+    const exhibitCameraPair = [{}, {}];
+    let exhibitPlayer;
+    let exhibitCameraDef;
+    let exhibitCameraTo;
+    let exhibitInteract = false;
+    const exhibitEase = 5e-2;
+    let exhibit2DRenderer;
 
-if($exhibit) {
-  const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
-  const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
-  let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
-  let exhibitOn;
-  const exhibitCameras = {};
-  const exhibitCameraPair = [{}, {}];
-  let exhibitPlayer;
-  let exhibitCameraDef;
-  let exhibitCameraTo;
-  let exhibitInteract = false;
-  const exhibitEase = 5e-2;
-  let exhibit2DRenderer;
+    function exhibitResize() {
+      let w = innerWidth;
+      let h = innerHeight;
+      const $p = $exhibitDemo.offsetParent;
 
-  function exhibitResize() {
-    let w = innerWidth;
-    let h = innerHeight;
-    const $p = $exhibitDemo.offsetParent;
-
-    $p && ({ width: w, height: h } = $p.getBoundingClientRect());
-    exhibit2DRenderer.setSize(w, h);
-    exhibitPlayer.setSize(w, h);
-  }
-
-  function exhibitPlay() {
-    const c = $exhibit.classList;
-
-    c.add('exhibit-play');
-    c.remove('exhibit-stop');
-    exhibitPlayer?.play?.();
-  }
-
-  function exhibitStop() {
-    const c = $exhibit.classList;
-
-    c.add('exhibit-stop');
-    c.remove('exhibit-play');
-    exhibitPlayer?.stop?.();
-  }
-
-  function exhibitScroll() {
-    const bounds = $exhibit.getBoundingClientRect();
-    const changeOn = exhibitOn !== (exhibitOn = inView(false, bounds));
-
-    if(!exhibitOn) { return changeOn && exhibitStop(); }
-    else { changeOn && exhibitPlay(); }
-
-    if(!exhibitPlayer) { return; }
-
-    const vy = innerHeight*0.5;
-    const [u, d] = exhibitCameraPair;
-
-    u.y = d.y = u.$ = d.$ = undefined;
-
-    const [{ $: u$, y: uy = 0 }, { $: d$, y: dy = 0 }] = reduce((pair, $) => {
-        const { y: y0, bottom: y1 } = $.getBoundingClientRect();
-        const y = mix(y0, y1, 0.5)-vy;
-        const d = y > 0;
-        const p = pair[+d];
-        const { $: p$, y: py } = p;
-
-        (!p$ || (py == null) || ((d)? y < py : y > py)) && (p.$ = $) && (p.y = y);
-
-        return pair;
-      },
-      $exhibitCameras, exhibitCameraPair);
-
-    const uc = u$?.dataset?.exhibitCamera;
-    const dc = d$?.dataset?.exhibitCamera;
-    const up = uc && exhibitCameras[uc]?.position;
-    const dp = dc && exhibitCameras[dc]?.position;
-
-    // Assumes cameras are at the root of the scene.
-    ((!up)? dp && exhibitCameraTo.copy(dp)
-    : (!dp)? up && exhibitCameraTo.copy(up)
-    : (up === dp)? exhibitCameraTo.copy(up)
-    : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
-  }
-
-  function exhibitAnimate() {
-    if(!exhibitOn) { return requestAnimationFrame(exhibitAnimate); }
-
-    const { camera, scene } = exhibitPlayer;
-
-    if(!exhibitInteract) {
-      const p = camera.position;
-
-      ((p.distanceToSquared(exhibitCameraTo) < 2e-3)? p.copy(exhibitCameraTo)
-      : p.lerp(exhibitCameraTo, exhibitEase));
+      $p && ({ width: w, height: h } = $p.getBoundingClientRect());
+      exhibit2DRenderer.setSize(w, h);
+      exhibitPlayer.setSize(w, h);
     }
 
-    exhibit2DRenderer.render(scene, camera);
+    function exhibitPlay() {
+      const c = $exhibit.classList;
 
-    requestAnimationFrame(exhibitAnimate);
-  }
-
-  async function exhibitLoad() {
-    const exhibit = await import('../media/exhibit.json');
-
-    exhibitPlayer = api.exhibitPlayer = new ScenePlayer(null, {
-        enablePan: false,
-        minDistance: 2,
-        maxDistance: 7,
-        maxPolarAngle: pi*0.55,
-        zoomSpeed: 2,
-        mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
-        touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
-      },
-      null, { pixelRatio: 1 });
-
-    exhibitPlayer.load(exhibit);
-    exhibitPlayer.render();
-
-    const $exhibitVideo = $exhibitDemo.querySelector('.exhibit-video');
-    const { dom, scene, orbit, camera } = exhibitPlayer;
-    let interactWait;
-    let labelWait;
-
-    $exhibitDemo.replaceWith($exhibitDemo = dom);
-    $exhibitDemo.appendChild($exhibitVideo);
-    $exhibitDemo.classList.add('exhibit-demo');
-    exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
-
-    function interactStart() {
-      clearTimeout(interactWait);
-      exhibitInteract = true;
+      c.add('exhibit-play');
+      c.remove('exhibit-stop');
+      exhibitPlayer?.play?.();
     }
 
-    function interactEnd() {
-      clearTimeout(interactWait);
-      interactWait = setTimeout(() => exhibitInteract = false, 3e3);
+    function exhibitStop() {
+      const c = $exhibit.classList;
+
+      c.add('exhibit-stop');
+      c.remove('exhibit-play');
+      exhibitPlayer?.stop?.();
     }
 
-    orbit.addEventListener('start', interactStart);
-    orbit.addEventListener('end', interactEnd);
-    orbit.update();
+    function exhibitScroll() {
+      const bounds = $exhibit.getBoundingClientRect();
+      const changeOn = exhibitOn !== (exhibitOn = inView(false, bounds));
 
-    const infoTouch = (e) =>
-      $exhibitInfoTouch.classList.toggle('show', e.targetTouches.length !== 2);
+      if(!exhibitOn) { return changeOn && exhibitStop(); }
+      else { changeOn && exhibitPlay(); }
 
-    $exhibitDemo.addEventListener('touchstart', infoTouch);
-    $exhibitDemo.addEventListener('touchend', infoTouch);
+      if(!exhibitPlayer) { return; }
 
-    function labelOpen() {
-      interactStart();
-      clearTimeout(labelWait);
-      orbit.enabled = false;
+      const vy = innerHeight*0.5;
+      const [u, d] = exhibitCameraPair;
+
+      u.y = d.y = u.$ = d.$ = undefined;
+
+      const [{ $: u$, y: uy = 0 }, { $: d$, y: dy = 0 }] = reduce((pair, $) => {
+          const { y: y0, bottom: y1 } = $.getBoundingClientRect();
+          const y = mix(y0, y1, 0.5)-vy;
+          const d = y > 0;
+          const p = pair[+d];
+          const { $: p$, y: py } = p;
+
+          (!p$ || (py == null) || ((d)? y < py : y > py)) &&
+            (p.$ = $) && (p.y = y);
+
+          return pair;
+        },
+        $exhibitCameras, exhibitCameraPair);
+
+      const uc = u$?.dataset?.exhibitCamera;
+      const dc = d$?.dataset?.exhibitCamera;
+      const up = uc && exhibitCameras[uc]?.position;
+      const dp = dc && exhibitCameras[dc]?.position;
+
+      // Assumes cameras are at the root of the scene.
+      ((!up)? dp && exhibitCameraTo.copy(dp)
+      : (!dp)? up && exhibitCameraTo.copy(up)
+      : (up === dp)? exhibitCameraTo.copy(up)
+      : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
     }
 
-    function labelShut() {
-      interactEnd();
-      clearTimeout(labelWait);
-      labelWait = setTimeout(() => orbit.enabled = true, 3e3);
+    function exhibitAnimate() {
+      if(!exhibitOn) { return requestAnimationFrame(exhibitAnimate); }
+
+      const { camera, scene } = exhibitPlayer;
+
+      if(!exhibitInteract) {
+        const p = camera.position;
+
+        ((p.distanceToSquared(exhibitCameraTo) < 2e-3)? p.copy(exhibitCameraTo)
+        : p.lerp(exhibitCameraTo, exhibitEase));
+      }
+
+      exhibit2DRenderer.render(scene, camera);
+
+      requestAnimationFrame(exhibitAnimate);
     }
 
-    scene.traverse((o) => {
-      const { userData: d, position: p } = o;
-      const label = d?.label;
+    async function exhibitLoad() {
+      const exhibit = await import('../media/exhibit.json');
 
-      if(!label) { return; }
+      exhibitPlayer = api.exhibitPlayer = new ScenePlayer(null, {
+          enablePan: false,
+          minDistance: 2,
+          maxDistance: 7,
+          maxPolarAngle: pi*0.55,
+          zoomSpeed: 2,
+          mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
+          touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
+        },
+        null, { pixelRatio: 1 });
 
-      const $label = document.createElement('small');
-      const to = new CSS2DObject($label);
-      const focus = d?.focus;
+      exhibitPlayer.load(exhibit);
+      exhibitPlayer.render();
 
-      $label.textContent = label;
-      $label.classList.add('exhibit-label');
-      focus && to.position.set(...focus);
-      o.add(to);
-      $label.addEventListener('pointerenter', labelOpen);
-      $label.addEventListener('pointerleave', labelShut);
-    });
+      const $exhibitVideo = $exhibitDemo.querySelector('.exhibit-video');
+      const { dom, scene, orbit, camera } = exhibitPlayer;
+      let interactWait;
+      let labelWait;
 
-    exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
+      $exhibitDemo.replaceWith($exhibitDemo = dom);
+      $exhibitVideo && $exhibitDemo.appendChild($exhibitVideo);
+      $exhibitDemo.classList.add('exhibit-demo');
+      exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
 
-    reduce((to, { dataset: { exhibitCamera: c } }) => {
-        to[c] ??= scene.getObjectByName(c);
+      function interactStart() {
+        clearTimeout(interactWait);
+        exhibitInteract = true;
+      }
 
-        return to;
-      },
-      $exhibitCameras, exhibitCameras);
+      function interactEnd() {
+        clearTimeout(interactWait);
+        interactWait = setTimeout(() => exhibitInteract = false, 2e3);
+      }
 
-    exhibitCameraTo = exhibitCameraDef.position.clone();
+      orbit.addEventListener('start', interactStart);
+      orbit.addEventListener('end', interactEnd);
+      orbit.update();
 
-    const screenCircle = scene.getObjectByName('ScreenCircle');
+      const infoTouch = (e) =>
+        $exhibitInfoTouch.classList.toggle('show',
+          e.targetTouches.length !== 2);
 
-    screenCircle.getWorldPosition(orbit.target);
+      $exhibitDemo.addEventListener('touchstart', infoTouch);
+      $exhibitDemo.addEventListener('touchend', infoTouch);
 
-    const animateScreen = () =>
-      screenCircle.material.emissiveMap = new VideoTexture($exhibitVideo);
+      function labelOpen() {
+        interactStart();
+        clearTimeout(labelWait);
+        orbit.enabled = false;
+      }
 
-    (($exhibitVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)?
-        animateScreen()
-      : $exhibitVideo.addEventListener('canplaythrough', animateScreen));
+      function labelShut() {
+        interactEnd();
+        clearTimeout(labelWait);
+        labelWait = setTimeout(() => orbit.enabled = true, 3e3);
+      }
 
-    addEventListener('resize', throttle(3e2, exhibitResize));
-    exhibitResize();
+      scene.traverse((o) => {
+        const { userData: d, position: p } = o;
+        const label = d?.label;
 
-    exhibitPlayer.play();
-    exhibitAnimate();
+        if(!label) { return; }
+
+        const $label = document.createElement('small');
+        const to = new CSS2DObject($label);
+        const focus = d?.focus;
+
+        $label.textContent = label;
+        $label.classList.add('exhibit-label');
+        focus && to.position.set(...focus);
+        o.add(to);
+        $label.addEventListener('pointerenter', labelOpen);
+        $label.addEventListener('pointerleave', labelShut);
+      });
+
+      exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
+
+      reduce((to, { dataset: { exhibitCamera: c } }) => {
+          to[c] ??= scene.getObjectByName(c);
+
+          return to;
+        },
+        $exhibitCameras, exhibitCameras);
+
+      exhibitCameraTo = exhibitCameraDef.position.clone();
+
+      const screenCircle = scene.getObjectByName('ScreenCircle');
+
+      screenCircle.getWorldPosition(orbit.target);
+
+      if($exhibitVideo) {
+        const animateScreen = () =>
+          screenCircle.material.emissiveMap = new VideoTexture($exhibitVideo);
+
+        (($exhibitVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)?
+            animateScreen()
+          : $exhibitVideo.addEventListener('canplaythrough', animateScreen));
+      }
+
+      addEventListener('resize', throttle(3e2, exhibitResize));
+      exhibitResize();
+
+      exhibitPlayer.play();
+      exhibitAnimate();
+      exhibitScroll();
+    }
+
+    addEventListener('scroll', throttle(3e2, exhibitScroll));
     exhibitScroll();
-  }
 
-  addEventListener('scroll', throttle(3e2, exhibitScroll));
-  exhibitScroll();
+    const exhibitReady = () =>
+      (document.readyState === 'interactive') && setTimeout(exhibitLoad, 1e3);
 
-  const exhibitReady = () =>
-    (document.readyState === 'interactive') && setTimeout(exhibitLoad, 1e3);
-
-  ((exhibitReady() === false) &&
-    document.addEventListener('readystatechange', exhibitReady));
-}
+    ((exhibitReady() === false) &&
+      document.addEventListener('readystatechange', exhibitReady));
+  },
+  document.querySelectorAll('.exhibit'));
 
 function scrollReady() {
   if(document.readyState !== 'complete') { return false; }
