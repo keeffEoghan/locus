@@ -319,6 +319,7 @@ each(($view) => {
     const $full = $view.querySelector('.demo-fullscreen');
     const $camera = $view.querySelector('.demo-camera');
     const $cameraOn =$view.parentElement?.querySelector?.('.demo-camera-on');
+    const $visit = $view.querySelector('.demo-visit');
 
     $flip && $fill && $flip.addEventListener('change', () => {
       (($flip.checked)? $view.prepend($fill) : $fill.remove());
@@ -378,6 +379,9 @@ each(($view) => {
 
     $live && $full?.addEventListener?.('click',
       () => $live.requestFullscreen());
+
+    $visit && $live?.addEventListener?.('load',
+      () => $visit.href = $live.src);
   },
   document.querySelectorAll('.demo-view'));
 

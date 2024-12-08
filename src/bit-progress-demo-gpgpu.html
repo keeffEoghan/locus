@@ -3,30 +3,25 @@
   <section class="gpgpu-info" md>
     ### Progress demo ~ `GPGPU`
 
-    Developed [`gl-gpgpu`](https://epok.tech/gl-gpgpu){target="_blank"}, a *General-Processing GPU* tool, [`GPGPU`](https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units), to compute optimally with high parallelism on the *GPU* via [`WebGL 1.0`](https://www.khronos.org/webgl/) and [`GLSL`](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)).
+    Developed [`gl-gpgpu`](https://epok.tech/gl-gpgpu){target="_blank"}, a [**General-Processing GPU** or `GPGPU`](https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units) tool – useful for computationally intensive tasks like real-time physics and particle systems, of which **Locus** has many.
 
-    <!-- Useful in tasks like [real-time physics, particle systems](https://epok.tech/gl-gpgpu), of which [***Locus***](https://epok.tech/locus/) has many.
+    Provides equity of access to **Locus**, with high-performance parallel-computation of complex systems not reliant on the availability of compute-shaders or [`WebGPU`](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API) – just [`WebGL 1.0`](https://www.khronos.org/webgl/), available on most devices audiences may own personally, not only high-end devices in custom installations.
 
-    Developed and published [*Open](https://www.npmjs.com/package/@epok.tech/gl-gpgpu)-[Source](https://github.com/keeffEoghan/gl-gpgpu)*, to the same community [***Locus***](https://epok.tech/locus/) will serve.
-
-    Tested in several real projects with real audiences like others shown here.
-
-    Develops and tests the equity of access that [***Locus***](https://epok.tech/locus/) centres, high-performance parallel computation of complex systems without needing to rely on the availability of compute-shaders or [`WebGPU`](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API), just the more widely-available [`WebGL 1.0`](https://www.khronos.org/webgl/), which will keep [***Locus***](https://epok.tech/locus/) accessible on as many devices as possible; those audiences may own personally, not just high-end devices dedicated to exhibitions.
-
-    Tested the capacity of such a system to simulate and render the necessary millions of particles that [***Locus***](https://epok.tech/locus/) will require. -->
+    <small>Developed for optimal computation on the `GPU` via [`WebGL 1.0`](https://www.khronos.org/webgl/) and [`GLSL`](https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)), and published [Open](https://www.npmjs.com/package/@epok.tech/gl-gpgpu){target="_blank"}-[Source](https://github.com/keeffEoghan/gl-gpgpu){target="_blank"}.</small>
   </section>
   <section class="gpgpu-view demo-view">
     <div class="gpgpu-fill demo-fill">
       <iframe class="gpgpu-demo demo-live"
         loading="lazy" frameborder="0" allowfullscreen
         allow="" data-y="camera *" data-n=""
-        src="https://epok.tech/gl-gpgpu?guide=false"
+        src="https://epok.tech/gl-gpgpu?guide=false&scroll=false&fallback=false"
         sandbox="allow-scripts allow-same-origin">
       </iframe>
     </div>
     <iframe class="demo-video video-embed"
       loading="lazy" frameborder="0" allowfullscreen
-      src="https://www.youtube.com/embed/ddt3YA2J1ys?si=s7G3w4QzJb3cMd9L&rel=0&color=white" title="Demo of Material Point Method prototype"
+      src="https://www.youtube.com/embed/ddt3YA2J1ys?si=s7G3w4QzJb3cMd9L&rel=0&color=white"
+      title="Demo of gl-gpgpu tool"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
     </iframe>
     <div class="demo-controls">
@@ -39,6 +34,11 @@
         <span class="icon material-symbols-rounded">fullscreen</span>
         fullscreen
       </button>
+      <a class="icon-in button"
+        href="https://epok.tech/gl-gpgpu" target="_blank">
+        <span class="icon material-symbols-rounded">open_in_new</span>
+        visit
+      </a>
     </div>
   </section>
 </article>

@@ -1437,17 +1437,19 @@ img,
   margin: auto;
 }
 
-.demo-control { display: none; }
+.demo-flip {
+  display: none;
 
-.demo-flip { display: none; }
+  & ~ .demo-control { display: none; }
+
+  &:checked {
+    & ~ .demo-control { display: block; }
+
+    & ~ .demo-flip-label > .icon::after { content: 'simulation'; }
+  }
+}
 
 .demo-flip-label > .icon::after { content: 'movie'; }
-
-.demo-flip:checked {
-  & ~ .demo-control { display: block; }
-
-  & ~ .demo-flip-label > .icon::after { content: 'simulation'; }
-}
 
 .demo-camera { display: none; }
 
