@@ -950,11 +950,23 @@ img,
   }
 }
 
+.nav-cta,
+.key-cta {
+  &,
+  &.button {
+    --c-text: #000c;
+    --c-base: var(--c-hi-1);
+    --c-action-0: var(--c-hi-0);
+    --c-action-1: var(--c-base);
+    --c-action-0: var(--c-base);
+    --c-action-1: var(--c-cta);
+    --c-active: var(--c-cta);
+  }
+}
+
 .nav-cta {
   --s-input-x: 0.8rem;
   --s-input-y: 0.8rem;
-  --c-action-0: var(--c-base);
-  --c-action-1: var(--c-cta);
   font-size: var(--s-font-cta);
   color: var(--c-action-0);
   transition: color 9e2ms ease-out,
@@ -981,11 +993,8 @@ img,
 .key-cta {
   &,
   &.button {
-    --c-text: #000c;
-    --c-action-0: var(--c-hi-1);
     display: block;
     text-align: center;
-    margin: var(--s-l1-y) auto;
   }
 }
 
@@ -1495,13 +1504,21 @@ img,
   --c-active: var(--c-cta);
   border-left: var(--s-s1-r) solid var(--c-cta);
   border-right: var(--s-s1-r) solid var(--c-cta);
+
+  &.artizen-info-intro { border-top: var(--s-s1-r) solid var(--c-cta); }
+
+  &.artizen-info-outro { border-bottom: var(--s-s1-r) solid var(--c-cta); }
 }
 
-.artizen-cta { align-self: center; }
+.artizen-cta {
+  align-self: center;
+  text-align: center;
+}
 
 .artizen-laurel {
   flex: 0 1 16rem;
   padding: var(--s-m0-r);
+  margin: var(--s-l0-y) auto;
 }
 
 .pay-method {
