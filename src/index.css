@@ -1463,9 +1463,9 @@ img,
 .demo-camera { display: none; }
 
 .demo-camera {
-  & ~ .icon::after { content: 'videocam_off'; }
+  & ~ .icon::after { content: 'video_call'; }
 
-  &:checked ~ .icon::after { content: 'video_call'; }
+  &:checked ~ .icon::after { content: 'video_camera_front'; }
 }
 
 .progress-demo {
