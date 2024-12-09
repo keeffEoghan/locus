@@ -347,9 +347,9 @@ each(($view) => {
           let to;
 
           demoFillIntersects.forEach((at) => {
-            if(at.ratio < to?.ratio) { return at.$live.remove(); }
+            if(at.ratio < to?.ratio) { return at.$fill.innerHTML = ''; }
 
-            to?.$live?.remove?.();
+            to && (to.$fill.innerHTML = '');
             to = at;
           });
 

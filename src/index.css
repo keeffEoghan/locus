@@ -1471,25 +1471,25 @@ img,
 .progress-demo {
   & > section { align-self: center; }
 
-  .mpm-fill {
+  .mpm-fill:empty {
     background-image: url('../media/demo-mpm-cover-0.png?width=2562'),
       url('../media/demo-mpm-cover-0.png?width=256'),
       url('../media/demo-mpm-cover-0.png?width=26');
   }
 
-  .peer-fill {
+  .peer-fill:empty {
     background-image: url('../media/demo-peer-cover-0.png?width=2544'),
       url('../media/demo-peer-cover-0.png?width=254'),
       url('../media/demo-peer-cover-0.png?width=25');
   }
 
-  .gpgpu-fill {
-    background-image: url('../media/demo-gpgpu-cover-0.png?width=1081'),
-      url('../media/demo-gpgpu-cover-0.png?width=108'),
-      url('../media/demo-gpgpu-cover-0.png?width=11');
+  .gpgpu-fill:empty {
+    background-image: url('../media/demo-gpgpu-cover-0.png?width=3600'),
+      url('../media/demo-gpgpu-cover-0.png?width=360'),
+      url('../media/demo-gpgpu-cover-0.png?width=36');
   }
 
-  .optical-flow-fill {
+  .optical-flow-fill:empty {
     background-image: url('../media/demo-optical-flow-cover-0.png?width=1050'),
       url('../media/demo-optical-flow-cover-0.png?width=105'),
       url('../media/demo-optical-flow-cover-0.png?width=11');
