@@ -108,8 +108,8 @@ each(($d) => $d.addEventListener('toggle', () => $d.open && scrollIntoView($d)),
 const minute = 60*1e3;
 const hour = 60*minute;
 const day = 24*hour;
-const etaCrypto = new Date('2025-01-13T09:00:00-08:00');
-const etaCard = new Date('2025-01-11T09:00:00-08:00');
+const etaCrypto = new Date('2025-01-24T09:00:00-08:00');
+const etaCard = new Date('2025-01-22T09:00:00-08:00');
 const $etaCrypto = document.querySelectorAll('.eta-crypto');
 const $etaCard = document.querySelectorAll('.eta-card');
 const $giveCrypto = document.querySelector('#contribute-crypto');
