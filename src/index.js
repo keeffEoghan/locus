@@ -493,12 +493,12 @@ each(($exhibit) => {
 
     function exhibitScroll() {
       const bounds = $exhibit.getBoundingClientRect();
-      const changeOn = exhibitOn !== (exhibitOn = inView(false, bounds));
+      const changeOn = (exhibitOn !== (exhibitOn = inView(false, bounds)));
 
       if(!exhibitOn) { return changeOn && exhibitStop(); }
       else { changeOn && exhibitPlay(); }
 
-      if(!exhibitPlayer) { return; }
+      if(!exhibitPlayer || exhibitInteract) { return; }
 
       const vy = innerHeight*0.5;
       const [u, d] = exhibitCameraPair;
@@ -589,9 +589,8 @@ each(($exhibit) => {
       orbit.addEventListener('end', interactEnd);
       orbit.update();
 
-      const infoTouch = (e) =>
-        $exhibitInfoTouch.classList.toggle('show',
-          e.targetTouches.length !== 2);
+      const infoTouch = ({ targetTouches: t }) =>
+        $exhibitInfoTouch.classList.toggle('show', t.length !== 2);
 
       $exhibitDemo.addEventListener('touchstart', infoTouch);
       $exhibitDemo.addEventListener('touchend', infoTouch);
@@ -604,8 +603,14 @@ each(($exhibit) => {
 
       function labelShut() {
         interactEnd();
+        exhibitScroll();
         clearTimeout(labelWait);
-        labelWait = setTimeout(() => orbit.enabled = true, 3e3);
+
+        labelWait = setTimeout(() => {
+            orbit.enabled = true;
+            exhibitScroll();
+          },
+          3e3);
       }
 
       scene.traverse((o) => {

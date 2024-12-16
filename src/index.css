@@ -224,6 +224,7 @@ nav {
   position: sticky;
   inset: 0;
   margin: 0;
+  border-bottom: var(--s-hair) solid var(--c-accent);
   padding: var(--s-m2-y) var(--s-m2-x);
   align-self: stretch;
   gap: var(--s-items-gap);
@@ -236,6 +237,7 @@ nav {
     margin: var(--s-l0-y) var(--s-m2-x);
     align-self: center;
     border-radius: var(--s-nav-r);
+    border: var(--s-hair) solid var(--c-accent);
   }
 }
 
@@ -1246,6 +1248,7 @@ img,
     clip-path 9e2ms ease-out,
     color 9e2ms ease-out,
     background-color 9e2ms ease-out,
+    transform 1e2ms linear,
     z-index 9e2ms linear;
   will-change: max-width,
     max-height,
@@ -1287,6 +1290,7 @@ img,
       clip-path 5e2ms ease-in,
       color 3e2ms ease-in,
       background-color 3e2ms ease-in,
+      transform 1e2ms linear,
       z-index 0ms linear;
 
     &::before {
