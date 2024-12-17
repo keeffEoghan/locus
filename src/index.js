@@ -665,8 +665,11 @@ each(($exhibit) => {
           : $exhibitVideo.addEventListener('canplaythrough', animateScreen));
       }
 
-      $exhibitTouring?.addEventListener?.('change',
-        () => exhibitTour = (($exhibitTouring.checked)? 0 : -1));
+      const toExhibitTour = () =>
+        exhibitTour = (($exhibitTouring?.checked)? 0 : -1);
+
+      $exhibitTouring?.addEventListener?.('change', toExhibitTour);
+      toExhibitTour();
 
       addEventListener('resize', throttle(3e2, exhibitResize));
       exhibitResize();
