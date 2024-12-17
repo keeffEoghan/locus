@@ -224,6 +224,7 @@ nav {
   position: sticky;
   inset: 0;
   margin: 0;
+  border-top: var(--s-hair) solid var(--c-accent);
   border-bottom: var(--s-hair) solid var(--c-accent);
   padding: var(--s-m2-y) var(--s-m2-x);
   align-self: stretch;
@@ -1333,6 +1334,28 @@ img,
   &.show {
     opacity: 1;
     transition: opacity 3e2ms ease-out;
+  }
+}
+
+.exhibit-tour {
+  position: absolute;
+  inset: var(--s-m0-y) var(--s-m0-x) auto auto;
+  background: var(--c-over-0);
+  /* backdrop-filter: invert(0.8) blur(var(--s-s1-r)); */
+  /* backdrop-filter: invert(0.8); */
+  border-radius: var(--s-s1-r);
+  z-index: var(--z-exhibit-over);
+}
+
+.exhibit-touring {
+  display: none;
+
+  & ~ .exhibit-tour::after { content: 'autopause'; }
+
+  &:checked {
+    & ~ .exhibit-tour::after { content: 'autoplay'; }
+
+    & ~ .exhibit-info { display: none; }
   }
 }
 

@@ -455,14 +455,17 @@ each(($exhibit) => {
     const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
     const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
     let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
+    let $exhibitTouring = $exhibit.querySelector('.exhibit-touring');
     let exhibitOn;
-    const exhibitCameras = {};
+    const exhibitCameras = { all: {}, order: [] };
     const exhibitCameraPair = [{}, {}];
     let exhibitPlayer;
     let exhibitCameraDef;
     let exhibitCameraTo;
     let exhibitInteract = false;
-    const exhibitEase = 5e-2;
+    let exhibitTour = -1;
+    const exhibitCameraNear = 0.5;
+    const exhibitEase = { scroll: 5e-2, tour: 8e-3 };
     let exhibit2DRenderer;
 
     function exhibitResize() {
@@ -521,8 +524,9 @@ each(($exhibit) => {
 
       const uc = u$?.dataset?.exhibitCamera;
       const dc = d$?.dataset?.exhibitCamera;
-      const up = uc && exhibitCameras[uc]?.position;
-      const dp = dc && exhibitCameras[dc]?.position;
+      const { all } = exhibitCameras;
+      const up = uc && all[uc]?.position;
+      const dp = dc && all[dc]?.position;
 
       // Assumes cameras are at the root of the scene.
       ((!up)? dp && exhibitCameraTo.copy(dp)
@@ -531,21 +535,28 @@ each(($exhibit) => {
       : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
     }
 
-    function exhibitAnimate() {
-      if(!exhibitOn) { return requestAnimationFrame(exhibitAnimate); }
+    function exhibitFrame() {
+      if(!exhibitOn) { return requestAnimationFrame(exhibitFrame); }
 
       const { camera, scene } = exhibitPlayer;
+      const p = camera.position;
+      const { order } = exhibitCameras;
+      const tourTo = order[exhibitTour]?.position;
+
+      tourTo &&
+        exhibitCameraTo.copy((p.distanceToSquared(tourTo) < exhibitCameraNear)?
+            order[exhibitTour = (exhibitTour+1)%order.length]?.position
+          : tourTo);
 
       if(!exhibitInteract) {
-        const p = camera.position;
-
-        ((p.distanceToSquared(exhibitCameraTo) < 2e-3)? p.copy(exhibitCameraTo)
-        : p.lerp(exhibitCameraTo, exhibitEase));
+        ((p.distanceToSquared(exhibitCameraTo) < exhibitCameraNear)?
+          p.copy(exhibitCameraTo)
+        : p.lerp(exhibitCameraTo, exhibitEase[(tourTo)? 'tour' : 'scroll']));
       }
 
       exhibit2DRenderer.render(scene, camera);
 
-      requestAnimationFrame(exhibitAnimate);
+      requestAnimationFrame(exhibitFrame);
     }
 
     async function exhibitLoad() {
@@ -631,14 +642,13 @@ each(($exhibit) => {
         $label.addEventListener('pointerleave', labelShut);
       });
 
-      exhibitCameraDef = exhibitCameras[camera.name] = camera.clone();
+      const { all: camerasAll, order: camerasOrder } = exhibitCameras;
 
-      reduce((to, { dataset: { exhibitCamera: c } }) => {
-          to[c] ??= scene.getObjectByName(c);
+      exhibitCameraDef = camerasAll[camera.name] = camera.clone();
 
-          return to;
-        },
-        $exhibitCameras, exhibitCameras);
+      map(({ dataset: { exhibitCamera: c } }) =>
+          camerasAll[c] ??= scene.getObjectByName(c),
+        $exhibitCameras, camerasOrder);
 
       exhibitCameraTo = exhibitCameraDef.position.clone();
 
@@ -655,11 +665,14 @@ each(($exhibit) => {
           : $exhibitVideo.addEventListener('canplaythrough', animateScreen));
       }
 
+      $exhibitTouring?.addEventListener?.('change',
+        () => exhibitTour = (($exhibitTouring.checked)? 0 : -1));
+
       addEventListener('resize', throttle(3e2, exhibitResize));
       exhibitResize();
 
       exhibitPlayer.play();
-      exhibitAnimate();
+      exhibitFrame();
       exhibitScroll();
     }
 
