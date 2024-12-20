@@ -464,8 +464,8 @@ each(($exhibit) => {
     let exhibitCameraTo;
     let exhibitInteract = false;
     let exhibitTour = -1;
-    const exhibitCameraNear = 0.5;
-    const exhibitEase = { scroll: 5e-2, tour: 8e-3 };
+    const exhibitCameraNear = { scroll: 1e-3, tour: 5e-1 };
+    const exhibitEase = { scroll: 3e-2, tour: 8e-3 };
     let exhibit2DRenderer;
 
     function exhibitResize() {
@@ -496,10 +496,10 @@ each(($exhibit) => {
 
     function exhibitScroll() {
       const bounds = $exhibit.getBoundingClientRect();
-      const changeOn = (exhibitOn !== (exhibitOn = inView(false, bounds)));
+      const changedOn = (exhibitOn !== (exhibitOn = inView(false, bounds)));
 
-      if(!exhibitOn) { return changeOn && exhibitStop(); }
-      else { changeOn && exhibitPlay(); }
+      if(!exhibitOn) { return changedOn && exhibitStop(); }
+      else { changedOn && exhibitPlay(); }
 
       if(!exhibitPlayer || exhibitInteract) { return; }
 
@@ -542,14 +542,15 @@ each(($exhibit) => {
       const p = camera.position;
       const { order } = exhibitCameras;
       const tourTo = order[exhibitTour]?.position;
+      const { tour: nearTour, scroll: nearScroll } = exhibitCameraNear;
 
       tourTo &&
-        exhibitCameraTo.copy((p.distanceToSquared(tourTo) < exhibitCameraNear)?
+        exhibitCameraTo.copy((p.distanceToSquared(tourTo) < nearTour)?
             order[exhibitTour = (exhibitTour+1)%order.length]?.position
           : tourTo);
 
       if(!exhibitInteract) {
-        ((p.distanceToSquared(exhibitCameraTo) < exhibitCameraNear)?
+        ((p.distanceToSquared(exhibitCameraTo) < nearScroll)?
           p.copy(exhibitCameraTo)
         : p.lerp(exhibitCameraTo, exhibitEase[(tourTo)? 'tour' : 'scroll']));
       }
