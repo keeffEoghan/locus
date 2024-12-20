@@ -1647,7 +1647,9 @@ img,
   }
 }
 
-.face-view {}
+.face-view {
+  min-width: 50%;
+}
 
 .info,
 .copy {

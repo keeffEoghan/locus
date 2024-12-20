@@ -120,25 +120,38 @@
         </section>
       </section>
     </section>
-    <figure class="face-view video-view-wide">
-      <iframe class="video-embed"
+    <section class="face-view demo-view">
+      <div class="face-fill demo-fill">
+        <iframe class="face-demo demo-live"
+          loading="lazy" frameborder="0" allowfullscreen
+          src="https://my.spline.design/untitled-6e913ee6d5ad2d42a61f286095fb0678/"
+          sandbox="allow-scripts allow-same-origin">
+        </iframe>
+      </div>
+      <iframe class="demo-video video-embed"
         loading="lazy" frameborder="0" allowfullscreen
-        src="https://youtube.com/embed/1V85241UJmg?si=ZEbXacSHaT1JUIQe&rel=0&color=white" title="Spline demo of Gaussian Splatting rendering"
+        src="https://youtube.com/embed/1V85241UJmg?si=ZEbXacSHaT1JUIQe&rel=0&rel=0&color=white"
+        title="Demos of Gaussian Splatting face capture"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
       </iframe>
-      <figcaption md inline>
-        [Spline](https://docs.spline.design/e17b7c105ef0433f8c5d2b39d512614e){target="_blank"} demo of [`Gaussian Splatting`](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/){target="_blank"} rendering.
-      </figcaption>
-    </figure>
-    <figure class="face-view video-view-wide">
-      <iframe class="video-embed"
-        loading="lazy" frameborder="0" allowfullscreen
-        src="https://youtube.com/embed/m2j8EF6N2G8?si=mDwzog0MR8HCRM_-&rel=0&color=white" title="Polycam demo of Gaussian Splatting capture and render"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
-      </iframe>
-      <figcaption md inline>
-        [Polycam](https://poly.cam/tools/gaussian-splatting){target="_blank"} demo of [`Gaussian Splatting`](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/){target="_blank"} capture and rendering.
-      </figcaption>
-    </figure>
+      <div class="face-controls demo-controls">
+        <!-- @todo Use `<details>` instead of this checkbox? Layout's tricky -->
+        <input type="checkbox" class="demo-flip" id="reward-face-flip" checked />
+        <label class="icon-in demo-flip-label" for="reward-face-flip">
+          <span class="icon material-symbols-rounded"></span>
+          demo or video
+        </label>
+        <button class="face-fullscreen demo-fullscreen demo-control icon-in">
+          <span class="icon material-symbols-rounded">open_in_full</span>
+          fullscreen
+        </button>
+        <a class="icon-in button"
+          href="https://my.spline.design/untitled-6e913ee6d5ad2d42a61f286095fb0678/"
+          target="_blank">
+          <span class="icon material-symbols-rounded">open_in_new</span>
+          visit
+        </a>
+      </div>
+    </section>
   </section>
 </article>
