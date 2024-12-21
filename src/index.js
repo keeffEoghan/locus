@@ -465,7 +465,7 @@ each(($exhibit) => {
     let exhibitInteract = false;
     let exhibitTour = -1;
     const exhibitCameraNear = { scroll: 1e-3, tour: 5e-1 };
-    const exhibitEase = { scroll: 3e-2, tour: 8e-3 };
+    const exhibitEase = { scroll: 3e-2, tour: 4e-3 };
     let exhibit2DRenderer;
 
     function exhibitResize() {
