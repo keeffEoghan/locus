@@ -88,6 +88,7 @@
   --s-m0-r: 1rem;
   --s-m1-x: 1.1rem;
   --s-m1-y: 0.5rem;
+  --s-m1-r: 0.5rem;
   --s-m2-x: 0.8rem;
   --s-m2-r: 0.8rem;
   --s-m2-y: 0.5rem;
@@ -1342,7 +1343,7 @@ img,
 .exhibit-info-intro,
 .exhibit-info-outro { position: absolute; }
 
-.exhibit-info-intro { top: 0; }
+.exhibit-info-intro { top: var(--s-l0-y); }
 
 .exhibit-info-outro { bottom: 0; }
 
@@ -1362,7 +1363,7 @@ img,
 
 .exhibit-tour {
   position: absolute;
-  inset: var(--s-m0-y) var(--s-m0-x) auto auto;
+  inset: var(--s-m1-r) var(--s-m1-r) auto auto;
   background: var(--c-over-0);
   /* backdrop-filter: invert(0.8) blur(var(--s-s1-r)); */
   /* backdrop-filter: invert(0.8); */
