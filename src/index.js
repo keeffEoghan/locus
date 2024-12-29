@@ -347,10 +347,11 @@ each(($view) => {
           let to;
 
           demoFillIntersects.forEach((at) => {
-            if(at.ratio < to?.ratio) { return at.$fill.innerHTML = ''; }
+            const gt = (at.ratio > (to?.ratio || 0));
+            const rm = ((gt)? to : at);
 
-            to && (to.$fill.innerHTML = '');
-            to = at;
+            rm && (rm.$fill.innerHTML = '');
+            gt && (to = at);
           });
 
           const { $fill, $live } = to;
