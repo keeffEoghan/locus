@@ -594,7 +594,12 @@ each(($exhibit) => {
 
       function interactEnd() {
         clearTimeout(interactWait);
-        interactWait = setTimeout(() => exhibitInteract = false, 2e3);
+
+        interactWait = setTimeout(() => {
+            exhibitInteract = false;
+            exhibitScroll();
+          },
+          3e3);
       }
 
       orbit.addEventListener('start', interactStart);
@@ -606,24 +611,6 @@ each(($exhibit) => {
 
       $exhibitDemo.addEventListener('touchstart', infoTouch);
       $exhibitDemo.addEventListener('touchend', infoTouch);
-
-      function labelOpen() {
-        interactStart();
-        clearTimeout(labelWait);
-        orbit.enabled = false;
-      }
-
-      function labelShut() {
-        interactEnd();
-        exhibitScroll();
-        clearTimeout(labelWait);
-
-        labelWait = setTimeout(() => {
-            orbit.enabled = true;
-            exhibitScroll();
-          },
-          3e3);
-      }
 
       scene.traverse((o) => {
         const { userData: d, position: p } = o;
@@ -639,8 +626,8 @@ each(($exhibit) => {
         $label.classList.add('exhibit-label');
         focus && to.position.set(...focus);
         o.add(to);
-        $label.addEventListener('pointerenter', labelOpen);
-        $label.addEventListener('pointerleave', labelShut);
+        $label.addEventListener('pointerenter', interactStart);
+        $label.addEventListener('pointerleave', interactEnd);
       });
 
       const { all: camerasAll, order: camerasOrder } = exhibitCameras;
