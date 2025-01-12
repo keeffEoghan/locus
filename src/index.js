@@ -354,6 +354,8 @@ each(($view) => {
             gt && (to = at);
           });
 
+          if(!to) { return; }
+
           const { $fill, $live } = to;
 
           ($live.parentElement !== $fill) && $fill.append($live);
