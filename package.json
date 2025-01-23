@@ -14,14 +14,15 @@
     "start": "yarn dist:fresh",
     "dev": "parcel --target app --log-level verbose",
     "dev:fresh": "yarn dev --no-cache",
-    "dist": "yarn clean && yarn build && cp media/preview.png docs/",
-    "dist:fresh": "yarn clean && yarn build:fresh && cp media/preview.png docs/",
+    "dist": "yarn clean && yarn build && yarn copy",
+    "dist:fresh": "yarn clean && yarn build:fresh && yarn copy",
     "build": "parcel build --target app --no-source-maps",
     "build:fresh": "yarn build --no-cache",
     "clean": "yarn clean:dev & yarn clean:build & yarn clean:parcel & wait",
     "clean:dev": "rm -rf ./dist/",
     "clean:build": "rm -rf ./docs/",
-    "clean:parcel": "rm -rf ./.parcel-cache"
+    "clean:parcel": "rm -rf ./.parcel-cache",
+    "copy": "cp media/preview.png docs/"
   },
   "dependencies": {
     "@epok.tech/fn-lists": "^0.1.4",
