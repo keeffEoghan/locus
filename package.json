@@ -22,7 +22,7 @@
     "clean:dev": "rm -rf ./dist/",
     "clean:build": "rm -rf ./docs/",
     "clean:parcel": "rm -rf ./.parcel-cache",
-    "copy": "cp media/preview.png docs/"
+    "copy": "cp media/{preview.png,peel-artifact.mp4} docs/"
   },
   "dependencies": {
     "@epok.tech/fn-lists": "^0.1.4",
