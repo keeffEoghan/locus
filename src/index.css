@@ -34,6 +34,11 @@
   }
 }
 
+@keyframes scroll-roll {
+  0% { text-shadow: 0 var(--s-l3-y) var(--c-hi-1); }
+  100% { text-shadow: 0 calc(-1*var(--s-l3-y)) var(--c-hi-1); }
+}
+
 @keyframes pointer-events-auto-none {
   0% { pointer-events: auto; }
   100% { pointer-events: none; }
@@ -71,7 +76,7 @@
   --s-font-m: 1rem;
   --s-font-s: 0.9rem;
   --s-font-xs: 0.6rem;
-  --s-font-cta: 1.2rem;
+  --s-font-cta: 1.1rem;
   --s-font-cite-0: 1.6rem;
   --s-font-cite-1: 2.4rem;
   --s-font-cite-3: 1.2rem;
@@ -83,6 +88,8 @@
   --s-l1-r: 2rem;
   --s-l2-x: 4rem;
   --s-l2-y: 8rem;
+  --s-l3-x: 3rem;
+  --s-l3-y: 3rem;
   --s-m0-x: 2rem;
   --s-m0-y: 1rem;
   --s-m0-r: 1rem;
@@ -90,8 +97,8 @@
   --s-m1-y: 0.5rem;
   --s-m1-r: 0.5rem;
   --s-m2-x: 0.8rem;
-  --s-m2-r: 0.8rem;
   --s-m2-y: 0.5rem;
+  --s-m2-r: 0.8rem;
   --s-m3-x: 1.3rem;
   --s-m3-y: 1.2rem;
   --s-s0-x: 5px;
@@ -107,12 +114,12 @@
   --s-nav-r: 2.5rem;
   --s-nav-border: 0;
   --s-line-x: 30rem;
-  --s-icon-l: 3rem;
+  --s-icon-l: 2.5rem;
   --s-icon-m: 2rem;
   --s-icon-s: 1.2rem;
   --s-icon-xs: 1rem;
   --s-input-x: 0.7rem;
-  --s-input-y: 0.7rem;
+  --s-input-y: 0.3rem;
   --s-input-r: 1.8rem;
   --s-jump-y: 9rem;
   --s-jump-r-0: 0;
@@ -197,7 +204,7 @@ html {
 body {
   min-height: 100%;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 main {
@@ -210,10 +217,9 @@ main {
 nav,
 form,
 fieldset {
-  align-self: stretch;
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
 }
@@ -248,8 +254,8 @@ nav {
 form,
 fieldset {
   gap: var(--s-s2-r);
-  padding: var(--s-s2-y) var(--s-s2-x);
   border-radius: var(--s-input-r);
+  padding: var(--s-s2-y) var(--s-s2-x);
 }
 
 form {
@@ -259,8 +265,7 @@ form {
   input,
   button,
   .button,
-  label,
-  fieldset {
+  label {
     &:not(:hover, :focus, :active) { border-color: #0000; }
   }
 
@@ -301,12 +306,34 @@ form {
   }
 }
 
-.subscribe {
-  input,
-  .placeholder { min-width: 10em; }
+.logo {
+  margin: 0 var(--s-m2-x);
+  font-weight: 100;
 }
 
-fieldset { flex: 0 1 auto; }
+.scroll-roll {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  color: #0000;
+  text-align: center;
+  height: var(--s-l3-y);
+  font-size: var(--s-font-cta);
+  font-style: normal;
+  z-index: var(--z-article);
+  will-change: text-shadow;
+  animation: 2e3ms cubic-bezier(0, 0.4, 1, 0.6) infinite scroll-roll;
+}
+
+.subscribe {
+  input,
+  .placeholder { min-width: 7em; }
+}
+
+fieldset {
+  flex: 0 1 auto;
+  border: none;
+}
 
 header,
 article {
@@ -638,8 +665,7 @@ fieldset,
 input,
 button,
 .button,
-label,
-fieldset {
+label {
   border: var(--s-hair) solid currentColor;
 
   &:hover,
@@ -753,6 +779,7 @@ h3,
 h4,
 h5,
 h6 {
+  line-height: 1.2;
   color: var(--c-hi-1);
   margin: var(--s-m0-y) var(--s-m0-x);
   max-width: var(--s-line-x);
@@ -881,11 +908,12 @@ blockquote {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  gap: var(--s-l0-y);
   min-height: var(--s-view-tall);
   margin: 0;
   font-size: clamp(var(--s-font-cite-0), 5vmin, var(--s-font-cite-1));
   font-weight: var(--font-w-0);
-  line-height: 1.5;
+  line-height: 1.4;
   letter-spacing: -0.02em;
   text-align: center;
 }
@@ -974,7 +1002,8 @@ img,
 
 .nav-cta {
   --s-input-x: 0.8rem;
-  --s-input-y: 0.8rem;
+  --s-input-y: 0.5rem;
+  margin-left: auto;
   font-size: var(--s-font-cta);
   color: var(--c-action-0);
   transition: color 9e2ms ease-out,
@@ -1046,8 +1075,8 @@ img,
 }
 
 .peel-art-main {
-  max-height: 60vmin;
-  max-width: 60vmin;
+  max-height: 50vmin;
+  max-width: 50vmin;
 
   figure:fullscreen & {
     max-height: 90vmin;
