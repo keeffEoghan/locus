@@ -243,15 +243,13 @@ fieldset {
 }
 
 nav {
-  --c-text: var(--c-hi-0);
+  --c-text: var(--c-lo-1);
   --c-title: var(--c-hi-1);
   --c-base-root: var(--c-lo-1);
-  --c-base: var(--c-lo-0);
+  --c-base: var(--c-hi-1);
   --c-action-0: var(--c-hi-0);
   --c-action-1: var(--c-base);
-  --c-accent: var(--c-text);
-  --c-interact: var(--c-interact-lo);
-  --c-disable: var(--c-disable-lo);
+  --c-accent: var(--c-hi-0);
   --s-font-m: 1.1rem;
   position: sticky;
   inset: var(--s-m0-y) auto var(--s-m0-y) 0;
@@ -1008,54 +1006,15 @@ img,
   }
 }
 
-.nav-cta {
-  font-size: var(--s-font-cta);
-  color: var(--c-action-0);
-  transition: color 9e2ms ease-out,
-    background-color 9e2ms ease-out,
-    border-color 9e2ms ease-out,
-    outline-color 9e2ms ease-out,
-    background-position-y 9e2ms ease-out;
-  will-change: color, background-color, border-color, outline-color,
-    background-position-y;
-
-  &,
-  &.button {
-    --c-text: var(--c-lo-0);
-    --c-base: var(--c-cta);
-    --c-action-0: var(--c-base);
-    --c-action-1: var(--c-lo-0);
-    --c-active: var(--c-hi-0);
-    --s-input-x: var(--s-m2-x);
-    --s-input-y: var(--s-m2-y);
-    --s-input-r: var(--s-l2-r);
-  }
-
-  &:hover,
-  &:focus,
-  &:active {
-    --c-action-0: var(--c-hi-1);
-    --c-action-1: var(--c-cta);
-    transition: color 3e2ms ease-in,
-      background-color 3e2ms ease-in,
-      border-color 3e2ms ease-in,
-      outline-color 3e2ms ease-in,
-      background-position-y 3e2ms ease-in;
-  }
-}
-
+.nav-cta,
 .key-cta {
   &,
   &.button {
     --c-action-0: var(--c-hi-0);
     --c-action-1: var(--c-cta);
     --c-active: var(--c-hi-0);
-    --s-input-x: var(--s-m3-x);
-    --s-input-y: var(--s-m3-y);
     --s-input-r: var(--s-l2-r);
     font-size: var(--s-font-cta);
-    display: block;
-    text-align: center;
     color: var(--c-action-0);
     transition: color 9e2ms ease-out,
       background-color 9e2ms ease-out,
@@ -1076,6 +1035,24 @@ img,
         outline-color 3e2ms ease-in,
         background-position-y 3e2ms ease-in;
     }
+  }
+}
+
+.nav-cta {
+  &,
+  &.button {
+    --s-input-x: var(--s-m2-x);
+    --s-input-y: var(--s-m2-y);
+  }
+}
+
+.key-cta {
+  &,
+  &.button {
+    --s-input-x: var(--s-m3-x);
+    --s-input-y: var(--s-m3-y);
+    display: block;
+    text-align: center;
   }
 }
 
