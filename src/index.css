@@ -36,19 +36,28 @@
 
 @keyframes scroll-roll {
   0% {
-    text-shadow: 0 1.3em #0000,
-      0 -1.3em #0000,
-      0 0 var(--c-hi-1);
+    text-shadow: 0 var(--s-scroll-roll-y) var(--s-s1-r) #0000,
+      0 var(--s-scroll-roll-y) var(--s-s1-r) #0000,
+      0 calc(-1*var(--s-scroll-roll-y)) var(--s-s1-r) #0000,
+      0 calc(-1*var(--s-scroll-roll-y)) var(--s-s1-r) #0000,
+      0 0 var(--c-hi-1),
+      0 0 var(--s-s1-r) var(--c-lo-1);
   }
   50% {
     text-shadow: 0 0 var(--c-hi-1),
-      0 1.3em #0000,
-      0 -1.3em #0000;
+      0 0 var(--s-s1-r) var(--c-lo-1),
+      0 var(--s-scroll-roll-y) var(--s-s1-r) #0000,
+      0 var(--s-scroll-roll-y) var(--s-s1-r) #0000,
+      0 calc(-1*var(--s-scroll-roll-y)) var(--s-s1-r) #0000,
+      0 calc(-1*var(--s-scroll-roll-y)) var(--s-s1-r) #0000;
   }
   100% {
-    text-shadow: 0 -1.3em #0000,
+    text-shadow: 0 calc(-1*var(--s-scroll-roll-y)) var(--s-s1-r) #0000,
+      0 calc(-1*var(--s-scroll-roll-y)) var(--s-s1-r) #0000,
       0 0 var(--c-hi-1),
-      0 1.3em #0000;
+      0 0 var(--s-s1-r) var(--c-lo-1),
+      0 var(--s-scroll-roll-y) var(--s-s1-r) #0000,
+      0 var(--s-scroll-roll-y) var(--s-s1-r) #0000;
   }
 }
 
@@ -150,6 +159,9 @@
   --s-view-mid: 50vh;
   --s-view-tall: 85vh;
   --s-tap-r: 30px;
+  --s-fig-comfy: 400px;
+  --s-scroll-roll-x: 2em;
+  --s-scroll-roll-y: 2em;
   --z-jump: 0;
   --z-figure-flip: 1;
   --z-article: 2;
@@ -157,6 +169,7 @@
   --z-exhibit-edge: 1;
   --z-exhibit-over: 2;
   --z-exhibit-label: 999;
+  --z-scroll: 8;
   --z-nav: 9;
   --font-w-0: 100;
   --font-w-1: 200;
@@ -168,32 +181,6 @@
 *,
 *:before,
 *:after { box-sizing: inherit; }
-
-/** Intro animation. */
-.wait {
-  & {
-    animation: 9e2ms ease-in 1 18e2ms backwards text-contrast-0-1;
-    will-change: color, background-color;
-  }
-
-  & nav {
-    animation: 9e2ms ease-in 1 18e2ms backwards opacity-0-1,
-      9e2ms ease-in 1 18e2ms backwards text-contrast-0-1;
-    will-change: opacity, color, background-color;
-  }
-
-  & header,
-  & article {
-    animation: 9e2ms ease-in 1 9e2ms backwards opacity-0-1,
-      9e2ms ease-in 1 18e2ms backwards text-contrast-0-1;
-    will-change: opacity, color, background-color;
-  }
-
-  & .exhibit-demo {
-    animation: 9e2ms ease-in 1 3e3ms backwards opacity-0-1;
-    will-change: opacity;
-  }
-}
 
 /** Main styles. */
 
@@ -215,6 +202,32 @@ html {
   font-family: Inter, sans-serif;
   font-weight: var(--font-w-2);
   overflow: hidden auto;
+  will-change: color, background-color;
+
+  /** Intro animation. */
+  /* &.wait {
+    animation: 0ms linear reverse 1 forwards text-contrast-0-1;
+
+    & nav,
+    & .intro-main,
+    & article,
+    & .exhibit-demo {
+      animation: 0ms linear reverse 1 forwards opacity-0-1;
+      will-change: opacity;
+    }
+  }
+
+  &:not(.wait) {
+    animation: 9e2ms ease-in 1 9e2ms forwards text-contrast-0-1;
+
+    & nav,
+    & .intro-main,
+    & article,
+    & .exhibit-demo {
+      animation: 9e2ms ease-in 1 6e2ms forwards opacity-0-1;
+      will-change: opacity;
+    }
+  } */
 }
 
 .smooth-scroll { scroll-behavior: smooth; }
@@ -331,16 +344,18 @@ form {
 }
 
 .scroll-roll {
-  display: block;
-  width: 100%;
+  position: absolute;
+  inset: auto auto 100% 0;
   overflow: hidden;
   color: #0000;
-  background: var(--c-base-root);
-  text-align: center;
-  padding: var(--s-m0-y) var(--s-m0-x);
+  padding: var(--s-scroll-roll-y) var(--s-scroll-roll-x);
+  margin: auto;
   font-size: var(--s-font-cta);
   font-style: normal;
-  z-index: var(--z-article);
+  font-weight: 900;
+  text-align: center;
+  z-index: var(--z-scroll);
+  pointer-events: none;
   will-change: text-shadow;
   animation: 3e3ms cubic-bezier(0.4, 0.2, 0.6, 0.8) infinite scroll-roll;
 }
@@ -359,7 +374,6 @@ header,
 article {
   position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
   align-content: center;
   width: 100%;
@@ -372,6 +386,7 @@ article {
 
 header {
   flex-flow: row-reverse wrap;
+  justify-content: flex-end;
   min-height: var(--s-view-tall);
   /* padding: var(--s-s1-r); */
   /* background: var(--c-accent); */
@@ -379,6 +394,7 @@ header {
 
 article {
   flex-flow: row wrap;
+  justify-content: center;
   border-top: var(--s-hair) solid var(--c-accent);
 
   /* &:nth-of-type(odd) { background: var(--c-nth); } */
@@ -1069,6 +1085,7 @@ img,
     max-width: none;
     max-height: none;
     margin: 0;
+    background: #0000;
   }
 
   .demo-live {
@@ -1095,14 +1112,9 @@ img,
   pointer-events: none;
 }
 
-.peel-art-main {
-  max-height: 50vmin;
-  max-width: 50vmin;
-
-  figure:fullscreen & {
-    max-height: 90vmin;
-    max-width: 90vmin;
-  }
+.peel-art-main figure:fullscreen & {
+  max-height: 90vmin;
+  max-width: 90vmin;
 }
 
 .peel-art-layer {
@@ -1393,9 +1405,9 @@ img,
 .exhibit-info-intro,
 .exhibit-info-outro { position: absolute; }
 
-.exhibit-info-intro { top: var(--s-l0-y); }
+.exhibit-info-intro { top: var(--s-l1-y); }
 
-.exhibit-info-outro { bottom: 0; }
+.exhibit-info-outro { bottom: var(--s-l1-y); }
 
 .exhibit-info-touch {
   position: fixed;
@@ -1494,13 +1506,20 @@ img,
 
 .references {
   display: block;
-  columns: auto 300px;
+  columns: auto var(--s-fig-comfy);
   gap: 0;
+  padding: var(--s-jump-r-1);
 
   & > section,
   & > figure {
+    position: relative;
     width: 100%;
     break-inside: avoid-column;
+  }
+
+  & > figure:not(.references-big) {
+    border: solid #0000;
+    border-width: var(--s-m2-y) var(--s-m2-x);
   }
 }
 
@@ -1530,11 +1549,12 @@ img,
   max-height: 720px;
   max-width: 1280px;
   margin: var(--s-m0-y) 0;
-  background-color: var(--c-accent);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.demo-video { background-color: var(--c-accent); }
 
 .demo-fill ~ .demo-video { display: none; }
 
@@ -1571,6 +1591,12 @@ img,
 
 .progress-demo {
   & > section { align-self: center; }
+
+  .gauss-splat-fill:empty {
+    background-image: url('../media/demo-gauss-splat-cover-0.png?width=2562'),
+      url('../media/demo-gauss-splat-cover-0.png?width=256'),
+      url('../media/demo-gauss-splat-cover-0.png?width=26');
+  }
 
   .mpm-fill:empty {
     background-image: url('../media/demo-mpm-cover-0.png?width=2562'),
@@ -1852,3 +1878,18 @@ img,
   background: var(--c-hi-1);
  }
 }
+
+/* @todo Remove after demo. */
+
+/* .intro-main,
+nav { display: none; } */
+
+/* #intro {
+  width: 100vh;
+  height: 100vh;
+}
+
+.gauss-splat-artifact {
+  position: absolute;
+  inset: 0;
+} */

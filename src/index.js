@@ -38,10 +38,10 @@ const $html = document.documentElement;
 const rootClass = $html.classList;
 
 setTimeout(() => {
-    rootClass.add('info-hint');
-    rootClass.remove('wait');
+  rootClass.remove('wait');
+  rootClass.add('info-hint');
   },
-  1e2);
+  3e2);
 
 setTimeout(() => rootClass.remove('info-hint'), 7e3);
 
@@ -167,7 +167,7 @@ if($etaCrypto || $etaCard || $giveCrypto || $giveCard) {
 
 // Subscription.
 
-const $subscribes = each(($subscribe) => {
+each(($subscribe) => {
     const $submit = $subscribe.querySelector('[type="submit"]');
     const $optional = $subscribe.querySelector('.optional');
     let successWait;
@@ -205,64 +205,66 @@ const $subscribes = each(($subscribe) => {
 // Concept art interactions.
 /** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
 
-const $peel = document.querySelector('.peel-art');
-const $peelLayers = $peel?.querySelectorAll?.('.peel-art-layer');
-const $peelStyle = $peel?.querySelector?.('.peel-art-style');
+each(($peel) => {
+    const $peelLayers = $peel?.querySelectorAll?.('.peel-art-layer');
+    const $peelStyle = $peel?.querySelector?.('.peel-art-style');
 
-if($peel && $peelLayers && $peelStyle) {
-  $peel.classList.add('peel-far', 'peel-intro');
-  setTimeout(() => $peel.classList.remove('peel-far'), 1e2+1e3);
-  setTimeout(() => $peel.classList.remove('peel-intro'), 6e3+1e3);
+    if($peel && $peelLayers && $peelStyle) {
+      $peel.classList.add('peel-far', 'peel-intro');
+      setTimeout(() => $peel.classList.remove('peel-far'), 1e2+1e3);
+      setTimeout(() => $peel.classList.remove('peel-intro'), 6e3+1e3);
 
-  function peelOn(e) {
-    $peel.classList.remove('peel-far', 'peel-intro');
-    $peel.parentElement.focus();
-    $peelStyle.disabled = false;
-  }
+      function peelOn(e) {
+        $peel.classList.remove('peel-far', 'peel-intro');
+        $peel.parentElement.focus();
+        $peelStyle.disabled = false;
+      }
 
-  function peelOff(e) {
-    $peel.parentElement.blur();
-    $peelStyle.disabled = true;
-  }
+      function peelOff(e) {
+        $peel.parentElement.blur();
+        $peelStyle.disabled = true;
+      }
 
-  function peelMove(e) {
-    const { clientX: cx, clientY: cy } = e;
-    const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
-    const [v0, v1] = cache.peelMove ?? [range(2, Infinity), []];
-    const [x1, y1] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
+      function peelMove(e) {
+        const { clientX: cx, clientY: cy } = e;
+        const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
+        const [v0, v1] = cache.peelMove ?? [range(2, Infinity), []];
+        const [x1, y1] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
 
-    if(distSq2(v0, v1) < 5e-2) { return; }
+        if(distSq2(v0, v1) < 5e-2) { return; }
 
-    const x = clamp01(x1)*($peelLayers.length+1);
-    const y = clamp01(y1);
-    const w = mix(1.1, 3e-2, y);
-    const d = $peelStyle.disabled;
+        const x = clamp01(x1)*($peelLayers.length+1);
+        const y = clamp01(y1);
+        const w = mix(1.1, 3e-2, y);
+        const d = $peelStyle.disabled;
 
-    $peelStyle.textContent = reduce((to, $l, i) => {
-        const n = indexOf.call($peel.children, $l)+1;
-        const o = 0.5+((i-x)*w);
-        const fill = $l.classList.contains('peel-art-layer-fill');
-        const pl = mix(0, 1e2, 1-fill && o);
-        const pr = mix(0, 1e2, +fill || (o+w));
-        const p = `polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%)`;
+        $peelStyle.textContent = reduce((to, $l, i) => {
+            const n = indexOf.call($peel.children, $l)+1;
+            const o = 0.5+((i-x)*w);
+            const fill = $l.classList.contains('peel-art-layer-fill');
+            const pl = mix(0, 1e2, 1-fill && o);
+            const pr = mix(0, 1e2, +fill || (o+w));
+            const p = `polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%)`;
 
-        return to+
-          `.peel-art-layer:nth-child(${n}) { clip-path: ${p} !important; }\n`;
-      },
-      $peelLayers, '');
+            return to+
+              `.peel-art-layer:nth-child(${n}) { clip-path: ${p} !important; }\n`;
+          },
+          $peelLayers, '');
 
-    // $peelStyle.disabled = ((x1 < 0) || (x1 > 1) || (y1 < 0) || (y1 > 1));
-    $peelStyle.disabled = d;
-    setC2(cache.peelMove, v1, v0);
-  }
+        // $peelStyle.disabled = ((x1 < 0) || (x1 > 1) || (y1 < 0) || (y1 > 1));
+        $peelStyle.disabled = d;
+        setC2(cache.peelMove, v1, v0);
+      }
 
-  $peel.addEventListener('pointermove', throttle(3e2, peelMove));
-  $peel.addEventListener('pointerdown', peelOn);
-  $peel.addEventListener('pointerenter', peelOn);
-  $peel.addEventListener('pointerout', peelOff);
-  $peel.addEventListener('pointerup', peelOff);
-  $peel.addEventListener('contextmenu', stopEvent);
-}
+      $peel.addEventListener('pointermove', throttle(3e2, peelMove));
+      $peel.addEventListener('pointerdown', peelOn);
+      $peel.addEventListener('pointerenter', peelOn);
+      $peel.addEventListener('pointerout', peelOff);
+      $peel.addEventListener('pointerup', peelOff);
+      $peel.addEventListener('contextmenu', stopEvent);
+    }
+  },
+  document.querySelectorAll('.peel-art'));
 
 // Crypto and currency conversion.
 
