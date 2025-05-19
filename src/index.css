@@ -1589,14 +1589,14 @@ img,
   &:checked ~ .icon::after { content: 'video_camera_front'; }
 }
 
+.gauss-splat-fill:empty {
+  background-image: url('../media/demo-gauss-splat-cover-0.png?width=2562'),
+    url('../media/demo-gauss-splat-cover-0.png?width=256'),
+    url('../media/demo-gauss-splat-cover-0.png?width=26');
+}
+
 .progress-demo {
   & > section { align-self: center; }
-
-  .gauss-splat-fill:empty {
-    background-image: url('../media/demo-gauss-splat-cover-0.png?width=2562'),
-      url('../media/demo-gauss-splat-cover-0.png?width=256'),
-      url('../media/demo-gauss-splat-cover-0.png?width=26');
-  }
 
   .mpm-fill:empty {
     background-image: url('../media/demo-mpm-cover-0.png?width=2562'),
@@ -1880,11 +1880,11 @@ img,
 }
 
 /* @todo Remove after demo. */
+/*
+.intro-main,
+nav { display: none; }
 
-/* .intro-main,
-nav { display: none; } */
-
-/* #intro {
+#intro {
   width: 100vh;
   height: 100vh;
 }

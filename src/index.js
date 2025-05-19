@@ -322,10 +322,11 @@ each(($view) => {
     const $camera = $view.querySelector('.demo-camera');
     const $cameraOn =$view.parentElement?.querySelector?.('.demo-camera-on');
     const $visit = $view.querySelector('.demo-visit');
+    const liveFrame = ($live?.tagName === 'IFRAME');
 
     $flip && $fill && $flip.addEventListener('change', () => {
       (($flip.checked)? $view.prepend($fill) : $fill.remove());
-      $live.src = $live.src;
+      liveFrame && ($live.src = $live.src);
       $video.src = $video.src;
     });
 
@@ -367,7 +368,7 @@ each(($view) => {
       demoFillIntersector.observe($fill);
     }
 
-    $live && $camera?.addEventListener?.('change', () => {
+    liveFrame && $live && $camera?.addEventListener?.('change', () => {
       const { allow, dataset } = $live;
       const to = dataset[(($camera.checked)? 'y' : 'n')];
 
@@ -385,7 +386,7 @@ each(($view) => {
     $live && $full?.addEventListener?.('click',
       () => $live.requestFullscreen());
 
-    $visit && $live?.addEventListener?.('load',
+    $visit && liveFrame && $live?.addEventListener?.('load',
       () => $visit.href = $live.src);
   },
   document.querySelectorAll('.demo-view'));
@@ -682,6 +683,9 @@ each(($exhibit) => {
       document.addEventListener('readystatechange', exhibitReady));
   },
   document.querySelectorAll('.exhibit'));
+
+addEventListener('keyup', ({ code: k, shiftKey: s }) =>
+  s && (k === 'KeyF') && $html.requestFullscreen());
 
 function scrollReady() {
   if(document.readyState !== 'complete') { return false; }
