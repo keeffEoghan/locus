@@ -1589,41 +1589,63 @@ img,
   &:checked ~ .icon::after { content: 'video_camera_front'; }
 }
 
+.progress-demo {
+  & > section { align-self: center; }
+}
+
 .gauss-splat-fill:empty {
   background-image: url('../media/demo-gauss-splat-cover-0.png?width=2562'),
     url('../media/demo-gauss-splat-cover-0.png?width=256'),
     url('../media/demo-gauss-splat-cover-0.png?width=26');
 }
 
-.progress-demo {
-  & > section { align-self: center; }
+.mpm-fill:empty {
+  background-image: url('../media/demo-mpm-cover-0.png?width=2562'),
+    url('../media/demo-mpm-cover-0.png?width=256'),
+    url('../media/demo-mpm-cover-0.png?width=26');
+}
 
-  .mpm-fill:empty {
-    background-image: url('../media/demo-mpm-cover-0.png?width=2562'),
-      url('../media/demo-mpm-cover-0.png?width=256'),
-      url('../media/demo-mpm-cover-0.png?width=26');
-  }
+.peer-fill:empty {
+  background-image: url('../media/demo-peer-cover-0.png?width=2544'),
+    url('../media/demo-peer-cover-0.png?width=254'),
+    url('../media/demo-peer-cover-0.png?width=25');
+}
 
-  .peer-fill:empty {
-    background-image: url('../media/demo-peer-cover-0.png?width=2544'),
-      url('../media/demo-peer-cover-0.png?width=254'),
-      url('../media/demo-peer-cover-0.png?width=25');
-  }
+.gpgpu-fill:empty {
+  background-image: url('../media/demo-gpgpu-cover-0.png?width=3600'),
+    url('../media/demo-gpgpu-cover-0.png?width=360'),
+    url('../media/demo-gpgpu-cover-0.png?width=36');
+}
 
-  .gpgpu-fill:empty {
-    background-image: url('../media/demo-gpgpu-cover-0.png?width=3600'),
-      url('../media/demo-gpgpu-cover-0.png?width=360'),
-      url('../media/demo-gpgpu-cover-0.png?width=36');
-  }
+.optical-flow-fill:empty {
+  background-image: url('../media/demo-optical-flow-cover-0.png?width=1050'),
+    url('../media/demo-optical-flow-cover-0.png?width=105'),
+    url('../media/demo-optical-flow-cover-0.png?width=11');
+}
 
-  .optical-flow-fill:empty {
-    background-image: url('../media/demo-optical-flow-cover-0.png?width=1050'),
-      url('../media/demo-optical-flow-cover-0.png?width=105'),
-      url('../media/demo-optical-flow-cover-0.png?width=11');
-  }
+.concept-fill:empty {
+  background-image: url('../media/peel/artifact.png?width=2000'),
+    url('../media/peel/artifact.png?width=200'),
+    url('../media/peel/artifact.png?width=20');
+  background-size: contain;
 }
 
 .progress-demo-flip { flex-direction: row-reverse; }
+
+.concept-demo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  max-width: 100%;
+  max-height: 100%;
+
+  .peel-art {
+    margin: auto;
+    aspect-ratio: 1/1;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
 
 .artizen-info {
   --c-jump-1: var(--c-cta);
