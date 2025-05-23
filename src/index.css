@@ -137,6 +137,7 @@
   --s-s2-x: 2px;
   --s-s2-y: 1px;
   --s-s2-r: 2px;
+  --s-link-line: var(--s-s0-r);
   --s-hair: 1px;
   --s-nav-r: 2.5rem;
   --s-nav-border: var(--s-hair);
@@ -339,6 +340,7 @@ form {
 }
 
 .logo {
+  --s-link-line: 0;
   margin: 0 var(--s-m2-x);
   font-weight: var(--font-w-0);
 }
@@ -640,14 +642,14 @@ code {
 a {
   position: relative;
   z-index: 0;
-  padding: var(--s-s0-r) 0;
+  padding: var(--s-link-line) 0;
   /* font-weight: var(--font-w-3); */
   cursor: pointer;
   text-decoration: none;
-  border-radius: var(--s-s0-r);
+  border-radius: var(--s-link-line);
   color: var(--c-action-0);
   background-image: linear-gradient(to top,
-    currentColor var(--s-s0-r), #0000 var(--s-s0-r));
+    currentColor var(--s-link-line), #0000 var(--s-link-line));
   background-repeat: repeat no-repeat;
   background-position-y: 0;
   transition: color 9e2ms ease-out,
@@ -659,7 +661,7 @@ a {
   &:hover,
   &:focus,
   &:active,
-  &[href^="#"] { background-position-y: calc(0.6*var(--s-s0-r)); }
+  &[href^="#"] { background-position-y: calc(0.6*var(--s-link-line)); }
 
   &:hover,
   &:focus,
@@ -1103,7 +1105,7 @@ img,
   overflow: hidden;
   touch-action: none;
   background: var(--c-art-fill);
-  /* cursor: move; */
+  cursor: move;
 }
 
 .peel-art-main,
@@ -1902,13 +1904,14 @@ img,
 }
 
 /* @todo Remove after demo. */
-/*
-.intro-main,
+
+/* .intro-main,
 nav { display: none; }
 
 #intro {
   width: 100vh;
   height: 100vh;
+  margin: auto;
 }
 
 .gauss-splat-artifact {

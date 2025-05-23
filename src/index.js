@@ -63,7 +63,7 @@ const scrollIntoView = ($e, s = scroll) =>
   $e &&
     ((s.scrollMode !== 'if-needed')? $e.scrollIntoView(s)
     : (inView(true, $e.getBoundingClientRect())? false
-    : $e.scrollIntoView(s) || true));
+    : !$e.scrollIntoView(s)));
 
 // Progressively load images.
 // @todo Also handle videos and other types of elements?
@@ -92,7 +92,11 @@ each(($a) => $a.addEventListener('click', () => {
     setTimeout(() => {
       rootClass.remove('jumping');
 
-      try { scrollIntoView(document.querySelector($a.getAttribute('href'))); }
+      const to = $a.getAttribute('href');
+
+      if(to === '#') { return scrollIntoView(document.body, true); }
+
+      try { scrollIntoView(document.querySelector(to)); }
       catch(e) { console.warn(e); }
     });
   }),
