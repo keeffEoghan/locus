@@ -214,50 +214,52 @@ each(($peel) => {
     const $peelStyle = $peel?.querySelector?.('.peel-art-style');
 
     if($peel && $peelLayers && $peelStyle) {
+      const $peelDemoFill = $peel.closest('.demo-fill');
+      const peelAt = [range(2, Infinity), []];
+
       $peel.classList.add('peel-far', 'peel-intro');
       setTimeout(() => $peel.classList.remove('peel-far'), 1e2+1e3);
       setTimeout(() => $peel.classList.remove('peel-intro'), 6e3+1e3);
 
-      function peelOn(e) {
+      function peelOn() {
         $peel.classList.remove('peel-far', 'peel-intro');
         $peel.parentElement.focus();
         $peelStyle.disabled = false;
       }
 
-      function peelOff(e) {
+      function peelOff() {
         $peel.parentElement.blur();
         $peelStyle.disabled = true;
       }
 
       function peelMove(e) {
         const { clientX: cx, clientY: cy } = e;
-        const { y: bt, right: br, bottom: bb, x: bl } = $peel.getBoundingClientRect();
-        const [v0, v1] = cache.peelMove ?? [range(2, Infinity), []];
-        const [x1, y1] = setC2(v1, fit(cx, br, bl, 1, 0), fit(cy, bb, bt, 0, 1));
+        const { y, right: r, bottom: b, x } = $peel.getBoundingClientRect();
+        const [at0, at1] = peelAt;
+        let [vx, vy] = setC2(at1, fit(cx, r, x, 1, 0), fit(cy, b, y, 0, 1));
 
-        if(distSq2(v0, v1) < 5e-2) { return; }
+        if(distSq2(at0, at1) < 5e-2) { return; }
 
-        const x = clamp01(x1)*($peelLayers.length+1);
-        const y = clamp01(y1);
-        const w = mix(1.1, 3e-2, y);
-        const d = $peelStyle.disabled;
+        setC2(peelAt, at1, at0);
+        // $peelStyle.disabled = ((vx < 0) || (vx > 1) || (vy < 0) || (vy > 1));
+        vx = clamp01(vx)*($peelLayers.length+1);
+
+        const w = mix(1.1, 3e-2, vy = clamp01(vy));
 
         $peelStyle.textContent = reduce((to, $l, i) => {
             const n = indexOf.call($peel.children, $l)+1;
-            const o = 0.5+((i-x)*w);
+            const o = 0.5+((i-vx)*w);
             const fill = $l.classList.contains('peel-art-layer-fill');
             const pl = mix(0, 1e2, 1-fill && o);
-            const pr = mix(0, 1e2, +fill || (o+w));
-            const p = `polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%)`;
+            const pr = mix(0, 1e2, +fill || o+w);
 
-            return to+
-              `.peel-art-layer:nth-child(${n}) { clip-path: ${p} !important; }\n`;
+            return to+`.peel-art-layer:nth-child(${n}) { `+
+                `clip-path: `+
+                  `polygon(${pl}% 0%, ${pr}% 0%, ${pr}% 100%, ${pl}% 100%) `+
+                    `!important; `+
+              `}\n`;
           },
           $peelLayers, '');
-
-        // $peelStyle.disabled = ((x1 < 0) || (x1 > 1) || (y1 < 0) || (y1 > 1));
-        $peelStyle.disabled = d;
-        setC2(cache.peelMove, v1, v0);
       }
 
       $peel.addEventListener('pointermove', throttle(3e2, peelMove));
@@ -266,6 +268,11 @@ each(($peel) => {
       $peel.addEventListener('pointerout', peelOff);
       $peel.addEventListener('pointerup', peelOff);
       $peel.addEventListener('contextmenu', stopEvent);
+
+      $peelDemoFill &&
+        (new MutationObserver((e) =>
+            (e[0]?.removedNodes) && ($peelStyle.textContent = '')))
+          .observe($peelDemoFill, { childList: true });
     }
   },
   document.querySelectorAll('.peel-art'));
@@ -324,7 +331,7 @@ each(($view) => {
     const $flip = $view.querySelector('.demo-flip');
     const $full = $view.querySelector('.demo-fullscreen');
     const $camera = $view.querySelector('.demo-camera');
-    const $cameraOn =$view.parentElement?.querySelector?.('.demo-camera-on');
+    const $cameraOn = $view.parentElement?.querySelector?.('.demo-camera-on');
     const $visit = $view.querySelector('.demo-visit');
     const liveFrame = ($live?.tagName === 'IFRAME');
 

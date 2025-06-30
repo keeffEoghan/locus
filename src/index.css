@@ -140,6 +140,7 @@
   --s-link-line: var(--s-s0-r);
   --s-hair: 1px;
   --s-nav-r: 2.5rem;
+  --s-nav-off-y: -2rem;
   --s-nav-border: var(--s-hair);
   --s-line-x: 30rem;
   --s-icon-l: 2.5rem;
@@ -161,7 +162,7 @@
   --s-view-tall: 85vh;
   --s-tap-r: 30px;
   --s-fig-comfy: 400px;
-  --s-scroll-roll-x: 2em;
+  --s-scroll-roll-x: 1.2em;
   --s-scroll-roll-y: 2em;
   --z-jump: 0;
   --z-figure-flip: 1;
@@ -266,7 +267,8 @@ nav {
   --c-accent: var(--c-hi-0);
   --s-font-m: 1.1rem;
   position: sticky;
-  inset: var(--s-m0-y) auto var(--s-m0-y) 0;
+  inset: calc(var(--s-m0-y) - var(--s-nav-off-y)) auto var(--s-m0-y) 0;
+  transform: translateY(var(--s-nav-off-y));
   margin: 0;
   border: var(--s-nav-border) solid var(--c-accent);
   border-left: none;
@@ -1537,6 +1539,20 @@ img,
   flex: 0 1 auto;
   flex-flow: column nowrap;
   min-width: 66%;
+
+  &.demo-no-trim {
+    min-width: auto;
+
+    .demo-fill {
+      width: auto;
+      height: auto;
+      max-width: auto;
+      max-height: auto;
+      margin: 0;
+    }
+
+    .demo-live {}
+  }
 }
 
 .demo-controls {
