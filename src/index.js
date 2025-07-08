@@ -583,7 +583,7 @@ each(($exhibit) => {
           enablePan: false,
           minDistance: 2,
           maxDistance: 7,
-          maxPolarAngle: pi*0.55,
+          maxPolarAngle: 0.66*pi,
           zoomSpeed: 2,
           mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
           touches: { ONE: false, TWO: TOUCH.DOLLY_ROTATE }
@@ -656,13 +656,16 @@ each(($exhibit) => {
 
       exhibitCameraTo = exhibitCameraDef.position.clone();
 
-      const screenCircle = scene.getObjectByName('ScreenCircle');
+      const projectTarget = scene.getObjectByName('ProjectorSpotLight').target;
+      const screenDisc = scene.getObjectByName('ScreenDisc');
+      const orbitTarget = screenDisc.getWorldPosition(orbit.target);
 
-      screenCircle.getWorldPosition(orbit.target);
+      scene.add(projectTarget);
+      projectTarget.position.copy(orbitTarget).y += 0.2;
 
       if($exhibitVideo) {
         const animateScreen = () =>
-          screenCircle.material.emissiveMap = new VideoTexture($exhibitVideo);
+          screenDisc.material.emissiveMap = new VideoTexture($exhibitVideo);
 
         (($exhibitVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)?
             animateScreen()

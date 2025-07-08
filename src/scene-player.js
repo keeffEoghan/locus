@@ -55,7 +55,7 @@ export class ScenePlayer {
   }
 
   load(data) {
-    const { project: p, scene, camera, scripts } = this.data = data;
+    const { project: p, scene: s, camera: c, scripts } = this.data = data;
     const { vr, shadows, shadowType, toneMapping, toneMappingExposure: te } = p;
     const { renderer, loader } = this;
     const events = this.#events;
@@ -66,7 +66,8 @@ export class ScenePlayer {
     (toneMapping !== undefined) && (renderer.toneMapping = toneMapping);
     (te !== undefined) && (renderer.toneMappingExposure = te);
 
-    this.setScene(loader.parse(scene)).setCamera(loader.parse(camera));
+    const { scene, camera } =
+      this.setScene(loader.parse(s)).setCamera(loader.parse(c));
 
     let scriptWrapParams = 'player,renderer,scene,camera';
     const scriptWrapResultObj = {};

@@ -1292,9 +1292,9 @@ img,
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  background-image: url('../media/exhibit-participant.jpg?width=1600'),
-    url('../media/exhibit-participant.jpg?width=160'),
-    url('../media/exhibit-participant.jpg?width=16');
+  background-image: url('../media/exhibit-participant.png?height=2060'),
+    url('../media/exhibit-participant.png?height=206'),
+    url('../media/exhibit-participant.png?height=20');
 
   & > canvas {
     width: 100%;
@@ -1920,9 +1920,10 @@ img,
 /* @todo Remove after demo. */
 
 /* .intro-main,
-.exhibit-info,
-.exhibit-label,
 nav { display: none; }
+
+.exhibit-info,
+.exhibit-label { visibility: hidden; }
 
 #intro {
   width: 100vh;
