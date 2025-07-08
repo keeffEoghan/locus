@@ -223,25 +223,25 @@ each(($peel) => {
 
       function peelOn() {
         $peel.classList.remove('peel-far', 'peel-intro');
-        $peel.parentElement.focus();
+        $peel.focus();
         $peelStyle.disabled = false;
       }
 
       function peelOff() {
-        $peel.parentElement.blur();
+        $peel.blur();
         $peelStyle.disabled = true;
       }
 
       function peelMove(e) {
         const { clientX: cx, clientY: cy } = e;
         const { y, right: r, bottom: b, x } = $peel.getBoundingClientRect();
+        const eps = 1/min(innerWidth, innerHeight);
         const [at0, at1] = peelAt;
         let [vx, vy] = setC2(at1, fit(cx, r, x, 1, 0), fit(cy, b, y, 0, 1));
 
-        if(distSq2(at0, at1) < 5e-2) { return; }
+        if(distSq2(...setC2(peelAt, at1, at0)) < eps) { return; }
+        if((vx < 0) || (vx > 1) || (vy < 0) || (vy > 1)) { return peelOff(); }
 
-        setC2(peelAt, at1, at0);
-        // $peelStyle.disabled = ((vx < 0) || (vx > 1) || (vy < 0) || (vy > 1));
         vx = clamp01(vx)*($peelLayers.length+1);
 
         const w = mix(1.1, 3e-2, vy = clamp01(vy));
@@ -262,7 +262,7 @@ each(($peel) => {
           $peelLayers, '');
       }
 
-      $peel.addEventListener('pointermove', throttle(3e2, peelMove));
+      $peel.addEventListener('pointermove', throttle(1e2, peelMove));
       $peel.addEventListener('pointerdown', peelOn);
       $peel.addEventListener('pointerenter', peelOn);
       $peel.addEventListener('pointerout', peelOff);
@@ -270,8 +270,7 @@ each(($peel) => {
       $peel.addEventListener('contextmenu', stopEvent);
 
       $peelDemoFill &&
-        (new MutationObserver((e) =>
-            (e[0]?.removedNodes) && ($peelStyle.textContent = '')))
+        (new MutationObserver((e) => e[0]?.removedNodes && peelOff()))
           .observe($peelDemoFill, { childList: true });
     }
   },
@@ -482,7 +481,7 @@ each(($exhibit) => {
     let exhibitInteract = false;
     let exhibitTour = -1;
     const exhibitCameraNear = { scroll: 1e-3, tour: 5e-1 };
-    const exhibitEase = { scroll: 3e-2, tour: 4e-3 };
+    const exhibitEase = { scroll: 3e-2, tour: 2e-3 };
     let exhibit2DRenderer;
 
     function exhibitResize() {

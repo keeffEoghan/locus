@@ -1550,8 +1550,6 @@ img,
       max-height: auto;
       margin: 0;
     }
-
-    .demo-live {}
   }
 }
 
@@ -1922,6 +1920,8 @@ img,
 /* @todo Remove after demo. */
 
 /* .intro-main,
+.exhibit-info,
+.exhibit-label,
 nav { display: none; }
 
 #intro {
