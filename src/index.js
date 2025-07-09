@@ -657,15 +657,15 @@ each(($exhibit) => {
       exhibitCameraTo = exhibitCameraDef.position.clone();
 
       const projectTarget = scene.getObjectByName('ProjectorSpotLight').target;
-      const screenDisc = scene.getObjectByName('ScreenDisc');
-      const orbitTarget = screenDisc.getWorldPosition(orbit.target);
+      const screenCircle = scene.getObjectByName('ScreenCircle');
+      const orbitTarget = screenCircle.getWorldPosition(orbit.target);
 
       scene.add(projectTarget);
       projectTarget.position.copy(orbitTarget).y += 0.2;
 
       if($exhibitVideo) {
         const animateScreen = () =>
-          screenDisc.material.emissiveMap = new VideoTexture($exhibitVideo);
+          screenCircle.material.emissiveMap = new VideoTexture($exhibitVideo);
 
         (($exhibitVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)?
             animateScreen()
