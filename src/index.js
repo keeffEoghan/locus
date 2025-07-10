@@ -31,6 +31,8 @@ const { HAVE_ENOUGH_DATA } = HTMLMediaElement;
 const api = self.locus = {};
 const cache = {};
 
+const query = new URLSearchParams(location.search);
+
 const stopEffect = (e) => e.preventDefault();
 const stopBubble = (e) => e.stopPropagation();
 
@@ -494,6 +496,12 @@ each(($exhibit) => {
     let exhibit2DRenderer;
     let exhibitTime = performance.now();
 
+    $exhibitWrapped &&
+      ($exhibitWrapped.checked = (query.get('wrap') === 'true'));
+
+    $exhibitTouring &&
+      ($exhibitTouring.checked = (query.get('tour') === 'true'));
+
     function exhibitResize() {
       let w = innerWidth;
       let h = innerHeight;
@@ -562,7 +570,7 @@ each(($exhibit) => {
       : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
     }
 
-    function exhibitFrame(t1) {
+    function exhibitFrame(t1 = performance.now()) {
       const t0 = exhibitTime;
 
       exhibitTime = t1;
@@ -712,25 +720,24 @@ each(($exhibit) => {
       }
 
       function toExhibitWrap() {
-        const wrapped = $exhibitWrapped?.checked;
+        const to = +$exhibitWrapped?.checked || 0;
 
         each((pre, wrap) =>
-            scene.getObjectByName(pre+'Group').visible = (wrap === +wrapped),
+            scene.getObjectByName(pre+'Group').visible = (wrap === to),
           exhibitWraps);
 
         exhibitScroll();
       }
 
+      self.scene = scene;
       $exhibitWrapped?.addEventListener?.('change', toExhibitWrap);
       toExhibitWrap();
 
       function toExhibitTour() {
-        const tour = $exhibitTouring?.checked;
+        const to = $exhibitTouring?.checked;
 
-        exhibitTour = ((tour)? 0 : -1);
-
-        tour &&
-          scrollIntoView($exhibit, { block: 'start', behavior: 'instant' });
+        exhibitTour = ((to)? 0 : -1);
+        to && scrollIntoView($exhibit, { block: 'start', behavior: 'instant' });
       }
 
       $exhibitTouring?.addEventListener?.('change', toExhibitTour);
