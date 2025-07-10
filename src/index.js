@@ -9,17 +9,24 @@ import { distSq2 } from '@thi.ng/vectors/distsq';
 import { setC2 } from '@thi.ng/vectors/setc';
 import { shuffle } from '@thi.ng/arrays/shuffle';
 import throttle from 'lodash/fp/throttle';
-import { Vector3, VideoTexture, MOUSE, TOUCH } from 'three';
+
+import {
+    Vector3, VideoTexture, RepeatWrapping, MirroredRepeatWrapping,
+    MOUSE, TOUCH
+  } from 'three';
 
 import { CSS2DRenderer, CSS2DObject }
   from 'three/examples/jsm/renderers/CSS2DRenderer';
 
 import { ScenePlayer } from './scene-player';
 
-const { min, max, abs, round, floor, ceil, random, PI: pi } = Math;
+const { min, max, abs, round, floor, ceil, random, PI: pi, TAU: tau = 2*pi } =
+  Math;
+
 const { indexOf } = Array.prototype;
 const { parse } = JSON;
 const { clipboard } = navigator;
+const { HAVE_ENOUGH_DATA } = HTMLMediaElement;
 
 const api = self.locus = {};
 const cache = {};
@@ -470,10 +477,12 @@ each(($artifactView) => {
 each(($exhibit) => {
     const $exhibitCameras = $exhibit.querySelectorAll('[data-exhibit-camera]');
     const $exhibitInfoTouch = $exhibit.querySelector('.exhibit-info-touch');
+    const $exhibitWrapped = $exhibit.querySelector('.exhibit-wrapped');
+    const $exhibitTouring = $exhibit.querySelector('.exhibit-touring');
     let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
-    let $exhibitTouring = $exhibit.querySelector('.exhibit-touring');
     let exhibitOn;
-    const exhibitCameras = { all: {}, order: [] };
+    const exhibitCameras = map(() => ({ all: {}, order: [] }), range(2), 0);
+    const exhibitWraps = ['Disc', 'Wrap'];
     const exhibitCameraPair = [{}, {}];
     let exhibitPlayer;
     let exhibitCameraDef;
@@ -481,8 +490,9 @@ each(($exhibit) => {
     let exhibitInteract = false;
     let exhibitTour = -1;
     const exhibitCameraNear = { scroll: 1e-3, tour: 5e-1 };
-    const exhibitEase = { scroll: 3e-2, tour: 2e-3 };
+    const exhibitEase = { scroll: 2e-3, tour: 5e-4 };
     let exhibit2DRenderer;
+    let exhibitTime = performance.now();
 
     function exhibitResize() {
       let w = innerWidth;
@@ -524,25 +534,26 @@ each(($exhibit) => {
 
       u.y = d.y = u.$ = d.$ = undefined;
 
-      const [{ $: u$, y: uy = 0 }, { $: d$, y: dy = 0 }] = reduce((pair, $) => {
+      const [{ $: $u, y: uy = 0 }, { $: $d, y: dy = 0 }] = reduce((p, $) => {
           const { y: y0, bottom: y1 } = $.getBoundingClientRect();
           const y = mix(y0, y1, 0.5)-vy;
           const d = y > 0;
-          const p = pair[+d];
-          const { $: p$, y: py } = p;
+          const to = p[+d];
+          const { $: $p, y: py } = to;
 
-          (!p$ || (py == null) || ((d)? y < py : y > py)) &&
-            (p.$ = $) && (p.y = y);
+          (!$p || (py == null) || ((d)? y < py : y > py)) &&
+            (to.$ = $) && (to.y = y);
 
-          return pair;
+          return p;
         },
         $exhibitCameras, exhibitCameraPair);
 
-      const uc = u$?.dataset?.exhibitCamera;
-      const dc = d$?.dataset?.exhibitCamera;
-      const { all } = exhibitCameras;
-      const up = uc && all[uc]?.position;
-      const dp = dc && all[dc]?.position;
+      const { all } = exhibitCameras[+$exhibitWrapped?.checked];
+      const pre = exhibitWraps[+$exhibitWrapped?.checked];
+      const uc = $u?.dataset?.exhibitCamera;
+      const dc = $d?.dataset?.exhibitCamera;
+      const up = uc && all[pre+uc]?.position;
+      const dp = dc && all[pre+dc]?.position;
 
       // Assumes cameras are at the root of the scene.
       ((!up)? dp && exhibitCameraTo.copy(dp)
@@ -551,24 +562,28 @@ each(($exhibit) => {
       : exhibitCameraTo.lerpVectors(up, dp, clamp01(fit(0, uy, dy, 0, 1))));
     }
 
-    function exhibitFrame() {
+    function exhibitFrame(t1) {
+      const t0 = exhibitTime;
+
+      exhibitTime = t1;
+
       if(!exhibitOn) { return requestAnimationFrame(exhibitFrame); }
 
       const { camera, scene } = exhibitPlayer;
       const p = camera.position;
-      const { order } = exhibitCameras;
+      const { order } = exhibitCameras[+$exhibitWrapped?.checked];
       const tourTo = order[exhibitTour]?.position;
       const { tour: nearTour, scroll: nearScroll } = exhibitCameraNear;
 
       tourTo &&
-        exhibitCameraTo.copy((p.distanceToSquared(tourTo) < nearTour)?
-            order[exhibitTour = (exhibitTour+1)%order.length]?.position
-          : tourTo);
+        exhibitCameraTo.copy((p.distanceToSquared(tourTo) >= nearTour)? tourTo
+          : order[exhibitTour = (exhibitTour+1)%order.length]?.position);
 
       if(!exhibitInteract) {
         ((p.distanceToSquared(exhibitCameraTo) < nearScroll)?
           p.copy(exhibitCameraTo)
-        : p.lerp(exhibitCameraTo, exhibitEase[(tourTo)? 'tour' : 'scroll']));
+        : p.lerp(exhibitCameraTo,
+            exhibitEase[(tourTo)? 'tour' : 'scroll']*(t1-t0)));
       }
 
       exhibit2DRenderer.render(scene, camera);
@@ -582,7 +597,7 @@ each(($exhibit) => {
       exhibitPlayer = api.exhibitPlayer = new ScenePlayer(null, {
           enablePan: false,
           minDistance: 2,
-          maxDistance: 7,
+          maxDistance: 10,
           maxPolarAngle: 0.66*pi,
           zoomSpeed: 2,
           mouseButtons: { LEFT: MOUSE.ROTATE, MIDDLE: false, RIGHT: MOUSE.DOLLY },
@@ -593,13 +608,15 @@ each(($exhibit) => {
       exhibitPlayer.load(exhibit);
       exhibitPlayer.render();
 
-      const $exhibitVideo = $exhibitDemo.querySelector('.exhibit-video');
+      const $exhibitDiscVideo = $exhibitDemo.querySelector('.exhibit-disc');
+      const $exhibitWrapVideo = $exhibitDemo.querySelector('.exhibit-wrap');
       const { dom, scene, orbit, camera } = exhibitPlayer;
       let interactWait;
       let labelWait;
 
       $exhibitDemo.replaceWith($exhibitDemo = dom);
-      $exhibitVideo && $exhibitDemo.appendChild($exhibitVideo);
+      $exhibitDiscVideo && $exhibitDemo.appendChild($exhibitDiscVideo);
+      $exhibitWrapVideo && $exhibitDemo.appendChild($exhibitWrapVideo);
       $exhibitDemo.classList.add('exhibit-demo');
       exhibit2DRenderer = new CSS2DRenderer({ element: $exhibitDemo });
 
@@ -646,34 +663,75 @@ each(($exhibit) => {
         $label.addEventListener('pointerleave', interactEnd);
       });
 
-      const { all: camerasAll, order: camerasOrder } = exhibitCameras;
-
-      exhibitCameraDef = camerasAll[camera.name] = camera.clone();
-
-      map(({ dataset: { exhibitCamera: c } }) =>
-          camerasAll[c] ??= scene.getObjectByName(c),
-        $exhibitCameras, camerasOrder);
-
-      exhibitCameraTo = exhibitCameraDef.position.clone();
-
-      const projectTarget = scene.getObjectByName('ProjectorSpotLight').target;
       const screenCircle = scene.getObjectByName('ScreenCircle');
-      const orbitTarget = screenCircle.getWorldPosition(orbit.target);
 
-      scene.add(projectTarget);
-      projectTarget.position.copy(orbitTarget).y += 0.2;
+      screenCircle.getWorldPosition(orbit.target);
+      exhibitCameraTo = camera.position.clone();
 
-      if($exhibitVideo) {
-        const animateScreen = () =>
-          screenCircle.material.emissiveMap = new VideoTexture($exhibitVideo);
+      each((pre, wrap) => {
+          const { all, order } = exhibitCameras[+wrap];
 
-        (($exhibitVideo.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)?
-            animateScreen()
-          : $exhibitVideo.addEventListener('canplaythrough', animateScreen));
+          all[camera.name] = camera.clone();
+
+          map(({ dataset: { exhibitCamera: c } }) =>
+              all[c = pre+c] ??= scene.getObjectByName(c),
+            $exhibitCameras, order);
+        },
+        exhibitWraps);
+
+      each((spot) => {
+          const to = spot.userData.target;
+
+          to && (spot.target = scene.getObjectByName(to));
+        },
+        scene.getObjectsByProperty('isSpotLight', true));
+
+      if($exhibitDiscVideo) {
+        const animateDisc = () =>
+          screenCircle.material.emissiveMap =
+            new VideoTexture($exhibitDiscVideo);
+
+        (($exhibitDiscVideo.readyState >= HAVE_ENOUGH_DATA)?
+            animateDisc()
+          : $exhibitDiscVideo.addEventListener('canplaythrough', animateDisc));
       }
 
-      const toExhibitTour = () =>
-        exhibitTour = (($exhibitTouring?.checked)? 0 : -1);
+      if($exhibitWrapVideo) {
+        function animateWrap() {
+          const t = new VideoTexture($exhibitWrapVideo);
+
+          t.wrapS = MirroredRepeatWrapping;
+          t.repeat.set(3, 1);
+          t.offset.set(-0.1, 0);
+          scene.getObjectByName('ScreenCylinder').material.emissiveMap = t;
+        }
+
+        (($exhibitWrapVideo.readyState >= HAVE_ENOUGH_DATA)?
+            animateWrap()
+          : $exhibitWrapVideo.addEventListener('canplaythrough', animateWrap));
+      }
+
+      function toExhibitWrap() {
+        const wrapped = $exhibitWrapped?.checked;
+
+        each((pre, wrap) =>
+            scene.getObjectByName(pre+'Group').visible = (wrap === +wrapped),
+          exhibitWraps);
+
+        exhibitScroll();
+      }
+
+      $exhibitWrapped?.addEventListener?.('change', toExhibitWrap);
+      toExhibitWrap();
+
+      function toExhibitTour() {
+        const tour = $exhibitTouring?.checked;
+
+        exhibitTour = ((tour)? 0 : -1);
+
+        tour &&
+          scrollIntoView($exhibit, { block: 'start', behavior: 'instant' });
+      }
 
       $exhibitTouring?.addEventListener?.('change', toExhibitTour);
       toExhibitTour();

@@ -1,8 +1,14 @@
 <article id="what-is-locus" class="exhibit jump bleed-inset">
+  <input id="exhibit-wrapped" class="exhibit-wrapped" type="checkbox" />
   <input id="exhibit-touring" class="exhibit-touring" type="checkbox" />
-  <label for="exhibit-touring"
-    class="exhibit-tour icon material-symbols-rounded">
-  </label>
+  <aside class="exhibit-actions">
+    <label for="exhibit-wrapped"
+      class="exhibit-wrap icon material-symbols-rounded">
+    </label>
+    <label for="exhibit-touring"
+      class="exhibit-tour icon material-symbols-rounded">
+    </label>
+  </aside>
   <small class="exhibit-info exhibit-info-instruct exhibit-info-intro" md inline>
     <small class="scroll-roll" style="inset: auto 0 100% 0;">scroll</small>
     Explore the installation mockup, drag to move around the space, open points-of-interest marked with **+**
@@ -11,9 +17,13 @@
     Turn and zoom the space using 2 fingers
   </small>
   <div class="exhibit-demo">
-    <video class="exhibit-video" autoplay loop muted controls preload="none"
-      src="../media/artizen-s5-artifact.mp4"
-      poster="../media/artizen-s5-artifact.png">
+    <video class="exhibit-video exhibit-disc"
+      autoplay loop muted controls preload="none"
+      src="../media/artizen-s5-artifact.mp4">
+    </video>
+    <video class="exhibit-video exhibit-wrap"
+      autoplay loop muted controls preload="none"
+      src="../media/wrap-flow-tile.mp4">
     </video>
   </div>
   <section id="what-is-locus-intro" class="exhibit-info jump"
