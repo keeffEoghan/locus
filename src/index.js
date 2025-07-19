@@ -411,6 +411,7 @@ each(($view) => {
 
     $camera && $cameraOn?.addEventListener?.('click', (e) => {
       !$camera.checked && $camera.click();
+      scrollIntoView($fill);
       stopEvent(e);
     });
 
@@ -422,19 +423,33 @@ each(($view) => {
   },
   document.querySelectorAll('.demo-view'));
 
+// `Shadows touch across time` progress demo.
+
+each(($shadowsView) => {
+    const $shadowsDemo = $shadowsView.querySelector('.shadows-demo');
+    const $shadowsQualities = $shadowsView.querySelectorAll('.shadows-quality');
+
+    $shadowsDemo &&
+      each(($shadowsQuality) => $shadowsQuality.addEventListener('click', () =>
+          $shadowsDemo.src = $shadowsQuality.dataset.src),
+        $shadowsQualities);
+  },
+  document.querySelectorAll('.shadows-view'));
+
 // MPM progress demo.
 
 each(($mpmView) => {
     const $mpmDemo = $mpmView.querySelector('.mpm-demo');
     const $mpmQualities = $mpmView.querySelectorAll('.mpm-quality');
 
-    $mpmDemo && each(($mpmQuality) => $mpmQuality.addEventListener('click',
-        () => $mpmDemo.src = $mpmQuality.dataset.src),
-      $mpmQualities);
+    $mpmDemo &&
+      each(($mpmQuality) => $mpmQuality.addEventListener('click', () =>
+          $mpmDemo.src = $mpmQuality.dataset.src),
+        $mpmQualities);
   },
   document.querySelectorAll('.mpm-view'));
 
-// `Peer into the Flow`.
+// `Peer into the flow`.
 
 // Seeds that look good and are easy to use.
 let peerSeeds;

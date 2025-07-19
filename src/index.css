@@ -1626,6 +1626,12 @@ img,
   & > section { align-self: center; }
 }
 
+.shadows-fill:empty {
+  background-image: url('../media/demo-shadows-cover-0.png?width=2404'),
+    url('../media/demo-shadows-cover-0.png?width=240'),
+    url('../media/demo-shadows-cover-0.png?width=24');
+}
+
 .gauss-splat-fill:empty {
   background-image: url('../media/demo-gauss-splat-cover-0.png?width=2562'),
     url('../media/demo-gauss-splat-cover-0.png?width=256'),

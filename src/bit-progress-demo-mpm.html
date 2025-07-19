@@ -5,7 +5,7 @@
 
     Work-in-progress developing [`gl-mpm`](https://epok.tech/wip-gl-mpm-demo/){target="_blank"}, the `Material Point Method` fluid-dynamics technology for **Locus**, and a cutting-edge physics simulation handling multiple forms of matter interacting in one model.
 
-    Implementing the `MLS-MPM` physics model, with `ASFLIP` integration, supporting `WebGL 1.0`, particle-based physics and rendering, real-time, natural-motion interaction – try it with the [camera enabled](#){.demo-camera-on}.
+    Implementing the `MLS-MPM` physics model, with `ASFLIP` integration, supporting `WebGL 1.0`, particle-based physics and rendering, real-time, natural-motion interaction – try it with the [camera enabled](.){.demo-camera-on}.
 
     So far *2D* not *3D*, fluid-dynamics not yet other materials, up to `AFLIP` not yet `ASFLIP`, basic rendering, uniform grid not yet hierarchical `SPGrid`.
 
@@ -26,7 +26,8 @@
     </div>
     <iframe class="demo-video video-embed"
       loading="lazy" frameborder="0" allowfullscreen
-      src="https://www.youtube.com/embed/M9Fjef_Czlg?si=q0ND4aJFxri5acra&rel=0&color=white" title="Demo of Material Point Method prototype"
+      src="https://youtube.com/embed/M9Fjef_Czlg?rel=0&color=white"
+      title="Demo of `Material Point Method` prototype"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
     </iframe>
     <div class="demo-controls">
@@ -43,7 +44,7 @@
       <button class="mpm-quality demo-control icon-in"
         data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&g[1]=0&gridToPoints.boundsClamp=false&grid.boundsHit=-1&background=none">
         <span class="icon material-symbols-rounded">brightness_2</span>
-        medium quality
+        mid quality
       </button>
       <button class="mpm-quality demo-control icon-in"
         data-src="https://epok.tech/wip-gl-mpm-demo/?demo.fps=false&g[1]=0&grid.detail=1.5e2&gridToPoints.gpgpu.scale=10&gridToPoints.boundsClamp=false&grid.boundsHit=-1&background=none">
@@ -53,7 +54,7 @@
       <label class="demo-control icon-in">
         <input type="checkbox" class="mpm-camera demo-camera" />
         <span class="icon material-symbols-rounded"></span>
-        camera optical-flow
+        camera interact
       </label>
       <button class="mpm-fullscreen demo-fullscreen demo-control icon-in">
         <span class="icon material-symbols-rounded">fullscreen</span>

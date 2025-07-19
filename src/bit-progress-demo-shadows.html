@@ -1,0 +1,71 @@
+<article id="progress-demo-shadows" class="progress-demo bleed-inset jump {{ classes }}">
+  <a href="#progress-demo-shadows" class="jump-share material-symbols-rounded"></a>
+  <section class="shadows-info" md>
+    ### Progress demo ~ *Shadows touch across time*
+
+    [*Shadows touch across time*](https://epok.tech/shadows-touch-across-time-demo){target="_blank"}, an interactive artwork installation commissioned by [Olta](https://olta.art/){target="_blank"} and [Arweave](https://arweave.org/){target="_blank"}, for exhibition at [Arweave Day 2025](https://lu.ma/arweaveday2025){target="_blank"} conference in Berlin.
+
+    People connect across time through gestures, an emergent collaboration co-creating the artwork – try it with the [camera enabled](.){.demo-camera-on}.<br/>
+    The fluid flows with your motions, your hand is a print made of solid particles; occasionally trails of other handprints appear, shadows left by those before you – if your hand touches theirs before they dissolve, your handprint is traced into the artwork, another shadow for a future person to touch.<br/>
+    Together, hands connect across the artwork, as you respond to each others' gestures in a discourse, your shadows touch across time.
+
+    Combines and develops the fluid-dynamics and `AI` hand-tracking elements of **Locus** into a different creative execution.
+
+    <small>Integrates [`AI` hand-tracking](https://mediapipe-studio.webapps.google.com/demo/hand_landmarker){target="_blank"} to capture traces of audience hand gestures and drive this dialogue.</small>
+
+    <small>Integrates [`gl-mpm`](#progress-demo-mpm) and [`glsl-optical-flow`](#progress-demo-optical-flow) for fluid-dynamics simulation and natural-motion interaction via camera to influence it.</small>
+  </section>
+  <section class="shadows-view demo-view">
+    <div class="shadows-fill demo-fill">
+      <iframe class="shadows-demo demo-live"
+        loading="lazy" frameborder="0" allowfullscreen
+        allow="" data-y="camera *" data-n=""
+        src="https://epok.tech/shadows-touch-across-time-demo/?g[2]=-1e2&background=none"
+        sandbox="allow-scripts allow-same-origin">
+      </iframe>
+    </div>
+    <iframe class="demo-video video-embed"
+      loading="lazy" frameborder="0" allowfullscreen
+      src="https://youtube.com/embed/LUFt4qaDssQ?rel=0&color=white"
+      title="Exhibition and demo of `Shadows touch across time`"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share">
+    </iframe>
+    <div class="demo-controls">
+      <input type="checkbox" class="demo-flip" id="shadows-flip" checked />
+      <label class="icon-in demo-flip-label" for="shadows-flip">
+        <span class="icon material-symbols-rounded"></span>
+        demo or video
+      </label>
+      <button class="shadows-quality demo-control icon-in"
+        data-src="https://epok.tech/shadows-touch-across-time-demo/?grid.detail=7e1&gridToPoints.gpgpu.scale=8&g[2]=-1e2&background=none">
+        <span class="icon material-symbols-rounded">brightness_3</span>
+        low quality
+      </button>
+      <button class="shadows-quality demo-control icon-in"
+        data-src="https://epok.tech/shadows-touch-across-time-demo/?g[2]=-1e2&background=none">
+        <span class="icon material-symbols-rounded">brightness_2</span>
+        mid quality
+      </button>
+      <button class="shadows-quality demo-control icon-in"
+        data-src="https://epok.tech/shadows-touch-across-time-demo/?grid.detail=1.5e2&gridToPoints.gpgpu.scale=10&g[2]=-1e2&background=none">
+        <span class="icon material-symbols-rounded">brightness_1</span>
+        high quality
+      </button>
+      <label class="demo-control icon-in">
+        <input type="checkbox" class="shadows-camera demo-camera" />
+        <span class="icon material-symbols-rounded"></span>
+        camera interact
+      </label>
+      <button class="shadows-fullscreen demo-fullscreen demo-control icon-in">
+        <span class="icon material-symbols-rounded">fullscreen</span>
+        fullscreen
+      </button>
+      <a class="demo-visit icon-in button"
+        href="https://epok.tech/shadows-touch-across-time-demo"
+        target="_blank">
+        <span class="icon material-symbols-rounded">open_in_new</span>
+        visit
+      </a>
+    </div>
+  </section>
+</article>
