@@ -125,9 +125,9 @@ const etaCrypto = new Date('2025-07-25T15:00:00-08:00');
 const etaCard = new Date('2025-07-25T15:00:00-08:00');
 const $etaCrypto = document.querySelectorAll('.eta-crypto');
 const $etaCard = document.querySelectorAll('.eta-card');
-const $giveCrypto = document.querySelector('#contribute-crypto');
+const $giveCrypto = document.querySelector('#support-crypto');
 const $timedOutCrypto = $giveCrypto?.querySelectorAll?.('.times-out');
-const $giveCard = document.querySelector('#contribute-card');
+const $giveCard = document.querySelector('#support-card');
 const $timedOutCard = $giveCard?.querySelectorAll?.('.times-out');
 
 if($etaCrypto || $etaCard || $giveCrypto || $giveCard) {
@@ -140,10 +140,14 @@ if($etaCrypto || $etaCard || $giveCrypto || $giveCard) {
   }
 
   const fillTil = (t, $all) => each(($e) => {
-      const { dataset: { til,  title }, classList } = $e;
+      const { dataset: d, classList } = $e;
+      const { til, ariaDescription, ariaTitle, title } = d;
 
       $e.textContent = toTil(t, til);
-      title && ($e.title = title) && classList.add('info');
+      title && ($e.title = title);
+      ariaDescription && ($e.ariaDescription = ariaDescription);
+      ariaTitle && ($e.ariaTitle = ariaTitle);
+      (title || ariaTitle || ariaDescription) && classList.add('info');
     },
     $all);
 
@@ -157,7 +161,7 @@ if($etaCrypto || $etaCard || $giveCrypto || $giveCard) {
 
           $t.target && ($t.target = '');
 
-          $t.title = 'This option timed out! '+
+          $t.title = $t.ariaDescription = 'This option timed out! '+
             'Try another or contact us to arrange an alternative';
         },
         $over);
@@ -254,6 +258,7 @@ each(($peel) => {
         vx = clamp01(vx)*($peelLayers.length+1);
 
         const w = mix(1.1, 3e-2, vy = clamp01(vy));
+        const off = $peelStyle.disabled;
 
         $peelStyle.textContent = reduce((to, $l, i) => {
             const n = indexOf.call($peel.children, $l)+1;
@@ -269,6 +274,9 @@ each(($peel) => {
               `}\n`;
           },
           $peelLayers, '');
+
+        // Setting `textContent` can reset `disabled`, so restore it after.
+        $peelStyle.disabled = off;
       }
 
       $peel.addEventListener('pointermove', throttle(1e2, peelMove));
@@ -276,6 +284,7 @@ each(($peel) => {
       $peel.addEventListener('pointerenter', peelOn);
       $peel.addEventListener('pointerout', peelOff);
       $peel.addEventListener('pointerup', peelOff);
+      $peel.addEventListener('pointerleave', peelOff);
       $peel.addEventListener('contextmenu', stopEvent);
 
       $peelDemoFill &&
@@ -289,24 +298,27 @@ each(($peel) => {
 
 each(async ($c) => {
     try {
-      const { textContent: content, title, dataset: d } = $c;
-      const f = d.coinAt || 'eth';
-      const t = d.coinTo || 'usd';
-      const s = d.coinSum || 0.004;
-      const mc = d.coinText || '(\\$)([0-9\\.\\,]+)()';
-      const mt = d.coinTitle || `()([0-9\\.\\,]+)(${t})`;
-      const p = parseInt(d.coinPlace || 0, 10);
+      const { textContent, title, ariaDescription, ariaTitle, dataset: d } = $c;
+      const { coinAt, coinTo, coinSum, coinText, coinTip, coinPlace } = d;
+      const f = coinAt || 'eth';
+      const t = coinTo || 'usd';
+      const s = coinSum || 0.004;
+      const textRx = new RegExp(coinText || '(\\$)([0-9\\.\\,]+)()', 'gi');
+      const tipRX = new RegExp(coinTip || `()([0-9\\.\\,]+)(${t})`, 'gi');
+      const p = parseInt(coinPlace || 0, 10);
       const u = `https://api.coinconvert.net/convert/${f}/${t}?amount=${s}`;
       let to = (await (await fetch(u)).json())[t.toUpperCase()];
 
       to = ((p > 0)? to.toFixed(p) : round(to)).toLocaleString();
-      $c.textContent = content.replace(new RegExp(mc, 'gi'), `$1${to}$3`);
-      $c.title = title.replace(new RegExp(mt, 'gi'), `$1${to}$3`);
+      $c.textContent = textContent.replace(textRx, `$1${to}$3`);
+      $c.title = title.replace(tipRx, `$1${to}$3`);
+      $c.ariaDescription = ariaDescription.replace(tipRx, `$1${to}$3`);
+      $c.ariaTitle = ariaTitle.replace(tipRx, `$1${to}$3`);
     }
     catch(e) { console.warn(e); }
   },
   document.querySelectorAll(`[data-coin-at],[data-coin-to],[data-coin-sum],
-    [data-coin-text],[data-coin-title]`));
+    [data-coin-text],[data-coin-tip]`));
 
 // Copy jump shares.
 
@@ -774,3 +786,20 @@ function scrollReady() {
 
 ((scrollReady() === false) &&
   document.addEventListener('readystatechange', scrollReady));
+
+// Ensure `.info` and `.copy` tool-tips don't overflow the viewport.
+function resize() {
+  const mid = innerWidth*0.5;
+
+  each(($t) => {
+      const r = $t.getBoundingClientRect().right > mid;
+      const c = $t.classList;
+
+      c.toggle('flip-right', r);
+      c.toggle('flip-left', !r);
+    },
+    document.querySelectorAll('.info, .copy'));
+}
+
+addEventListener('resize', throttle(3e2, resize));
+resize();

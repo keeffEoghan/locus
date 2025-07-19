@@ -164,6 +164,7 @@
   --s-fig-comfy: 400px;
   --s-scroll-roll-x: 1.2em;
   --s-scroll-roll-y: 2em;
+  --s-info-w: 12rem;
   --z-jump: 0;
   --z-figure-flip: 1;
   --z-article: 2;
@@ -279,7 +280,6 @@ nav {
   font-weight: var(--font-w-3);
 
   &.round {
-    inset: var(--s-s1-r) auto auto 0;
     margin: var(--s-l0-y) var(--s-m2-x);
     align-self: center;
     border: var(--s-nav-border) solid var(--c-accent);
@@ -1305,9 +1305,9 @@ img,
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  background-image: url('../media/exhibit-participant.png?height=2060'),
-    url('../media/exhibit-participant.png?height=206'),
-    url('../media/exhibit-participant.png?height=20');
+  background-image: url('../media/exhibit-disc-participants.png?height=2060'),
+    url('../media/exhibit-disc-participants.png?height=206'),
+    url('../media/exhibit-disc-participants.png?height=20');
 
   & > canvas {
     width: 100%;
@@ -1322,7 +1322,7 @@ img,
   display: block;
   position: absolute;
   inset: 0 auto auto 0;
-  width: var(--info-w);
+  width: var(--s-info-w);
   padding: var(--s-m2-y) var(--s-m2-x);
   font-size: var(--s-font-m);
   font-family: Inter, sans-serif;
@@ -1373,7 +1373,7 @@ img,
   &:focus,
   &:active,
   &.show {
-    max-width: calc(0.5*var(--s-line-x));
+    max-width: var(--s-line-x);
     max-height: 200vh;
     clip-path: circle(100%);
     color: var(--c-lo-1);
@@ -1563,8 +1563,8 @@ img,
     .demo-fill {
       width: auto;
       height: auto;
-      max-width: auto;
-      max-height: auto;
+      max-width: none;
+      max-height: none;
       margin: 0;
     }
   }
@@ -1794,11 +1794,9 @@ img,
   &::before {
     display: block;
     position: absolute;
-    inset: auto 0 100% auto;
-    width: var(--info-w);
+    width: var(--s-info-w);
     max-width: var(--s-line-x);
     padding: var(--s-s0-y) var(--s-s0-x);
-    border-radius: var(--s-s1-r) var(--s-s1-r) 0 var(--s-s1-r);
     font-size: var(--s-font-m);
     font-family: Inter, sans-serif;
     pointer-events: none;
@@ -1808,6 +1806,17 @@ img,
     transition: opacity 5e2ms ease-in 5e2ms,
       transform 5e2ms ease-in 5e2ms;
     will-change: opacity, transform;
+
+    &,
+    .flip-right& {
+      inset: auto 0 100% auto;
+      border-radius: var(--s-s1-r) var(--s-s1-r) 0 var(--s-s1-r);
+    }
+
+    .flip-left& {
+      inset: auto auto 100% 100%;
+      border-radius: var(--s-s1-r) var(--s-s1-r) var(--s-s1-r) 0;
+    }
   }
 
   &:hover,
@@ -1844,7 +1853,7 @@ img,
   }
 
   &::before {
-    content: attr(title);
+    content: attr(aria-description, attr(aria-title, attr(title)));
     border: var(--s-hair) solid var(--c-active);
     color: var(--c-lo-1);
     background: var(--c-hi-1);
@@ -1943,12 +1952,18 @@ nav { display: none; }
 .exhibit-label { visibility: hidden; }
 
 #intro {
-  width: 100vh;
-  height: 100vh;
+  width: 100vmin;
+  height: 100vmin;
   margin: auto;
 }
 
 .gauss-splat-artifact {
   position: absolute;
   inset: 0;
+}
+
+.exhibit-actions {
+  opacity: 0;
+
+  &:hover { opacity: 1; }
 } */

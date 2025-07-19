@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "yarn dist:fresh",
-    "dev": "parcel --target app --log-level verbose",
+    "dev": "parcel --target app",
     "dev:fresh": "yarn dev --no-cache",
     "dist": "yarn clean && yarn build && yarn copy",
     "dist:fresh": "yarn clean && yarn build:fresh && yarn copy",
@@ -22,7 +22,10 @@
     "clean:dev": "rm -rf ./dist/",
     "clean:build": "rm -rf ./docs/",
     "clean:parcel": "rm -rf ./.parcel-cache",
-    "copy": "cp media/{preview.png,peel-artifact.mp4} docs/"
+    "copy": "cp media/{preview.png,peel-artifact.mp4} docs/",
+    "setup": "yarn setup:ides & yarn setup:tsc & wait",
+    "setup:ides": "yarn dlx @yarnpkg/sdks vscode",
+    "setup:tsc": "yarn tsc"
   },
   "dependencies": {
     "@epok.tech/fn-lists": "^0.1.4",
