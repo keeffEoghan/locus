@@ -76,10 +76,14 @@ const scrollIntoView = ($e, s = scroll) =>
 
 // Indicate scroll position.
 
-each(($menu) => {
-    // addEventListener('scroll', throttle(3e2, exhibitScroll));
-    // exhibitScroll();
-  },
+each(($menu) => each(($at) => {
+      const c = $at.classList;
+
+      (new IntersectionObserver((os) =>
+          each((o) => c.toggle('menu-hint', !!o.intersectionRatio), os)))
+        .observe(document.querySelector($at.getAttribute('href')));
+    },
+    $menu.querySelectorAll('a[href^="#"]')),
   document.querySelectorAll('menu'));
 
 // Progressively load images.
