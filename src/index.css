@@ -170,10 +170,14 @@
   --z-article: 2;
   --z-article-exhibit: 1;
   --z-exhibit-edge: 1;
-  --z-exhibit-over: 2;
+  --z-exhibit-info: 2;
+  --z-exhibit-over: 3;
   --z-exhibit-label: 999;
-  --z-scroll: 8;
-  --z-nav: 9;
+  --z-scroll: 6;
+  --z-chapter: 7;
+  --z-header: 7;
+  --z-nav-index: 8;
+  --z-nav-main: 9;
   --font-w-0: 100;
   --font-w-1: 200;
   --font-w-2: 300;
@@ -276,7 +280,7 @@ nav {
   border-radius: 0 var(--s-s1-r) var(--s-s1-r) 0;
   padding: var(--s-m2-y) var(--s-m2-x);
   gap: var(--s-items-gap);
-  z-index: var(--z-nav);
+  z-index: var(--z-nav-main);
   font-weight: var(--font-w-3);
 
   &.round {
@@ -285,6 +289,67 @@ nav {
     border: var(--s-nav-border) solid var(--c-accent);
     border-radius: var(--s-nav-r);
   }
+}
+
+menu {
+  --c-text: var(--c-hi-0);
+  display: flex;
+  position: fixed;
+  inset: 0 0 0 auto;
+  overflow: hidden auto;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: var(--s-l0-y) 0;
+  margin: 0;
+  z-index: var(--z-nav-index);
+  color: var(--c-text);
+  max-width: var(--s-line-x);
+  pointer-events: none;
+  list-style: none;
+  transform: translateX(100%) translateX(calc(-1 * var(--s-m0-x)));
+
+  &,
+  li {
+    transition: transform 9e2ms ease-out;
+    will-change: transform;
+  }
+
+  &:hover {
+    &,
+    li {
+      transform: none;
+      transition: transform 3e2ms ease-in;
+    }
+  }
+
+  li {
+    width: 100%;
+    margin: 0;
+    pointer-events: all;
+    text-align: right;
+    transform: translateX(-100%) translateX(var(--s-m0-x));
+
+    &:first-child { margin-top: auto; }
+
+    &:last-child { margin-bottom: auto; }
+
+    a {
+      display: inline-block;
+      padding: var(--s-s1-y) var(--s-l1-x) var(--s-s1-y) var(--s-s1-x);
+      will-change: backdrop-filter;
+      transition: backdrop-filter 9e2ms ease-out;
+
+      &.index-hint { color: var(--c-active); }
+    }
+  }
+
+  &:hover li a,
+  li a:hover { transition: backdrop-filter 3e2ms ease-in; }
+
+  &:hover li a { backdrop-filter: invert(0.8) brightness(0.4); }
+
+  li a:hover { backdrop-filter: invert(1) brightness(0.1); }
 }
 
 form,
@@ -341,12 +406,6 @@ form {
   }
 }
 
-.logo {
-  --s-link-line: 0;
-  margin: 0 var(--s-m2-x);
-  font-weight: var(--font-w-0);
-}
-
 .scroll-roll {
   position: absolute;
   inset: auto auto 100% 0;
@@ -383,7 +442,6 @@ article {
   width: 100%;
   padding: var(--s-l1-y) var(--s-l1-x);
   margin: 0;
-  z-index: var(--z-article);
 
   & > section { padding: 0; }
 }
@@ -392,6 +450,7 @@ header {
   flex-flow: row-reverse wrap;
   justify-content: flex-end;
   min-height: var(--s-view-tall);
+  z-index: var(--z-header);
   /* padding: var(--s-s1-r); */
   /* background: var(--c-accent); */
 }
@@ -399,6 +458,7 @@ header {
 article {
   flex-flow: row wrap;
   justify-content: center;
+  z-index: var(--z-article);
   border-top: var(--s-hair) solid var(--c-accent);
 
   /* &:nth-of-type(odd) { background: var(--c-nth); } */
@@ -826,12 +886,15 @@ h6 {
 }
 
 h1 {
-  font-size: 2.8em;
+  --s-link-line: 0;
+  font-size: 1.6em;
   font-weight: 700;
+  margin: 0 var(--s-m2-x);
+  font-weight: var(--font-w-0);
 }
 
 h2 {
-  font-size: 1.6em;
+  font-size: 1.7em;
   font-weight: 700;
 }
 
@@ -844,6 +907,16 @@ h4,
 h5,
 h6 { font-size: 1.1em; }
 
+.chapter {
+  position: sticky;
+  inset: 5.5rem 100% 0 0;
+  margin-right: auto;
+  padding: var(--s-m0-y) var(--s-m0-x) var(--s-m0-y) 0;
+  border-radius: 0 var(--s-s1-r) var(--s-s1-r) 0;
+  z-index: var(--z-chapter);
+  background: var(--c-base-root);
+}
+
 p,
 ul,
 ol,
@@ -852,12 +925,10 @@ details {
   max-width: var(--s-line-x);
 }
 
-ul {
-  padding-left: var(--s-m1-x);
-  list-style-type: "~ ";
-}
-
+ul,
 ol { padding-left: var(--s-m1-x); }
+
+ul { list-style-type: "~ "; }
 
 li { margin: var(--s-m1-y) 0; }
 
@@ -1400,7 +1471,7 @@ img,
   /* backdrop-filter: invert(0.8) blur(var(--s-s1-r));
   backdrop-filter: invert(0.8); */
   border-radius: var(--s-s1-r);
-  z-index: var(--z-exhibit-over);
+  z-index: var(--z-exhibit-info);
 }
 
 .exhibit-info-instruct {
@@ -1557,17 +1628,13 @@ img,
   flex-flow: column nowrap;
   min-width: 66%;
 
-  &.demo-no-trim {
-    min-width: auto;
+  &.demo-no-trim { min-width: auto; }
+}
 
-    .demo-fill {
-      width: auto;
-      height: auto;
-      max-width: none;
-      max-height: none;
-      margin: 0;
-    }
-  }
+.demo-fill {
+  width: auto;
+  height: auto;
+  margin: 0;
 }
 
 .demo-controls {
@@ -1622,7 +1689,62 @@ img,
   &:checked ~ .icon::after { content: 'video_camera_front'; }
 }
 
-.progress-demo {
+.concept-view {
+  min-width: 0;
+
+  .references-big & { width: 100%; }
+}
+
+.concept-fill {
+  aspect-ratio: 1;
+
+  .references-big & {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+.concept-demo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  &,
+  & .peel-art {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .peel-art {
+    margin: auto;
+    aspect-ratio: 1;
+  }
+}
+
+figure:fullscreen {
+  .concept-view,
+  .concept-fill,
+  .concept-demo {
+    width: auto;
+    height: auto;
+    margin: 0;
+  }
+}
+
+.prototype {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 100%;
+  padding: var(--s-l1-y) 0;
+  /* border-top: var(--s-hair) solid var(--c-accent); */
+  z-index: var(--z-article);
+
   & > section { align-self: center; }
 }
 
@@ -1669,22 +1791,7 @@ img,
   background-size: contain;
 }
 
-.progress-demo-flip { flex-direction: row-reverse; }
-
-.concept-demo {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  max-width: 100%;
-  max-height: 100%;
-
-  .peel-art {
-    margin: auto;
-    aspect-ratio: 1/1;
-    max-width: 100%;
-    max-height: 100%;
-  }
-}
+.prototype-flip { flex-direction: row-reverse; }
 
 .artizen-info {
   --c-jump-1: var(--c-cta);
@@ -1957,7 +2064,7 @@ nav { display: none; }
 .exhibit-info,
 .exhibit-label { visibility: hidden; }
 
-#intro {
+#start {
   width: 100vmin;
   height: 100vmin;
   margin: auto;

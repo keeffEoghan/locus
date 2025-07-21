@@ -74,6 +74,14 @@ const scrollIntoView = ($e, s = scroll) =>
     : (inView(true, $e.getBoundingClientRect())? false
     : !$e.scrollIntoView(s)));
 
+// Indicate scroll position.
+
+each(($menu) => {
+    // addEventListener('scroll', throttle(3e2, exhibitScroll));
+    // exhibitScroll();
+  },
+  document.querySelectorAll('menu'));
+
 // Progressively load images.
 // @todo Also handle videos and other types of elements?
 
@@ -423,7 +431,7 @@ each(($view) => {
   },
   document.querySelectorAll('.demo-view'));
 
-// `Shadows touch across time` progress demo.
+// `Shadows touch across time` prototype.
 
 each(($shadowsView) => {
     const $shadowsDemo = $shadowsView.querySelector('.shadows-demo');
@@ -436,7 +444,7 @@ each(($shadowsView) => {
   },
   document.querySelectorAll('.shadows-view'));
 
-// MPM progress demo.
+// MPM prototype.
 
 each(($mpmView) => {
     const $mpmDemo = $mpmView.querySelector('.mpm-demo');
