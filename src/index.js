@@ -639,7 +639,8 @@ each(($exhibit) => {
     }
 
     async function exhibitLoad() {
-      const exhibit = await import('../media/exhibit.json');
+      // const exhibit = await import('../media/exhibit.json');
+      const exhibit = await import('../media/exhibit.min.json');
 
       exhibitPlayer = api.exhibitPlayer = new ScenePlayer(null, {
           enablePan: false,

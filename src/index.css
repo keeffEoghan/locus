@@ -143,6 +143,8 @@
   --s-nav-r: 2.5rem;
   --s-nav-off-y: -2rem;
   --s-nav-border: var(--s-hair);
+  --s-nav-flip-r: 1.6rem;
+  --s-nav-flip-y: calc(var(--s-link-line) * 0.1);
   --s-line-x: 30rem;
   --s-icon-l: 2.5rem;
   --s-icon-m: 2rem;
@@ -296,18 +298,67 @@ menu {
   --c-text: var(--c-hi-0);
   display: flex;
   position: fixed;
-  inset: 0 0 0 auto;
+  inset: auto 0 auto auto;
   overflow: hidden auto;
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-end;
   padding: var(--s-l0-y) 0;
   margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: var(--z-nav-index);
   color: var(--c-text);
   max-width: var(--s-line-x);
+  max-height: 100%;
   pointer-events: none;
   list-style: none;
+
+  &::before,
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 0 0 auto auto;
+    width: var(--s-nav-flip-r);
+    height: var(--s-nav-flip-r);
+    border: var(--s-link-line) solid;
+    border-color: #0000 #0000 var(--c-active) #0000;
+    border-radius: 100% 100% var(--s-s1-r) var(--s-s1-r);
+    pointer-events: all;
+    cursor: pointer;
+    transform-origin: bottom left;
+    transition: transform 6e2ms cubic-bezier(0.4, 1, 0.6, 0),
+      transform-origin 0ms linear 3e2ms;
+    will-change: transform, transform-origin;
+  }
+
+  &::before {
+    transform: translateY(-50%)
+      translateY(var(--s-nav-flip-y)) rotate(0.06turn);
+  }
+
+  &::after {
+    transform: translateY(-50%)
+      scaleY(-1) translateY(var(--s-nav-flip-y)) rotate(0.06turn);
+  }
+
+  &:hover,
+  &:active,
+  &:focus-within {
+    &::before,
+    &::after { transform-origin: bottom right; }
+
+    &::before {
+      transform: translateY(-50%)
+        translateY(var(--s-nav-flip-y)) rotate(-0.06turn);
+    }
+
+    &::after {
+      transform: translateY(-50%)
+        scaleY(-1) translateY(var(--s-nav-flip-y)) rotate(-0.06turn);
+    }
+  }
 
   li {
     flex: 0 0 auto;
@@ -571,9 +622,9 @@ figure {
       0 0 3px var(--c-lo-1);
     opacity: 0;
     transform: rotate(75deg);
-    transition: transform 9e2ms cubic-bezier(0.5, -1, 0.2, 0.2) 4e2ms,
+    transition: transform 9e2ms cubic-bezier(0.1, -1, 0.2, 0.2) 4e2ms,
       opacity 8e2ms ease-in 5e2ms;
-    will-change: transform, opacity;
+    will-change: transform, opacity1
   }
 
   &:hover,
