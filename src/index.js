@@ -84,7 +84,7 @@ each(($menu) => each(($at) => {
         .observe(document.querySelector($at.getAttribute('href')));
     },
     $menu.querySelectorAll('a[href^="#"]')),
-  document.querySelectorAll('menu'));
+  $html.querySelectorAll('menu'));
 
 // Progressively load images.
 // @todo Also handle videos and other types of elements?
@@ -93,17 +93,17 @@ const loaded = ($l) => $l.classList.add('loaded');
 
 each(($l) =>
     (($l.complete)? loaded($l) : $l.addEventListener('load', () => loaded($l))),
-  document.querySelectorAll('img.load'));
+  $html.querySelectorAll('img.load'));
 
 // Figures.
 
 each(($f) => $f.addEventListener('click', () =>
     ((document.fullscreenElement)? document.exitFullscreen()
     : $f.requestFullscreen())),
-  document.querySelectorAll('figure'));
+  $html.querySelectorAll('figure'));
 
 each(($f) => $f.addEventListener('click', stopBubble),
-  document.querySelectorAll('figcaption'));
+  $html.querySelectorAll('figcaption'));
 
 // Ensure anchors scroll.
 
@@ -121,12 +121,12 @@ each(($a) => $a.addEventListener('click', () => {
       catch(e) { console.warn(e); }
     });
   }),
-  document.querySelectorAll('a[href^="#"]'));
+  $html.querySelectorAll('a[href^="#"]'));
 
 // Details.
 
 each(($d) => $d.addEventListener('toggle', () => $d.open && scrollIntoView($d)),
-  document.querySelectorAll('details'));
+  $html.querySelectorAll('details'));
 
 // Countdowns to deadlines.
 
@@ -135,8 +135,8 @@ const hour = 60*minute;
 const day = 24*hour;
 const etaCrypto = new Date('2025-07-25T15:00:00-08:00');
 const etaCard = new Date('2025-07-25T15:00:00-08:00');
-const $etaCrypto = document.querySelectorAll('.eta-crypto');
-const $etaCard = document.querySelectorAll('.eta-card');
+const $etaCrypto = $html.querySelectorAll('.eta-crypto');
+const $etaCard = $html.querySelectorAll('.eta-card');
 const $giveCrypto = document.querySelector('#support-crypto');
 const $timedOutCrypto = $giveCrypto?.querySelectorAll?.('.times-out');
 const $giveCard = document.querySelector('#support-card');
@@ -229,7 +229,7 @@ each(($subscribe) => {
       scrollIntoView($optional);
     });
   },
-  document.querySelectorAll('.subscribe'));
+  $html.querySelectorAll('.subscribe'));
 
 // Concept art interactions.
 /** @todo [Shrink input to fit value/placeholder](https://stackoverflow.com/a/8100949). */
@@ -304,7 +304,7 @@ each(($peel) => {
           .observe($peelDemoFill, { childList: true });
     }
   },
-  document.querySelectorAll('.peel-art'));
+  $html.querySelectorAll('.peel-art'));
 
 // Crypto and currency conversion.
 
@@ -329,13 +329,13 @@ each(async ($c) => {
     }
     catch(e) { console.warn(e); }
   },
-  document.querySelectorAll(`[data-coin-at],[data-coin-to],[data-coin-sum],
+  $html.querySelectorAll(`[data-coin-at],[data-coin-to],[data-coin-sum],
     [data-coin-text],[data-coin-tip]`));
 
 // Copy jump shares.
 
 each(($a) => ($a.dataset.copy = $a.href) && $a.classList.add('copy'),
-  document.querySelectorAll('.jump-share'));
+  $html.querySelectorAll('.jump-share'));
 
 // Copy to clipboard.
 
@@ -349,7 +349,7 @@ each(($c) => $c.addEventListener('click', async () => {
     }
     catch(e) { console.warn("Can't copy to clipboard", $c, e); }
   }),
-  document.querySelectorAll('.copy'));
+  $html.querySelectorAll('.copy'));
 
 // Progress and demos.
 
@@ -433,7 +433,7 @@ each(($view) => {
     $visit && liveFrame && $live?.addEventListener?.('load',
       () => $visit.href = $live.src);
   },
-  document.querySelectorAll('.demo-view'));
+  $html.querySelectorAll('.demo-view'));
 
 // `Shadows touch across time` prototype.
 
@@ -446,7 +446,7 @@ each(($shadowsView) => {
           $shadowsDemo.src = $shadowsQuality.dataset.src),
         $shadowsQualities);
   },
-  document.querySelectorAll('.shadows-view'));
+  $html.querySelectorAll('.shadows-view'));
 
 // MPM prototype.
 
@@ -459,7 +459,7 @@ each(($mpmView) => {
           $mpmDemo.src = $mpmQuality.dataset.src),
         $mpmQualities);
   },
-  document.querySelectorAll('.mpm-view'));
+  $html.querySelectorAll('.mpm-view'));
 
 // `Peer into the flow`.
 
@@ -493,7 +493,7 @@ each(($peerView) => {
       $peerRandom.addEventListener('click', () => peerSeed());
     }
   },
-  document.querySelectorAll('.peer-view'));
+  $html.querySelectorAll('.peer-view'));
 
 // Reward: `Artifact`.
 
@@ -511,7 +511,7 @@ each(($artifactView) => {
       $artifactStill.addEventListener('click', stopBubble);
     }
   },
-  document.querySelectorAll('.artifact-view'));
+  $html.querySelectorAll('.artifact-view'));
 
 // Exhibition scene.
 
@@ -800,11 +800,20 @@ each(($exhibit) => {
     ((exhibitReady() === false) &&
       document.addEventListener('readystatechange', exhibitReady));
   },
-  document.querySelectorAll('.exhibit'));
+  $html.querySelectorAll('.exhibit'));
 
 // Autoplay videos after interaction on devices which restrict autoplay.
 each(($a) => $html.addEventListener('click', () => $a.paused && $a.play()),
-  document.querySelectorAll('.autoplay'));
+  $html.querySelectorAll('.autoplay'));
+
+// Move pinned menu away when the toggle is unchecked.
+each(($c) => $c.addEventListener('change', () => {
+    if($c.checked) { return; }
+
+    $c.disabled = true;
+    setTimeout(() => $c.disabled = false);
+  }),
+  $html.querySelectorAll('.nav-index-flip'));
 
 addEventListener('keyup', ({ code: k, shiftKey: s }) =>
   s && (k === 'KeyF') && $html.requestFullscreen());
@@ -830,7 +839,7 @@ function resize() {
       c.toggle('flip-right', r);
       c.toggle('flip-left', !r);
     },
-    document.querySelectorAll('.info, .copy'));
+    $html.querySelectorAll('.info, .copy'));
 }
 
 addEventListener('resize', throttle(3e2, resize));
