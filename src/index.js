@@ -810,8 +810,10 @@ each(($a) => $html.addEventListener('click', () => $a.paused && $a.play()),
 each(($c) => $c.addEventListener('change', () => {
     if($c.checked) { return; }
 
+    $c.blur();
+    each(($l) => $l.blur(), $c.labels);
     $c.disabled = true;
-    setTimeout(() => $c.disabled = false);
+    setTimeout(() => $c.disabled = false, 9);
   }),
   $html.querySelectorAll('.nav-index-flip'));
 
