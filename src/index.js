@@ -46,6 +46,8 @@ function stopEvent(e) {
 const $html = document.documentElement;
 const rootClass = $html.classList;
 
+rootClass.toggle('has-hover', matchMedia('(hover: hover)').matches);
+
 setTimeout(() => {
   rootClass.remove('wait');
   rootClass.add('info-hint');
@@ -805,17 +807,6 @@ each(($exhibit) => {
 // Autoplay videos after interaction on devices which restrict autoplay.
 each(($a) => $html.addEventListener('click', () => $a.paused && $a.play()),
   $html.querySelectorAll('.autoplay'));
-
-// Move pinned menu away when the toggle is unchecked.
-each(($c) => $c.addEventListener('change', () => {
-    if($c.checked) { return; }
-
-    $c.blur();
-    each(($l) => $l.blur(), $c.labels);
-    $c.disabled = true;
-    setTimeout(() => $c.disabled = false, 9);
-  }),
-  $html.querySelectorAll('.nav-index-flip'));
 
 addEventListener('keyup', ({ code: k, shiftKey: s }) =>
   s && (k === 'KeyF') && $html.requestFullscreen());

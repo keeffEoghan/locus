@@ -383,7 +383,7 @@ menu {
     &::after { transform: translateY(-50%) scaleY(-1) rotate(0.06turn); }
   }
 
-  &:hover,
+  .has-hover &:hover,
   &:focus-within {
     .nav-index-toggle {
       &::before { transform: translateY(-50%) rotate(0.03turn); }
@@ -412,33 +412,9 @@ menu {
     }
   }
 
-  /* &:hover {
-    .nav-index-toggle { background: #f00; }
-  }
-
-  &:focus-within {
-    .nav-index-toggle { background: #0f0; }
-  }
-
+  .has-hover &:hover,
+  &:focus-within,
   .nav-index-flip:checked + & {
-    .nav-index-toggle { background: #00f; }
-  }
-
-  .nav-index-flip:enabled + & {
-    .nav-index-toggle { outline: 3px dashed #0f0; }
-  }
-
-  .nav-index-flip:disabled + & {
-    .nav-index-toggle { outline: 3px dashed #f00; }
-  } */
-
-  .nav-index-flip:disabled + & {
-    .nav-index-toggle { pointer-events: none; }
-  }
-
-  .nav-index-flip:enabled + &:hover,
-  .nav-index-flip:enabled + &:focus-within,
-  .nav-index-flip:enabled:checked + & {
     li {
       transition: transform 3e2ms ease-in;
 
