@@ -802,6 +802,10 @@ each(($exhibit) => {
   },
   document.querySelectorAll('.exhibit'));
 
+// Autoplay videos after interaction on devices which restrict autoplay.
+each(($a) => $html.addEventListener('click', () => $a.paused && $a.play()),
+  document.querySelectorAll('.autoplay'));
+
 addEventListener('keyup', ({ code: k, shiftKey: s }) =>
   s && (k === 'KeyF') && $html.requestFullscreen());
 
