@@ -490,9 +490,10 @@ menu {
         &:hover,
         &:active,
         &:focus {
-          color: var(--c-active);
-
-          a { background-color: var(--c-lo-1); }
+          a {
+            color: var(--c-active);
+            background-color: var(--c-lo-1);
+          }
         }
       }
     }
