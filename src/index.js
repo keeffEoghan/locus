@@ -45,6 +45,7 @@ function stopEvent(e) {
 
 const $html = document.documentElement;
 const rootClass = $html.classList;
+const printer = matchMedia('print').matches;
 
 rootClass.toggle('has-hover', matchMedia('(hover: hover)').matches);
 
@@ -79,10 +80,36 @@ const scrollIntoView = ($e, s = scroll) =>
 // Indicate scroll position.
 
 each(($menu) => each(($at) => {
-      const c = $at.classList;
+      const $p = $at.parentElement;
+      const s = $p.style;
 
-      (new IntersectionObserver((os) =>
-          each((o) => c.toggle('menu-hint', !!o.intersectionRatio), os)))
+      (new IntersectionObserver((os) => each((o) => {
+              const {
+                  intersectionRatio: r,
+                  intersectionRect: ib, boundingClientRect: cb, rootBounds: rb
+                } = o;
+
+              let h = 0;
+
+              if(r) {
+                const { width: iw, height: ih } = ib;
+                const { width: cw, height: ch } = cb;
+                const { width: rw, height: rh } = rb;
+
+                h = clamp01((iw*ih)/min(cw*ch, rw*rh));
+              }
+
+              if(h) {
+                $p.setAttribute('menu-hint', h);
+                s.setProperty('--a-menu-hint', (h*100)+'%');
+              }
+              else {
+                $p.removeAttribute('menu-hint');
+                s.removeProperty('--a-menu-hint');
+              }
+            },
+            os),
+          { threshold: map((_, i, a) => i/(a.length-1), range(1e2), 0) }))
         .observe(document.querySelector($at.getAttribute('href')));
     },
     $menu.querySelectorAll('a[href^="#"]')),
@@ -375,7 +402,8 @@ each(($view) => {
       $video.src = $video.src;
     });
 
-    if($live && $fill) {
+    if(printer) { $fill && ($fill.innerHTML = ''); }
+    else if($live && $fill) {
       (demoFillIntersects ??= new Map())
         .set($fill, { $fill, $live, time: 0, ratio: 0 });
 
@@ -523,6 +551,9 @@ each(($exhibit) => {
     const $exhibitWrapped = $exhibit.querySelector('.exhibit-wrapped');
     const $exhibitTouring = $exhibit.querySelector('.exhibit-touring');
     let $exhibitDemo = $exhibit.querySelector('.exhibit-demo');
+
+    if(printer) { return $exhibitDemo && ($exhibitDemo.innerHTML = ''); }
+
     let exhibitOn;
     const exhibitCameras = map(() => ({ all: {}, order: [] }), range(2), 0);
     const exhibitWraps = ['Disc', 'Wrap'];

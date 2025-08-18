@@ -67,7 +67,8 @@
       "distDir": "docs/",
       "source": [
         "src/index.html",
-        "src/immersive-arts.html"
+        "src/pitch.html",
+        "src/print.html"
       ],
       "publicUrl": "./"
     }
