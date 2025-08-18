@@ -145,6 +145,7 @@
   --s-nav-off-y: -2rem;
   --s-nav-border: var(--s-hair);
   --s-nav-flip-r: 1.6rem;
+  --s-nav-flip-line: 1px;
   --s-line-x: 30rem;
   --s-icon-l: 2.5rem;
   --s-icon-m: 2rem;
@@ -409,12 +410,12 @@ menu {
       content: '';
       display: block;
       position: absolute;
-      inset: 0;
-      border: var(--s-link-line) solid;
-      border-color: #0000 #0000 currentColor #0000;
-      border-radius: var(--s-s1-r) var(--s-s1-r);
+      inset: 50% 8% auto 8%;
+      border: solid currentColor;
+      border-width: var(--s-nav-flip-line) 0 var(--s-nav-flip-line) 0;
+      border-radius: 100%;
       cursor: pointer;
-      transform-origin: bottom left;
+      transform-origin: center left;
       transition: transform 6e2ms ease-in-out,
         transform-origin 0ms linear 3e2ms;
       will-change: transform, transform-origin;
@@ -428,9 +429,9 @@ menu {
   .has-hover &:hover,
   &:focus-within {
     .nav-index-toggle {
-      &::before { transform: translateY(-50%) rotate(0.03turn); }
+      &::before { transform: translateY(-50%) rotate(-0.03turn); }
 
-      &::after { transform: translateY(-50%) scaleY(-1) rotate(0.03turn); }
+      &::after { transform: translateY(-50%) scaleY(-1) rotate(-0.03turn); }
     }
   }
 
@@ -439,7 +440,7 @@ menu {
       color: var(--c-active);
 
       &::before,
-      &::after { transform-origin: bottom right; }
+      &::after { transform-origin: center right; }
 
       &::before { transform: translateY(-50%) rotate(-0.06turn); }
 
@@ -447,9 +448,9 @@ menu {
 
       &:hover,
       &:focus {
-        &::before { transform: translateY(-50%) rotate(-0.03turn); }
+        &::before { transform: translateY(-50%) rotate(0.03turn); }
 
-        &::after { transform: translateY(-50%) scaleY(-1) rotate(-0.03turn); }
+        &::after { transform: translateY(-50%) scaleY(-1) rotate(0.03turn); }
       }
     }
   }
@@ -480,15 +481,18 @@ menu {
         background-color: var(--c-lo-0);
       }
 
-      &[menu-hint] a { color: var(--c-menu-hint); }
+      &[menu-hint] {
+        a { color: var(--c-menu-hint); }
+      }
 
       &,
-      &[menu-hint] a {
+      &[menu-hint] {
         &:hover,
         &:active,
         &:focus {
           color: var(--c-active);
-          background-color: var(--c-lo-1);
+
+          a { background-color: var(--c-lo-1); }
         }
       }
     }
