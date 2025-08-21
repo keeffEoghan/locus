@@ -1503,19 +1503,35 @@ img,
   .wait & { clip-path: inset(0); }
 
   @media print {
+    --s-line-x: 20vw;
+    height: 300vh;
+    pointer-events: all;
     background-image: url('../media/exhibit-disc-room.png?height=2060'),
-      url('../media/exhibit-disc-participants.png?height=2060'),
-      url('../media/exhibit-disc-observers.png?height=2060');
-    background-position-y: 0, 50%, 100%;
-    /* background-image: url('../media/exhibit-disc-room.png?height=2060'),
       url('../media/exhibit-disc-participants.png?height=2060'),
       url('../media/exhibit-disc-observers.png?height=2060'),
       url('../media/exhibit-wrap-room.png?height=2060'),
       url('../media/exhibit-wrap-participants.png?height=2060'),
       url('../media/exhibit-wrap-observers.png?height=2060');
-    background-position-y: 0%, 20%, 40%, 60%, 80%, 100%; */
-    background-size: contain;
+    background-position: 90% 0%, 10% 20%, 90% 40%, 10% 60%, 90% 80%, 10% 100%;
+    background-size: auto 16.67%;
     background-repeat: no-repeat;
+
+    .exhibit-intro,
+    .exhibit-info { position: absolute; }
+
+    .exhibit-info { transform: translateY(-50%); }
+
+    #explore-locus { top: 14%; }
+
+    #explore-concept { top: 28%; }
+
+    #explore-interact { top: 41%; }
+
+    #explore-audio { top: 62%; }
+
+    #explore-motion { top: 79%; }
+
+    #explore-exhibits { top: 90%; }
   }
 }
 
@@ -1528,6 +1544,8 @@ img,
   inset: var(--s-l1-y) auto auto auto;
   z-index: var(--z-exhibit-info);
   margin: 0 auto var(--s-view-mid);
+
+  @media print { align-self: flex-start; }
 }
 
 .exhibit-info {
@@ -1537,12 +1555,18 @@ img,
   backdrop-filter: invert(0.8); */
   border-radius: var(--s-s1-r);
   z-index: var(--z-exhibit-info);
+
+  @media print {
+    &:nth-child(even) { align-self: flex-end; }
+  }
 }
 
 .exhibit-info-instruct {
   padding: var(--s-m1-y) var(--s-m1-x);
   margin: var(--s-m0-y) auto;
   pointer-events: none;
+
+  @media print { display: none; }
 }
 
 .exhibit-info-intro { margin: 0; }
@@ -1604,7 +1628,9 @@ img,
   }
 }
 
-.exhibit-info-flip { align-self: flex-end; }
+.exhibit-info-flip {
+  @media only screen { align-self: flex-end; }
+}
 
 /*
 .exhibit-zoom {
