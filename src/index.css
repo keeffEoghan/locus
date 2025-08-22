@@ -1521,17 +1521,17 @@ img,
 
     .exhibit-info { transform: translateY(-50%); }
 
-    #explore-locus { top: 14%; }
+    #explore-locus { top: 8.34%; }
 
-    #explore-concept { top: 28%; }
+    #explore-concept { top: 25%; }
 
-    #explore-interact { top: 41%; }
+    #explore-interact { top: 41.67%; }
 
-    #explore-audio { top: 62%; }
+    #explore-audio { top: 58.36%; }
 
-    #explore-motion { top: 79%; }
+    #explore-motion { top: 75%; }
 
-    #explore-exhibits { top: 90%; }
+    #explore-exhibits { top: 91.67%; }
   }
 }
 
