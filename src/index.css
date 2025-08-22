@@ -576,6 +576,8 @@ form {
 .subscribe {
   input,
   .placeholder { min-width: 7em; }
+
+  @media print { display: none; }
 }
 
 fieldset {
