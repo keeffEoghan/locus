@@ -1507,10 +1507,10 @@ img,
     height: 300vh;
     pointer-events: all;
     background-image: url('../media/exhibit-disc-room.png?height=2060'),
-      url('../media/exhibit-disc-participants.png?height=2060'),
       url('../media/exhibit-disc-observers.png?height=2060'),
-      url('../media/exhibit-wrap-room.png?height=2060'),
+      url('../media/exhibit-disc-participants.png?height=2060'),
       url('../media/exhibit-wrap-participants.png?height=2060'),
+      url('../media/exhibit-wrap-room.png?height=2060'),
       url('../media/exhibit-wrap-observers.png?height=2060');
     background-position: 90% 0%, 10% 20%, 90% 40%, 10% 60%, 90% 80%, 10% 100%;
     background-size: auto 16.67%;
