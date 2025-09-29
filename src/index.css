@@ -2285,6 +2285,12 @@ figure:fullscreen {
  }
 }
 
+.project-plan-view {
+  width: 100%;
+  aspect-ratio: 1.414/1;
+  max-height: 85vh;
+}
+
 /* @todo Remove after demo. */
 
 /* .intro-main,

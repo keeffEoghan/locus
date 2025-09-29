@@ -68,7 +68,8 @@
       "source": [
         "src/index.html",
         "src/pitch.html",
-        "src/print.html"
+        "src/print.html",
+        "src/immersive-arts.html"
       ],
       "publicUrl": "./"
     }
