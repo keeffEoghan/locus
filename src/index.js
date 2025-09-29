@@ -79,7 +79,9 @@ const scrollIntoView = ($e, s = scroll) =>
 
 // Indicate scroll position.
 
-each(($menu) => each(($at) => {
+each(($menu) => each(($at, i) => {
+      const $to = $html.querySelector($at.getAttribute('href'));
+      const c = ((i)? null : $menu.classList);
       const $p = $at.parentElement;
       const s = $p.style;
 
@@ -107,10 +109,12 @@ each(($menu) => each(($at) => {
                 $p.removeAttribute('menu-hint');
                 s.removeProperty('--a-menu-hint');
               }
+
+              c?.toggle('nav-index-open', h > 0.5);
             },
             os),
           { threshold: map((_, i, a) => i/(a.length-1), range(1e2), 0) }))
-        .observe(document.querySelector($at.getAttribute('href')));
+        .observe($to);
     },
     $menu.querySelectorAll('a[href^="#"]')),
   $html.querySelectorAll('menu'));

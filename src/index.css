@@ -435,6 +435,7 @@ menu {
     }
   }
 
+  &.nav-index-open,
   .nav-index-flip:checked + & {
     .nav-index-toggle {
       color: var(--c-active);
@@ -457,6 +458,7 @@ menu {
 
   .has-hover &:hover,
   &:focus-within,
+  &.nav-index-open,
   .nav-index-flip:checked + & {
     li {
       transition: transform 3e2ms ease-in;
@@ -2295,6 +2297,7 @@ figure:fullscreen {
   width: 100%;
   aspect-ratio: 1.414/1;
   max-height: 85vh;
+  border: none;
 }
 
 /* @todo Remove after demo. */
