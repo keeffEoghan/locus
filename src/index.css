@@ -605,6 +605,12 @@ header {
   z-index: var(--z-header);
   /* padding: var(--s-s1-r); */
   /* background: var(--c-accent); */
+  text-shadow: 0 0 1px #000,
+    0 0 2px #000,
+    0 0 4px #000,
+    0 0 8px #000;
+  --c-text: #fffffff0;
+  color: var(--c-text);
 
   @media print { font-weight: var(--font-w-4); }
 }
