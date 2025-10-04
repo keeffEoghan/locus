@@ -567,7 +567,7 @@ each(($exhibit) => {
     let exhibitCameraTo;
     let exhibitInteract = false;
     let exhibitTour = -1;
-    const exhibitCameraNear = { scroll: 1e-3, tour: 5e-1 };
+    const exhibitNear = { scroll: 1e-3, tour: 5e-1, move: 1e-5 };
     const exhibitEase = { scroll: 2e-3, tour: 5e-4 };
     let exhibit2DRenderer;
     let exhibitTime = performance.now();
@@ -654,21 +654,26 @@ each(($exhibit) => {
       if(!exhibitOn) { return requestAnimationFrame(exhibitFrame); }
 
       const { camera, scene } = exhibitPlayer;
-      const p = camera.position;
+      const p1 = camera.position;
+      const p0 = (camera.userData.past ??= new Vector3().copy(p1));
       const { order } = exhibitCameras[+$exhibitWrapped?.checked];
       const tourTo = order[exhibitTour]?.position;
-      const { tour: nearTour, scroll: nearScroll } = exhibitCameraNear;
+      const { tour: dTour, scroll: dScroll, move: dMove } = exhibitNear;
 
       tourTo &&
-        exhibitCameraTo.copy((p.distanceToSquared(tourTo) >= nearTour)? tourTo
+        exhibitCameraTo.copy((p1.distanceToSquared(tourTo) >= dTour)? tourTo
           : order[exhibitTour = (exhibitTour+1)%order.length]?.position);
 
-      if(!exhibitInteract) {
-        ((p.distanceToSquared(exhibitCameraTo) < nearScroll)?
-          p.copy(exhibitCameraTo)
-        : p.lerp(exhibitCameraTo,
+      !exhibitInteract &&
+        ((p1.distanceToSquared(exhibitCameraTo) < dScroll)?
+          p1.copy(exhibitCameraTo)
+        : p1.lerp(exhibitCameraTo,
             exhibitEase[(tourTo)? 'tour' : 'scroll']*(t1-t0)));
-      }
+
+      $exhibitDemo.classList
+        .toggle('exhibit-moved', p0.distanceToSquared(p1) >= dMove);
+
+      p0.copy(p1);
 
       exhibit2DRenderer.render(scene, camera);
 

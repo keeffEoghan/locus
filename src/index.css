@@ -1743,6 +1743,18 @@ img,
     will-change: opacity;
   }
 
+  .exhibit-demo.exhibit-moved & {
+    pointer-events: none;
+    clip-path: circle(2px);
+    transition: max-width 0ms,
+      max-height 0ms,
+      clip-path 2e2ms ease-in,
+      color 3e2ms ease-in,
+      background-color 3e2ms ease-in,
+      transform 1e2ms linear,
+      z-index 0ms linear;
+  }
+
   &:hover,
   &:focus,
   &:active,
